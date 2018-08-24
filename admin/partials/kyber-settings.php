@@ -51,6 +51,11 @@ return apply_filters( 'wc_kyber_settings',
             'title' => __( 'Network node endpoint', 'woocomerce-gateway-kyber' ),
             'type' => 'text',
             'description' => __( 'Node endpoint to check transaction status. If you do not have one, create using <a href="https://infura.io/" target="__blank">Infura</a>' )
+        ),
+        'site_url_for_dev' => array(
+            'title' => __( 'Site url for dev', 'woocommerce-gateway-kyber' ),
+            'type' => 'text',
+            'description' => __( 'Site url for dev', 'woocommerce-gateway-kyber' )
         )
     )
 );

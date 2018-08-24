@@ -36,6 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'PLUGIN_NAME_VERSION', '0.0.1' );
+define( 'WC_KYBER_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 
 /**
  * The code that runs during plugin activation.

@@ -41,28 +41,19 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->enabled = $this->get_option( 'enabled' );
         $this->description = $this->get_option( 'description' );
 
-        add_filter( 'cron_schedules', array( $this, 'my_cron_schedules') );
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
-        add_action( 'my_schedule_hook', array( $this, 'handle_schedule') );
+        add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
     }
 
-    public function my_cron_schedules($schedules){
-        error_log('Register schedule');
-        if(!isset($schedules["2min"])){
-            $schedules["1min"] = array(
-                'interval' => 10,
-                'display' => __('Once every 1 minutes'));
-        }
-        return $schedules;
-    }
-    
     public function init_form_fields() {
         $this->form_fields = require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kyber-settings.php' );
     }
 
     public function get_icon() {
+        Woo_Kyber_Logger::log("test dev log.");
+
 		$icons_str = '<img src="' . WC_KYBER_PLUGIN_URL . '/admin/images/kyber.svg" class="stripe-visa-icon stripe-icon" alt="Kyber" />';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icons_str, $this->id );
@@ -81,7 +72,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // Remove cart
         // $woocommerce->cart->empty_cart();
-        syslog(LOG_INFO, 'It works!');
 
         // Return thankyou redirect
         return array(
@@ -90,13 +80,19 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         );
     }
 
-    public function handle_schedule(){
-        error_log('TRANBAOHUY');
+    public function add_tx_hash_to_order( $order ) {
+        $order_tx = $order->get_meta("tx");
+
+        error_log(sprintf("order tx hash: %s", $order_tx));
+
+        if ( $order_tx != "" ) {
+            echo "<tr class='woocommerce-table__line-item order_item' >
+            <td class='woocommerce-table__product-name product-name'> 
+            Order transaction hash: </td><td class='woocommerce-table__product-total product-total'>" . $order_tx . "</td></tr>";
+        }
     }
 
-    public function get_checkout_url( $order ) {
-        $endpoint = "https://widget.knstats.com?mode=tab&theme=light&paramForwarding=true&";
-        $callback_url = urlencode($this->get_option( 'site_url_for_dev' ) . '/wc-api/kyber_callback');
+    public function monitor_tx_status ( $order ) {
 
         $web3 = new Web3(new HttpProvider(new HttpRequestManager('https://ropsten.infura.io', 5)));
         $tx = '0x940b6606c878919dff9fa5ac5f556b0ee33ecd27327f4596dec22d899bebc49e';
@@ -105,13 +101,20 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
                 error_log(print_r($transaction, true));
             }
         });
+
         $web3->eth->getTransactionByHash($tx, function ($err, $transaction) {
             if ($transaction) {
                 error_log(print_r($transaction, true));
             }
         });
 
-        die('omoo');
+    }
+
+    public function get_checkout_url( $order ) {
+        $endpoint = "https://widget.knstats.com?mode=tab&theme=light&paramForwarding=true&";
+        $callback_url = urlencode($this->get_option( 'site_url_for_dev' ) . '/wc-api/kyber_callback');
+
+
         // TODO: check if receive address is valid
         $receiveAddr = $this->get_option( 'receive_addr' );
 
@@ -145,9 +148,18 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $request_body    = file_get_contents( 'php://input' );
 
-        error_log( $request_body );
+        $data = json_decode($request_body);
 
-        $order_id = $request_body['order_id'];
+        $valid = $this->validate_callback_params($data);
+
+        if ( !$valid ) {
+            return;
+        }
+
+        $order_id = $data->order_id;
+        $tx = $data->tx;
+        error_log($tx);
+        error_log($order_id);
 
         $order = wc_get_order( $order_id );
 
@@ -155,11 +167,20 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         // Mark as on-hold (we're awaiting cheque)
         $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 
+        // Save transaction hash to order
+        $order->update_meta_data("tx", $tx);
+
+        $order->save();
+
         // Reduce stock levels
         $order->reduce_order_stock();
 
         // Remove cart
-        $woocommerce->cart->empty_cart();
+        // $woocommerce->cart->empty_cart();
+    }
+
+    private function validate_callback_params($request_body) {
+        return true;
     }
 
 }

@@ -180,7 +180,7 @@ class Woo_Kyber_Payment {
 			return;
 		}
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-payment-gateway.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
+		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
 		add_filter( 'woocommerce_payment_gateways', array($this, 'add_payment_gateways'),1000 );
 	}
 

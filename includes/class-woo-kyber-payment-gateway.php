@@ -45,41 +45,51 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
+        add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
     }
 
+    /**
+     * Init admin settings fields
+     * 
+     * @since 0.0.1
+     */
     public function init_form_fields() {
         $this->form_fields = require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kyber-settings.php' );
     }
 
+    /**
+     * Insert Kyber logo into checkout page
+     * 
+     * @since 0.0.1
+     */
     public function get_icon() {
-        Woo_Kyber_Logger::log("test dev log.");
-
-		$icons_str = '<img src="' . WC_KYBER_PLUGIN_URL . '/admin/images/kyber.svg" class="stripe-visa-icon stripe-icon" alt="Kyber" />';
+		$icons_str = '<img src="' . WC_KYBER_PLUGIN_URL . '/admin/images/kyber.svg" class="" alt="Kyber" />';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icons_str, $this->id );
     }
 
+    /**
+     * Override process_payment from WC_Payment_Gateway class
+     * 
+     * @since 0.0.1 
+     */
     public function process_payment( $order_id ) {
         
         global $woocommerce;
         $order = new WC_Order( $order_id );
 
-        // Mark as on-hold (we're awaiting cheque)
-        // $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
-
-        // Reduce stock levels
-        // $order->reduce_order_stock();
-
-        // Remove cart
-        // $woocommerce->cart->empty_cart();
-
         // Return thankyou redirect
         return array(
             'result' => 'success',
-            'redirect' => $this->get_checkout_url( $order )
+            'redirect' => $this->get_return_url( $order )
         );
     }
 
+    /**
+     * Display transaction hash on order detail page
+     * 
+     * @since 0.0.1
+     */
     public function add_tx_hash_to_order( $order ) {
         $order_tx = $order->get_meta("tx");
 
@@ -110,8 +120,14 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     }
 
+    /**
+     * Build Kyber widget redirect url
+     * 
+     * @since 0.0.1
+     * 
+     */
     public function get_checkout_url( $order ) {
-        $endpoint = "https://widget.knstats.com?mode=tab&theme=light&paramForwarding=true&";
+        $endpoint = "https://widget.knstats.com?theme=light&paramForwarding=true&";
         $callback_url = urlencode($this->get_option( 'site_url_for_dev' ) . '/wc-api/kyber_callback');
 
 
@@ -124,11 +140,14 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         // TODO: check if network is valid
         $network = $this->get_option( 'network' );
 
+        // TODO: check if mode is valid
+        $mode = $this->get_option( 'mode' );
+
         /// TODO: turn receive amount from USD to token
         // $receiveAmount = $order->get_total();
         $receiveAmount = '10'; // 10 KNC for dev
 
-        $endpoint .= 'receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
+        $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
 
         // add custom params
 
@@ -139,6 +158,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         return $endpoint;
     }
 
+    /**
+     * Handle callback from Kyber widget
+     * 
+     * @since 0.0.1
+     * 
+     */
     public function handle_kyber_callback() {
         if ( ( 'POST' !== $_SERVER['REQUEST_METHOD'] )) {
 			return;
@@ -147,8 +172,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         //TODO: validate request body 
 
         $request_body    = file_get_contents( 'php://input' );
+        error_log( $request_body );
 
-        $data = json_decode($request_body);
+        parse_str( $request_body, $dataStr );
+        $dataJSON = json_encode($dataStr);
+        $data = json_decode($dataJSON);
 
         $valid = $this->validate_callback_params($data);
 
@@ -158,8 +186,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $order_id = $data->order_id;
         $tx = $data->tx;
-        error_log($tx);
-        error_log($order_id);
 
         $order = wc_get_order( $order_id );
 
@@ -181,6 +207,24 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     private function validate_callback_params($request_body) {
         return true;
+    }
+
+    /**
+     * 
+     * Embed widget into order received page
+     * 
+     * @since 0.0.1
+     */
+    public function embed_kyber_widget_button( $order_id ) {
+        $order = wc_get_order($order_id);
+
+        $endpoint = $this->get_checkout_url( $order );
+
+        error_log( $endpoint );
+
+        echo "<a href='". $endpoint ."'
+        class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
+        target='_blank'>Pay by tokens</a>";
     }
 
 }

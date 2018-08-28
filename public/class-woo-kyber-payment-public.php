@@ -72,8 +72,8 @@ class Woo_Kyber_Payment_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-public.css', array(), $this->version, 'all' );
+        wp_enqueue_style( "woo-kyber-pyment-widget-css", 'https://widget.knstats.com/widget/v1.0/widget.css', array(), $this->version, 'all' );
 
 	}
 
@@ -95,8 +95,8 @@ class Woo_Kyber_Payment_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-public.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( "woo-kyber-payment-widget-js", 'https://widget.knstats.com/widget/v1.0/widget.js', array(), $this->version, true);
 
 	}
 

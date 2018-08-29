@@ -24,7 +24,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->id = 'kyber';
         $this->method_title = __( 'Kyber', 'woocommerce-gateway-kyber' );
         $this->method_description = sprintf( __('Kyber allow user to pay by using tokens') );
-        $this->order_button_text = __( 'Proceed to Kyber', 'woocommerce-gateway-kyber' );
+        $this->order_button_text = __( 'Place order', 'woocommerce-gateway-kyber' );
         $this->has_fields = true;
         $this->supports = array(
             'products',

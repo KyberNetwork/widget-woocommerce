@@ -191,7 +191,7 @@ class Woo_Kyber_Payment {
 		//
         add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
    		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
-		add_action( 'woocommerce_before_add_to_cart_form', array( $this, 'kyber_display_price_token' ) );
+		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'kyber_display_price_token' ) );
 	}
 
     /**
@@ -237,7 +237,7 @@ class Woo_Kyber_Payment {
 		if( $price_token ) {
 			// Only display our field if we've got a value for the field title
 			printf(
-				'<p class="price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol"></span>%s</span></p>',
+				'<p class="price">%s<span class="woocommerce-Price-amount amount">KNC<span class="woocommerce-Price-currencySymbol"></span></span></p>',
 				esc_html( $price_token )
 			);
 		} else {

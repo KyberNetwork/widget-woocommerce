@@ -63,10 +63,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * @since 0.0.1
      */
     public function get_icon() {
-		$icons_str = '<img src="' . WC_KYBER_PLUGIN_URL . '/admin/images/kyber.svg" class="" alt="Kyber" />';
+		$icons_str = '<img src="' . WC_KYBER_PLUGIN_URL . '/admin/images/kyber.svg" class="kyber-icon" alt="Kyber" />';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icons_str, $this->id );
     }
+
+
 
     /**
      * Override process_payment from WC_Payment_Gateway class
@@ -169,10 +171,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 			return;
         }
 
-        //TODO: validate request body 
-
         $request_body    = file_get_contents( 'php://input' );
-        error_log( $request_body );
 
         parse_str( $request_body, $dataStr );
         $dataJSON = json_encode($dataStr);
@@ -205,7 +204,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         // $woocommerce->cart->empty_cart();
     }
 
-    private function validate_callback_params($request_body) {
+    private function validate_callback_params( $request ) {
+        $order_id = $request['order_id'];
+
         return true;
     }
 
@@ -220,7 +221,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $endpoint = $this->get_checkout_url( $order );
 
-        error_log( $endpoint );
 
         echo "<a href='". $endpoint ."'
         class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'

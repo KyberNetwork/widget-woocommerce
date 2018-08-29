@@ -175,13 +175,76 @@ class Woo_Kyber_Payment {
 
 	}
 
+	public function missing_woocommerce_notice() {
+		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Kyber Payment requires %s to be installed and active.', 'woocommerce-gateway-stripe' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
+	}
+
 	public function init_kyber_payment() {
 		if ( ! class_exists("WC_Payment_Gateway") ) {
+			add_action( 'admin_notices', array( $this, 'missing_woocommerce_notice' ) );
 			return;
 		}
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-payment-gateway.php';
 		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
 		add_filter( 'woocommerce_payment_gateways', array($this, 'add_payment_gateways'),1000 );
+
+		//
+        add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
+   		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
+		add_action( 'woocommerce_before_add_to_cart_form', array( $this, 'kyber_display_price_token' ) );
+	}
+
+    /**
+     * Adding token price field to a single product
+     * 
+     * @since 0.0.1
+     */
+    public function add_token_price_fields() {
+
+        $args = array(
+            'id' => 'kyber_token_price',
+            'label' => __( 'Token price', 'woocommerce-gateway-kyber' ),
+            'class' => 'kyber-token-price',
+            'desc_tip' => true,
+            'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
+        );
+
+		woocommerce_wp_text_input( $args );
+	}
+	
+	/**
+	 * Save the token price 
+	 * 
+	 * @since 0.0.1
+	 */
+	function kyber_save_price_token( $post_id ) {
+		$product = wc_get_product( $post_id );
+		$token_price = isset( $_POST['kyber_token_price'] ) ? $_POST['kyber_token_price'] : '';
+		$product->update_meta_data( 'kyber_token_price', sanitize_text_field( $token_price) );
+		$product->save();
+   }
+
+   /**
+	 * Display price token 
+	 * 
+	 * @since 0.0.1
+	 */
+	function kyber_display_price_token() {
+		global $post;
+		// Check for the custom field value
+		$product = wc_get_product( $post->ID );
+		$price_token = $product->get_meta( 'kyber_token_price' );
+		if( $price_token ) {
+			// Only display our field if we've got a value for the field title
+			printf(
+				'<p class="price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol"></span>%s</span></p>',
+				esc_html( $price_token )
+			);
+		} else {
+			printf(
+				'<p class="price">This product cannot be paid by token.</p>'
+			);
+		}
 	}
 
 	function  add_payment_gateways ( $methods ) {

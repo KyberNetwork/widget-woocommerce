@@ -219,12 +219,13 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     public function embed_kyber_widget_button( $order_id ) {
         $order = wc_get_order($order_id);
 
-        $endpoint = $this->get_checkout_url( $order );
+        if ( $order->get_payment_method() == 'kyber' ) {
+            $endpoint = $this->get_checkout_url( $order );
 
-
-        echo "<a href='". $endpoint ."'
-        class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
-        target='_blank'>Pay by tokens</a>";
+            echo "<a href='". $endpoint ."'
+            class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
+            target='_blank'>Pay by tokens</a>";
+        }
     }
 
 }

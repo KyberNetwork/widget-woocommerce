@@ -47,6 +47,18 @@ return apply_filters( 'wc_kyber_settings',
                 'mainnet' => __( 'Mainnet', 'woocomerce-gateway-kyber' )
             ),
         ),
+        'mode' => array(
+            'title' => __( 'Payment mode', 'woocomerce-gateway-kyber' ),
+            'type' => 'select',
+            'description' => __( 'This is mode for display Kyber widget style, tab will load Kyber widget in new tab, iframe will load Kyber widget inside order received page.' ),
+            'default' => 'iframe',
+            'descp_ip' => false,
+            'options' => array(
+                'iframe' => 'iframe',
+                'tab' => 'tab',
+                'dom' => 'popup'
+            ),
+        ),
         'network_node_endpoint' => array(
             'title' => __( 'Network node endpoint', 'woocomerce-gateway-kyber' ),
             'type' => 'text',

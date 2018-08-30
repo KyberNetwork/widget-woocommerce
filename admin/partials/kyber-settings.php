@@ -31,11 +31,6 @@ return apply_filters( 'wc_kyber_settings',
             'type' => 'text',
             'description' => 'Address to receive coins, token payment',
         ),
-        'receive_token_symbol' => array(
-            'title' => __( 'Receive token symbol', 'woocommerce-gateway-kyber' ),
-            'type' => 'text',
-            'description' => __('Token you would like to receive by payment', 'woocommerce-gateway-kyber'),
-        ),
         'network' => array(
             'title' => __( 'Network', 'woocommerce-gateway-kyber' ),
             'type' => 'select',
@@ -47,6 +42,13 @@ return apply_filters( 'wc_kyber_settings',
                 'mainnet' => __( 'Mainnet', 'woocomerce-gateway-kyber' )
             ),
         ),
+        'receive_token_symbol' => array(
+            'title' => __( 'Receive token symbol', 'woocommerce-gateway-kyber' ),
+            'type' => 'select',
+            'description' => __('Token you would like to receive by payment', 'woocommerce-gateway-kyber'),
+            'default' => '',
+            'options' => $this->get_list_token_supported(),
+        ),
         'mode' => array(
             'title' => __( 'Payment mode', 'woocomerce-gateway-kyber' ),
             'type' => 'select',
@@ -56,7 +58,7 @@ return apply_filters( 'wc_kyber_settings',
             'options' => array(
                 'iframe' => 'iframe',
                 'tab' => 'tab',
-                'dom' => 'popup'
+                'popup' => 'popup'
             ),
         ),
         'network_node_endpoint' => array(

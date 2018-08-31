@@ -174,12 +174,13 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
        
         $network = $this->get_option( 'network' );
         if ( $network != 'ropsten' && $network != 'mainnet' ) {
+            error_log( $network );
             wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
             return false;
         }
 
         $mode = $this->get_option( 'mode' );
-        if ( $mode != 'tab' && $mode != 'iframe' && $mode != 'dom' ) {
+        if ( $mode != 'tab' && $mode != 'iframe' && $mode != 'popup' ) {
             wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
             return false;
         }
@@ -195,10 +196,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * @since 0.0.1
      */
     public function get_order_total_amount_by_token( $order ) {
-        $products = $order->get_items();
+        $items = $order->get_items();
 
         $total = 0;
-        foreach( $products as $product ) {
+        foreach( $items as $item ) {
+            $product = $item->get_product();
             $token_price = $product->get_meta( 'kyber_token_price' );
             if ( !$token_price ) {
                 wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
@@ -260,10 +262,15 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $request_body    = file_get_contents( 'php://input' );
         $request_header = $this->get_request_headers();
 
-        if ( $request_header['Content-Type'] == 'application/x-www-form-urlencoded' ) {
+        if ( strpos($request_header['Content-Type'], 'application/x-www-form-urlencoded') !== false ) {
             parse_str( $request_body, $dataStr );
             $dataJSON = json_encode($dataStr);
             $data = json_decode($dataJSON);
+            error_log( print_r( $data, 1 ) );
+        }
+
+        if ( !isset( $data ) ) {
+            return;
         }
 
         $valid = $this->validate_callback_params($data);

@@ -29,4 +29,21 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	window.kyberWidgetOptions = {
+		onClose: function(){
+			console.log("hahahah");
+			window.location.href="/my-account/"
+		}
+	}
+
+	window.addEventListener("message", receiveMessage, false);
+
+	function receiveMessage(event)
+	{
+	if (event.origin !== "http://example.org:8080")
+		return;
+
+	// ...
+	}
+	
 })( jQuery );

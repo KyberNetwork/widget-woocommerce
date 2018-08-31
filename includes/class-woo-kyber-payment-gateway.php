@@ -68,7 +68,25 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 		return apply_filters( 'woocommerce_gateway_icon', $icons_str, $this->id );
     }
 
+    /**
+     * Get list token supported from kyber
+     * 
+     * @since 0.0.1
+     */
+    public function get_list_token_supported() {
+        $tracker_url = sprintf('https://tracker.kyber.network/api/tokens/supported?chain=%s', $this->get_option( 'network' ) );
+        $response = wp_remote_get( $tracker_url );
 
+        $response_body= $response['body'];
+        $data = json_decode( $response_body );
+
+        $result = array();
+        for ( $index = 0; $index < count( $data); $index++ ) {
+            $result[$data[$index]->symbol] = $data[$index]->symbol;
+        }
+
+        return $result;
+    }
 
     /**
      * Override process_payment from WC_Payment_Gateway class
@@ -79,6 +97,18 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         
         global $woocommerce;
         $order = new WC_Order( $order_id );
+
+        // check if setting is correct for payment
+        $setting_ok = $this->validate_gateway_settings();
+        if ( !$setting_ok ) {
+            return;
+        }
+
+        // check if all products in order are supported pay by token
+        $products_ok = $this->get_order_total_amount_by_token( $order );
+        if ( !$products_ok ) {
+            return;
+        }
 
         // Return thankyou redirect
         return array(
@@ -94,13 +124,15 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function add_tx_hash_to_order( $order ) {
         $order_tx = $order->get_meta("tx");
-
-        error_log(sprintf("order tx hash: %s", $order_tx));
+        $network = $order->get_meta( 'network' );
 
         if ( $order_tx != "" ) {
-            echo "<tr class='woocommerce-table__line-item order_item' >
+            printf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
-            Order transaction hash: </td><td class='woocommerce-table__product-total product-total'>" . $order_tx . "</td></tr>";
+            Order transaction hash: </td>
+            <td class='woocommerce-table__product-total product-total'>
+            <a href='https://%s.etherscan.io/tx/%s' target='_blank'>%s</a>
+            </td></tr>", $network, $order_tx, $order_tx);
         }
     }
 
@@ -123,36 +155,90 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     }
 
     /**
+     * Check if Kyber gateway config is correct
+     * 
+     * @since 0.0.1
+     */
+    public function validate_gateway_settings() {
+        $receiveAddr = $this->get_option( 'receive_addr' );
+        if ( !$receiveAddr ) {
+            wc_add_notice( __('Receive address is empty. You cannot use pay by token, please contact your shop about this issue', 'woocommerce-gateway-kyber'), 'error' );
+            return false;
+        }
+
+        $receiveToken = $this->get_option( 'receive_token_symbol' );
+        if ( !$receiveToken ) {
+            wc_add_notice( __('Receive token is not supported.', 'woocommerce-gateway-kyber'), 'error' );
+            return false;
+        }
+       
+        $network = $this->get_option( 'network' );
+        if ( $network != 'ropsten' && $network != 'mainnet' ) {
+            wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
+            return false;
+        }
+
+        $mode = $this->get_option( 'mode' );
+        if ( $mode != 'tab' && $mode != 'iframe' && $mode != 'dom' ) {
+            wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return total amount by token
+     * if there is an item in order which does not support pay by token
+     * then return 0 
+     * 
+     * @since 0.0.1
+     */
+    public function get_order_total_amount_by_token( $order ) {
+        $products = $order->get_items();
+
+        $total = 0;
+        foreach( $products as $product ) {
+            $token_price = $product->get_meta( 'kyber_token_price' );
+            if ( !$token_price ) {
+                wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+                return 0;
+            }
+            $total += $token_price;
+        }
+
+        if ( $total == 0 ) {
+            wc_add_notice( __( sprintf( 'Order total should be greater than zero' ), 'woocommerce-gateway-kyber' ), 'error' );
+            return 0;
+        }
+
+        return true;
+    }
+
+    /**
      * Build Kyber widget redirect url
      * 
      * @since 0.0.1
-     * 
      */
     public function get_checkout_url( $order ) {
         $endpoint = "https://widget.knstats.com?theme=light&paramForwarding=true&";
         $callback_url = urlencode($this->get_option( 'site_url_for_dev' ) . '/wc-api/kyber_callback');
 
+        if ( !$this->validate_gateway_settings() ) {
+            return;
+        }
 
-        // TODO: check if receive address is valid
         $receiveAddr = $this->get_option( 'receive_addr' );
-
-        // TODO: check if receive token is supported
         $receiveToken = $this->get_option( 'receive_token_symbol' );
-       
-        // TODO: check if network is valid
         $network = $this->get_option( 'network' );
-
-        // TODO: check if mode is valid
         $mode = $this->get_option( 'mode' );
 
-        /// TODO: turn receive amount from USD to token
-        // $receiveAmount = $order->get_total();
-        $receiveAmount = '10'; // 10 KNC for dev
+        $receiveAmount = $this->get_order_total_amount_by_token($order);
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
+        $endpoint .= '&network=' . $network;
 
         // add custom params
-
         $order_id = $order->get_id();
 
         $endpoint .= '&order_id=' . strval($order_id);
@@ -172,43 +258,74 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
 
         $request_body    = file_get_contents( 'php://input' );
+        $request_header = $this->get_request_headers();
 
-        parse_str( $request_body, $dataStr );
-        $dataJSON = json_encode($dataStr);
-        $data = json_decode($dataJSON);
+        if ( $request_header['Content-Type'] == 'application/x-www-form-urlencoded' ) {
+            parse_str( $request_body, $dataStr );
+            $dataJSON = json_encode($dataStr);
+            $data = json_decode($dataJSON);
+        }
 
         $valid = $this->validate_callback_params($data);
-
         if ( !$valid ) {
             return;
         }
-
+        
+        // get data from callback
         $order_id = $data->order_id;
         $tx = $data->tx;
+        $network = $data->network;
 
         $order = wc_get_order( $order_id );
-
 
         // Mark as on-hold (we're awaiting cheque)
         $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 
         // Save transaction hash to order
         $order->update_meta_data("tx", $tx);
-
+        $order->update_meta_data("network", $network);
+        $order->update_meta_data("tx_status", "pending");
         $order->save();
 
         // Reduce stock levels
         $order->reduce_order_stock();
-
-        // Remove cart
-        // $woocommerce->cart->empty_cart();
     }
 
+    /**
+     * Validate callback params
+     * 
+     * @since 0.0.1
+     */
     private function validate_callback_params( $request ) {
-        $order_id = $request['order_id'];
+        $order_id = $request->order_id;
 
         return true;
     }
+
+
+	/**
+	 * Gets the incoming request headers. Some servers are not using
+	 * Apache and "getallheaders()" will not work so we may need to
+	 * build our own headers.
+	 *
+	 * @since 0.0.1
+	 * @version 0.0.1
+	 */
+	public function get_request_headers() {
+		if ( ! function_exists( 'getallheaders' ) ) {
+			$headers = array();
+
+			foreach ( $_SERVER as $name => $value ) {
+				if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
+					$headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+				}
+			}
+
+			return $headers;
+		} else {
+			return getallheaders();
+		}
+	}
 
     /**
      * 
@@ -222,9 +339,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( $order->get_payment_method() == 'kyber' ) {
             $endpoint = $this->get_checkout_url( $order );
 
-            echo "<a href='". $endpoint ."'
+            $widget_text = apply_filters( 'kyber_widget_text', 'Pay by tokens' );
+
+            printf("<a href='%s'
             class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
-            target='_blank'>Pay by tokens</a>";
+            target='_blank'>%s</a>", $endpoint, $widget_text);
         }
     }
 

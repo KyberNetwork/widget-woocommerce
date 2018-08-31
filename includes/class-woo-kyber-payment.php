@@ -201,9 +201,13 @@ class Woo_Kyber_Payment {
      */
     public function add_token_price_fields() {
 
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+
+		$token_symbol = $kyber_settings['receive_token_symbol'];
+
         $args = array(
             'id' => 'kyber_token_price',
-            'label' => __( 'Token price', 'woocommerce-gateway-kyber' ),
+            'label' => __( sprintf( 'Token price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
             'class' => 'kyber-token-price',
             'desc_tip' => true,
             'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
@@ -234,11 +238,15 @@ class Woo_Kyber_Payment {
 		// Check for the custom field value
 		$product = wc_get_product( $post->ID );
 		$price_token = $product->get_meta( 'kyber_token_price' );
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		$token_symbol = $kyber_settings['receive_token_symbol'];
+
 		if( $price_token ) {
 			// Only display our field if we've got a value for the field title
 			printf(
-				'<p class="price">%s<span class="woocommerce-Price-amount amount">KNC<span class="woocommerce-Price-currencySymbol"></span></span></p>',
-				esc_html( $price_token )
+				'<p class="price">%s<span class="woocommerce-Price-amount amount">%s<span class="woocommerce-Price-currencySymbol"></span></span></p>',
+				esc_html( $price_token ),
+				esc_html( $token_symbol )
 			);
 		} else {
 			printf(

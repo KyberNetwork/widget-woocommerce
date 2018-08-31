@@ -96,7 +96,7 @@ class Woo_Kyber_Payment_Public {
 		 * class.
 		 */
         wp_enqueue_script( "woo-kyber-payment-widget-js", 'https://widget.kyber.network/v0.1/widget.js', array(), $this->version, true);
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-public.js', array( 'jquery' ), $this->version, true);
 	}
 
 }

@@ -30,20 +30,18 @@
 	 */
 
 	window.kyberWidgetOptions = {
-		onClose: function(){
-			console.log("hahahah");
-			window.location.href="/my-account/"
+		onClose: function() {
+			window.location.href = "/my-account/orders/";
 		}
 	}
 
 	window.addEventListener("message", receiveMessage, false);
 
-	function receiveMessage(event)
-	{
-	if (event.origin !== "http://example.org:8080")
-		return;
-
-	// ...
+	function receiveMessage(event) {
+		if (event.data === "CloseWidget") {
+			closeWidget();
+			window.location.href = "/my-account/orders/";
+		}
 	}
 	
 })( jQuery );

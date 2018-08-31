@@ -27,7 +27,7 @@ return apply_filters( 'wc_kyber_settings',
             'desc_tip' => true,
         ),
         'receive_addr' => array(
-            'title' => __( 'Receive Address', 'woocommerce-gateway-kyber' ),
+            'title' => __( 'Receive Address*', 'woocommerce-gateway-kyber' ),
             'type' => 'text',
             'description' => 'Address to receive coins, token payment',
         ),
@@ -50,7 +50,7 @@ return apply_filters( 'wc_kyber_settings',
             'options' => $this->get_list_token_supported(),
         ),
         'mode' => array(
-            'title' => __( 'Payment mode', 'woocomerce-gateway-kyber' ),
+            'title' => __( 'Payment mode', 'woocommerce-gateway-kyber' ),
             'type' => 'select',
             'description' => __( 'This is mode for display Kyber widget style, tab will load Kyber widget in new tab, iframe will load Kyber widget inside order received page.' ),
             'default' => 'iframe',
@@ -62,14 +62,14 @@ return apply_filters( 'wc_kyber_settings',
             ),
         ),
         'network_node_endpoint' => array(
-            'title' => __( 'Network node endpoint', 'woocomerce-gateway-kyber' ),
+            'title' => __( 'Network node endpoint', 'woocommerce-gateway-kyber' ),
             'type' => 'text',
             'description' => __( 'Node endpoint to check transaction status. If you do not have one, create using <a href="https://infura.io/" target="__blank">Infura</a>' )
         ),
-        'site_url_for_dev' => array(
-            'title' => __( 'Site url for dev', 'woocommerce-gateway-kyber' ),
+        'commission_id' => array(
+            'title' => __( 'Commission ID', 'woocommerce-gateway-kyber' ),
             'type' => 'text',
-            'description' => __( 'Site url for dev', 'woocommerce-gateway-kyber' )
+            'description' => __( 'Your Ethereum wallet to get commission of the fees for the transaction. Your wallet must be whitelisted by KyberNetwork (the permissionless registration will be available soon) in order to get the commission, otherwise it will be ignored.', 'woocommerce-gateway-kyber' )
         )
     )
 );

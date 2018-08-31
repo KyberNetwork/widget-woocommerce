@@ -224,7 +224,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_checkout_url( $order ) {
         $endpoint = "https://widget.knstats.com?theme=light&paramForwarding=true&";
-        $callback_url = urlencode($this->get_option( 'site_url_for_dev' ) . '/wc-api/kyber_callback');
+        $callback_url = get_site_url() . '/wc-api/kyber_callback';
 
         if ( !$this->validate_gateway_settings() ) {
             return;
@@ -234,11 +234,18 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $receiveToken = $this->get_option( 'receive_token_symbol' );
         $network = $this->get_option( 'network' );
         $mode = $this->get_option( 'mode' );
+        
 
         $receiveAmount = $this->get_order_total_amount_by_token($order);
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
         $endpoint .= '&network=' . $network;
+
+        // commission id is optional
+        $commissionID = $this->get_option( 'commission_id' );
+        if ( $commissionID ) {
+            $endpoint .= '&commissionId=' . $commissionID;
+        }
 
         // add custom params
         $order_id = $order->get_id();

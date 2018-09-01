@@ -60,6 +60,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     /**
      * Insert Kyber logo into checkout page
      * 
+     * @param null
+     * @return string gateway icon
+     * 
      * @since 0.0.1
      */
     public function get_icon() {
@@ -70,6 +73,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     /**
      * Get list token supported from kyber
+     * 
+     * @param null
+     * @return array list of supported token
      * 
      * @since 0.0.1
      */
@@ -91,6 +97,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     /**
      * Override process_payment from WC_Payment_Gateway class
      * 
+     * @param integer order id
+     * @return array redirect to place order payment 
+     * 
      * @since 0.0.1 
      */
     public function process_payment( $order_id ) {
@@ -110,6 +119,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             return;
         }
 
+        // update order network is current network setting
+        $order->update_meta_data( 'network', $this->get_option( 'network' ) );
+
         // Return thankyou redirect
         return array(
             'result' => 'success',
@@ -119,6 +131,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     /**
      * Display transaction hash on order detail page
+     * 
+     * @param WC_Abstract_Order order
+     * @return string transaction hash
      * 
      * @since 0.0.1
      */
@@ -136,6 +151,14 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
     }
 
+    /**
+     * 
+     * @param WC_Abstract_Order order
+     * @return string order status
+     * 
+     * @since 0.0.1
+     * 
+     */
     public function monitor_tx_status ( $order ) {
 
         $web3 = new Web3(new HttpProvider(new HttpRequestManager('https://ropsten.infura.io', 5)));
@@ -156,6 +179,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     /**
      * Check if Kyber gateway config is correct
+     * 
+     * @return bool
      * 
      * @since 0.0.1
      */
@@ -189,9 +214,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     }
 
     /**
-     * Return total amount by token
-     * if there is an item in order which does not support pay by token
-     * then return 0 
+     * If there is an item is not supported for token payment
+     * return 0
+     * 
+     * @param WC_Abstract_Order order to calculate amount
+     * @return mixed total amount of order by token
      * 
      * @since 0.0.1
      */
@@ -219,7 +246,10 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     /**
      * Build Kyber widget redirect url
-     * 
+     *
+     * @param  WC_Abstract_Order $order 
+     * @return string checkout url for widget
+     *  
      * @since 0.0.1
      */
     public function get_checkout_url( $order ) {
@@ -292,6 +322,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $order = wc_get_order( $order_id );
 
+        // check if network from callback is match with order network
+        // if not the pay is not valid - ignore
+        if ( $network != $order->get_meta_data( 'network' ) ) {
+            return;
+        }
+
         // Mark as on-hold (we're awaiting cheque)
         $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 
@@ -344,6 +380,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     /**
      * 
      * Embed widget into order received page
+     * 
+     * @param integer order id
+     * @return string widget button
      * 
      * @since 0.0.1
      */

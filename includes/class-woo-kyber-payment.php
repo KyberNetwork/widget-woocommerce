@@ -175,10 +175,20 @@ class Woo_Kyber_Payment {
 
 	}
 
+	/**
+	 * @return string notice about missing required WooCommerce
+	 * 
+	 * @since 0.0.1
+	 */
 	public function missing_woocommerce_notice() {
 		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Kyber Payment requires %s to be installed and active.', 'woocommerce-gateway-stripe' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
 	}
 
+	/**
+	 * Init plugin class
+	 * 
+	 * @since 0.0.1
+	 */
 	public function init_kyber_payment() {
 		if ( ! class_exists("WC_Payment_Gateway") ) {
 			add_action( 'admin_notices', array( $this, 'missing_woocommerce_notice' ) );
@@ -192,11 +202,12 @@ class Woo_Kyber_Payment {
         add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
    		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'kyber_display_price_token' ) );
+		add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
 	}
 
     /**
      * Adding token price field to a single product
-     * 
+	 * 
      * @since 0.0.1
      */
     public function add_token_price_fields() {
@@ -255,6 +266,35 @@ class Woo_Kyber_Payment {
 		}
 	}
 
+	/**
+	 * Display token price in product list
+	 *
+	 * @param string html for price
+	 * @param WC_Product product 
+	 * @return string token price
+	 * 
+	 * @since 0.0.1
+	 */
+	function kyber_admin_product_list_token_price( $price, $product ) {
+		$token_price = $product->get_meta( 'kyber_token_price' );
+		if ( $token_price ) {
+			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+			$token_symbol = $kyber_settings['receive_token_symbol'];
+			$price .= sprintf('<div><span class="woocommerce-Price-amount amount">%s <span class="woocommerce-Price-currencySymbol">%s</span></span></div>',
+								esc_html( $token_price ),
+								esc_html( $token_symbol ));
+		}
+		return $price;
+	}
+
+	/**
+	 * 
+	 * Add payment gateway methods to WooCommerce methods list
+	 * 
+	 * @param array methods list
+	 * 
+	 * @since 0.0.1
+	 */
 	function  add_payment_gateways ( $methods ) {
 		$methods[] = 'WC_Kyber_Payment_Gateway';
 		return $methods;

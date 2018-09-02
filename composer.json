@@ -1,5 +1,6 @@
 {
+    "minimum-stability": "dev",
     "require": {
-        "sc0vu/web3.php": "dev-master"
+        "tranbaohuy/monitor-eth-tx": "dev-master"
     }
 }

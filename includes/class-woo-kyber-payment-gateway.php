@@ -121,6 +121,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // update order network is current network setting
         $order->update_meta_data( 'network', $this->get_option( 'network' ) );
+        $order->save();
 
         // Return thankyou redirect
         return array(
@@ -262,7 +263,10 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $receiveAddr = $this->get_option( 'receive_addr' );
         $receiveToken = $this->get_option( 'receive_token_symbol' );
-        $network = $this->get_option( 'network' );
+        $network = $order->get_meta( 'network' );
+        if ( !$network ) {
+            return;
+        }
         $mode = $this->get_option( 'mode' );
         
 
@@ -303,12 +307,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             parse_str( $request_body, $dataStr );
             $dataJSON = json_encode($dataStr);
             $data = json_decode($dataJSON);
-            error_log( print_r( $data, 1 ) );
         }
 
-        if ( !isset( $data ) ) {
-            return;
-        }
+        error_log( print_r( $data, 1 ) );
 
         $valid = $this->validate_callback_params($data);
         if ( !$valid ) {
@@ -324,18 +325,18 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // check if network from callback is match with order network
         // if not the pay is not valid - ignore
-        if ( $network != $order->get_meta_data( 'network' ) ) {
+        if ( $network != $order->get_meta( 'network' ) ) {
             return;
         }
-
-        // Mark as on-hold (we're awaiting cheque)
-        $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 
         // Save transaction hash to order
         $order->update_meta_data("tx", $tx);
         $order->update_meta_data("network", $network);
-        $order->update_meta_data("tx_status", "pending");
+        $order->add_meta_data("tx_status", "pending", true);
         $order->save();
+
+        // Mark as on-hold (we're awaiting cheque)
+        $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 
         // Reduce stock levels
         $order->reduce_order_stock();

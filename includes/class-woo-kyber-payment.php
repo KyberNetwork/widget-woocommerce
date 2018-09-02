@@ -1,5 +1,8 @@
 <?php
 
+require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
+use ETH\Monitor;
+
 /**
  * The file that defines the core plugin class
  *
@@ -203,6 +206,7 @@ class Woo_Kyber_Payment {
    		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'kyber_display_price_token' ) );
 		add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
+		add_action( 'woocommerce_order_status_on-hold', array($this, 'kyber_on_order_on_hold'), 10, 2 );
 	}
 
     /**
@@ -298,6 +302,48 @@ class Woo_Kyber_Payment {
 	function  add_payment_gateways ( $methods ) {
 		$methods[] = 'WC_Kyber_Payment_Gateway';
 		return $methods;
+	}
+
+	/**
+	 * Check tx status when order status change to on hold
+	 * 
+	 * @param integer ID of order
+	 * @param WC_Abstract_Order order
+	 * 
+	 * @return string tx status
+	 * 
+	 * @since 0.0.1
+	 */
+	function kyber_on_order_on_hold( $ID, $post) {
+        $order = wc_get_order($ID);
+		if ( $order->get_payment_method() != 'kyber') {
+			return;
+		}
+
+		$network = $order->get_meta( 'network' );
+		error_log( $network );
+
+		$monitor = new Monitor([
+			'node' => sprintf('https://%s.infura.io', $network),
+			'network' => $network,
+			'blockConfirm' => 30,
+			'txLostTimeout' => 15, // minutes
+			'intervalRefetchTx' => 10, // seconds
+		  ]);
+
+		  error_log( print_r( $monitor, 1 ) );
+		
+		  $tx = $order->get_meta( 'tx' );
+		
+		  $receipt = $monitor->checkStatus($tx);
+		  error_log( print_r($receipt, 1) );
+		  if ( $receipt['status'] == 'SUCCESS' ) {
+			  $order->update_meta_data( 'tx_status', 'success' );
+			  $order->save();
+		  } else {
+			  $order->update_meta_data( 'tx_status', 'failed' );
+			  $order->save();
+		  }
 	}
 
 	/**

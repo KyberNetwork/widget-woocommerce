@@ -41,7 +41,13 @@ Plugin settings include:
   This is Ethereum network where you want the payment gateway runs on. There are 2 options, Ropsten for test and Mainnet for your production.
 
 - **Mode**
-  This is mode for display the [Kyber Widget](kyber widget url). There are 3 options available.
+  This is mode for display the [Kyber Widget](https://developer.kyber.network/docs/WidgetOverview). There are 3 options available.
 
 - **Network node endpoint**
   This options is for tracking tx status
+
+- **Block Confirmation**
+  Number of block confirmation for confirm tx as success
+
+- **Commission ID**
+  Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)

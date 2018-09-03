@@ -359,6 +359,7 @@ class Woo_Kyber_Payment {
 		  }
 	}
 
+
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *

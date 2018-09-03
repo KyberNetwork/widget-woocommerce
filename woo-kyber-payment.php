@@ -59,6 +59,20 @@ function deactivate_woo_kyber_payment() {
 register_activation_hook( __FILE__, 'activate_woo_kyber_payment' );
 register_deactivation_hook( __FILE__, 'deactivate_woo_kyber_payment' );
 
+
+/**
+ * Add settings link to plugin settings page
+ * 
+ * @since 0.0.1
+ */
+function plugin_action_links( $links ) {
+	$links = array_merge( array(
+		'<a href="admin.php?page=wc-settings&tab=checkout&section=kyber">' . esc_html__( 'Settings', 'woocommerce-gateway-kyber' ) . '</a>',
+	), $links );
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'plugin_action_links' );
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

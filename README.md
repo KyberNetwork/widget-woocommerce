@@ -1,6 +1,8 @@
 # Introduction
 Kyber Payment Gateway for WooCommerce 
 
+![screenshot](https://github.com/KyberNetwork/widget-woocommerce/blob/master/assets/images/screenshot-2.png)
+
 # Requirements
 
 - PHP version 5.6+

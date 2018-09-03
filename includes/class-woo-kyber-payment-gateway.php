@@ -46,6 +46,10 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
+        add_action( 'woocommerce_review_order_after_order_total', array( $this, 'add_total_by_token_html' ) );
+        add_action( 'woocommerce_after_cart_totals', array( $this, 'add_total_by_token_html' ) );
+        add_action( 'woocommerce_cart_totals_after_order_total', array( $this, 'add_total_by_token_html' ) );
+        add_action( 'woocommerce_review_order_before_payment', array( $this, 'add_total_by_token_html' ) );
     }
 
     /**
@@ -118,9 +122,16 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( !$products_ok ) {
             return;
         }
+        $order->add_meta_data( 'total_amount', $products_ok, true );
 
         // update order network is current network setting
         $order->update_meta_data( 'network', $this->get_option( 'network' ) );
+
+        // update order receive address is current receive address
+        $order->add_meta_data( 'receive_addr', $this->get_option( 'receive_addr' ), true );
+
+        // update order receive symbol is current receive symbol
+        $order->add_meta_data( 'receive_symbol', $this->get_option( 'receive_token_symbol' ), true );
         $order->save();
 
         // Return thankyou redirect
@@ -141,15 +152,37 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     public function add_tx_hash_to_order( $order ) {
         $order_tx = $order->get_meta("tx");
         $network = $order->get_meta( 'network' );
+        $tx_status = $order->get_meta( 'tx_status' );
+
+        $response = '';
 
         if ( $order_tx != "" ) {
-            printf("<tr class='woocommerce-table__line-item order_item' >
+            $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
             Order transaction hash: </td>
             <td class='woocommerce-table__product-total product-total'>
             <a href='https://%s.etherscan.io/tx/%s' target='_blank'>%s</a>
             </td></tr>", $network, $order_tx, $order_tx);
         }
+
+        if ( $tx_status != "" ) {
+            $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
+            <td class='woocommerce-table__product-name product-name'> 
+            Tx Status: </td>
+            <td class='woocommerce-table__product-total product-total'>
+            %s
+            </td></tr>", $tx_status); 
+        }
+
+        if ( $network != "" ) {
+            $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
+            <td class='woocommerce-table__product-name product-name'> 
+            Network: </td>
+            <td class='woocommerce-table__product-total product-total'>
+            %s
+            </td></tr>", $network); 
+        }
+        echo $response;
     }
 
     /**
@@ -399,6 +432,34 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
+    }
+
+    /**
+     * Add total by token
+     */
+    public function add_total_by_token_html() {
+        // $total_token = $this->get_order_total_amount_by_token();
+        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+            return;
+        }
+        $items = WC()->cart->get_cart_contents();
+        $total_token = 0;
+        foreach( $items as $item ) {
+            $product = $item["data"];
+            $token_price = $product->get_meta( 'kyber_token_price' );
+            error_log( $token_price );
+            if ( !$token_price ) {
+                continue;
+            }
+            $total_token += $token_price*$item["quantity"];
+        }
+        error_log( print_r( $total_token, 1 ) );
+        printf(
+            "<tr class='my-class'>
+			    <th>%s</th>
+			    <td>%s</td>
+		    </tr>", 'Total', $total_token
+        );
     }
 
 }

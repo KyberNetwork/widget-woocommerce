@@ -1,0 +1,570 @@
+[
+    {
+        "name": "guzzlehttp/guzzle",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/guzzle.git",
+            "reference": "5c7a5c524e556113e7f8685e6880cbc4090c798d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/5c7a5c524e556113e7f8685e6880cbc4090c798d",
+            "reference": "5c7a5c524e556113e7f8685e6880cbc4090c798d",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/promises": "^1.0",
+            "guzzlehttp/psr7": "^1.4",
+            "php": ">=5.5"
+        },
+        "require-dev": {
+            "ext-curl": "*",
+            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
+            "psr/log": "^1.0"
+        },
+        "suggest": {
+            "psr/log": "Required for using the Log middleware"
+        },
+        "time": "2018-08-08T04:37:00+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "6.3-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "src/functions_include.php"
+            ],
+            "psr-4": {
+                "GuzzleHttp\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle is a PHP HTTP client library",
+        "homepage": "http://guzzlephp.org/",
+        "keywords": [
+            "client",
+            "curl",
+            "framework",
+            "http",
+            "http client",
+            "rest",
+            "web service"
+        ]
+    },
+    {
+        "name": "guzzlehttp/promises",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/promises.git",
+            "reference": "136531aa4e42f9b1971a47fb0faf60da00d2fefa"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/promises/zipball/136531aa4e42f9b1971a47fb0faf60da00d2fefa",
+            "reference": "136531aa4e42f9b1971a47fb0faf60da00d2fefa",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.36"
+        },
+        "time": "2018-03-25T01:26:01+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "GuzzleHttp\\Promise\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            }
+        ],
+        "description": "Guzzle promises library",
+        "keywords": [
+            "promise"
+        ]
+    },
+    {
+        "name": "guzzlehttp/psr7",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/guzzle/psr7.git",
+            "reference": "4b981cdeb8c13d22a6c193554f8c686f53d5c958"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/guzzle/psr7/zipball/4b981cdeb8c13d22a6c193554f8c686f53d5c958",
+            "reference": "4b981cdeb8c13d22a6c193554f8c686f53d5c958",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0",
+            "psr/http-message": "~1.0",
+            "ralouphie/getallheaders": "^2.0.5"
+        },
+        "provide": {
+            "psr/http-message-implementation": "1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+        },
+        "time": "2018-07-29T08:09:46+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.5-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "GuzzleHttp\\Psr7\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Michael Dowling",
+                "email": "mtdowling@gmail.com",
+                "homepage": "https://github.com/mtdowling"
+            },
+            {
+                "name": "Tobias Schultze",
+                "homepage": "https://github.com/Tobion"
+            }
+        ],
+        "description": "PSR-7 message implementation that also provides common utility methods",
+        "keywords": [
+            "http",
+            "message",
+            "request",
+            "response",
+            "stream",
+            "uri",
+            "url"
+        ]
+    },
+    {
+        "name": "kornrunner/keccak",
+        "version": "1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kornrunner/php-keccak.git",
+            "reference": "ad761f528f4d1e3ce378b8a0841e5f82c9973535"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kornrunner/php-keccak/zipball/ad761f528f4d1e3ce378b8a0841e5f82c9973535",
+            "reference": "ad761f528f4d1e3ce378b8a0841e5f82c9973535",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.1.0",
+            "symfony/polyfill-mbstring": "^1.8"
+        },
+        "require-dev": {
+            "php-coveralls/php-coveralls": "^2.1",
+            "phpunit/phpunit": "~7"
+        },
+        "time": "2018-07-30T22:16:23+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "kornrunner\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Boris Momcilovic",
+                "homepage": "https://github.com/kornrunner/php-keccak"
+            }
+        ],
+        "description": "Pure PHP implementation of Keccak",
+        "keywords": [
+            "keccak",
+            "sha-3",
+            "sha3-256"
+        ]
+    },
+    {
+        "name": "phpseclib/phpseclib",
+        "version": "2.0.x-dev",
+        "version_normalized": "2.0.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpseclib/phpseclib.git",
+            "reference": "6189452f1ba699ad64c8b2d6d9c44fa9b46b2468"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6189452f1ba699ad64c8b2d6d9c44fa9b46b2468",
+            "reference": "6189452f1ba699ad64c8b2d6d9c44fa9b46b2468",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "phing/phing": "~2.7",
+            "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
+            "sami/sami": "~2.0",
+            "squizlabs/php_codesniffer": "~2.0"
+        },
+        "suggest": {
+            "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+            "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
+            "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
+            "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
+        },
+        "time": "2018-08-21T02:41:18+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "phpseclib/bootstrap.php"
+            ],
+            "psr-4": {
+                "phpseclib\\": "phpseclib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jim Wigginton",
+                "email": "terrafrost@php.net",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Patrick Monnerat",
+                "email": "pm@datasphere.ch",
+                "role": "Developer"
+            },
+            {
+                "name": "Andreas Fischer",
+                "email": "bantu@phpbb.com",
+                "role": "Developer"
+            },
+            {
+                "name": "Hans-Jürgen Petrich",
+                "email": "petrich@tronic-media.com",
+                "role": "Developer"
+            },
+            {
+                "name": "Graham Campbell",
+                "email": "graham@alt-three.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+        "homepage": "http://phpseclib.sourceforge.net",
+        "keywords": [
+            "BigInteger",
+            "aes",
+            "asn.1",
+            "asn1",
+            "blowfish",
+            "crypto",
+            "cryptography",
+            "encryption",
+            "rsa",
+            "security",
+            "sftp",
+            "signature",
+            "signing",
+            "ssh",
+            "twofish",
+            "x.509",
+            "x509"
+        ]
+    },
+    {
+        "name": "psr/http-message",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/http-message.git",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-08-06T14:39:51+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Http\\Message\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for HTTP messages",
+        "homepage": "https://github.com/php-fig/http-message",
+        "keywords": [
+            "http",
+            "http-message",
+            "psr",
+            "psr-7",
+            "request",
+            "response"
+        ]
+    },
+    {
+        "name": "ralouphie/getallheaders",
+        "version": "2.0.5",
+        "version_normalized": "2.0.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ralouphie/getallheaders.git",
+            "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+            "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~3.7.0",
+            "satooshi/php-coveralls": ">=1.0"
+        },
+        "time": "2016-02-11T07:05:27+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/getallheaders.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ralph Khattar",
+                "email": "ralph.khattar@gmail.com"
+            }
+        ],
+        "description": "A polyfill for getallheaders."
+    },
+    {
+        "name": "sc0vu/web3.php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sc0Vu/web3.php.git",
+            "reference": "1fb7762eb7763b0ccdbac1483819606e9edc6a49"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sc0Vu/web3.php/zipball/1fb7762eb7763b0ccdbac1483819606e9edc6a49",
+            "reference": "1fb7762eb7763b0ccdbac1483819606e9edc6a49",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "~6.0",
+            "kornrunner/keccak": "~1.0",
+            "php": "^7.1",
+            "phpseclib/phpseclib": "~2.0.11"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~6.0"
+        },
+        "time": "2018-06-24T14:45:20+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Web3\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "sc0Vu",
+                "email": "alk03073135@gmail.com"
+            }
+        ],
+        "description": "Ethereum web3 interface."
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d0cd638f4634c16d8df4508e847f14e9e43168b8",
+            "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance"
+        },
+        "time": "2018-08-06T14:22:27+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.9-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Mbstring\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill for the Mbstring extension",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "mbstring",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "tranbaohuy/monitor-eth-tx",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
+            "reference": "54f1bccd4917dd96070fd43490b32a771d1a7b28"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/54f1bccd4917dd96070fd43490b32a771d1a7b28",
+            "reference": "54f1bccd4917dd96070fd43490b32a771d1a7b28",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "sc0vu/web3.php": "dev-master"
+        },
+        "time": "2018-08-31T11:24:09+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "ETH\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Trần Bảo Huy",
+                "email": "huy23121994@gmail.com"
+            }
+        ],
+        "description": "Monitor Ethereum transaction."
+    }
+]

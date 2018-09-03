@@ -320,24 +320,37 @@ class Woo_Kyber_Payment {
 			return;
 		}
 
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		$block_confirmation = $kyber_settings['block_confirmation'];
+		if ( is_numeric( $block_confirmation ) ) {
+			$block_confirmation = (int)$block_confirmation;
+		} else {
+			$block_confirmation = 30;
+		}
+
+
 		$network = $order->get_meta( 'network' );
-		error_log( $network );
 
 		$monitor = new Monitor([
 			'node' => sprintf('https://%s.infura.io', $network),
 			'network' => $network,
-			'blockConfirm' => 30,
+			'blockConfirm' => $block_confirmation ? $block_confirmation : 30,
 			'txLostTimeout' => 15, // minutes
 			'intervalRefetchTx' => 10, // seconds
 		  ]);
 
-		  error_log( print_r( $monitor, 1 ) );
-		
 		  $tx = $order->get_meta( 'tx' );
 		
 		  $receipt = $monitor->checkStatus($tx);
-		  error_log( print_r($receipt, 1) );
 		  if ( $receipt['status'] == 'SUCCESS' ) {
+			  // check tx amount
+			  $tx_amount = $receipt['to']['amount'];
+			  if ( $tx_amount != $order->get_meta( 'total_amount' ) ) {
+				  $order->update_meta_data( 'tx_status', 'failed' );
+				  $order->save();
+				  return;
+			  }
+		      $order->update_status('processing', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
 		  } else {

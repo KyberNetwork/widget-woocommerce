@@ -265,7 +265,8 @@ class Woo_Kyber_Payment {
 			);
 		} else {
 			printf(
-				'<p class="price">This product cannot be paid by token.</p>'
+				'<p class="price">%s</p>',
+				__('This product cannot be paid by token.', 'woocommerece-gateway-kyber')
 			);
 		}
 	}

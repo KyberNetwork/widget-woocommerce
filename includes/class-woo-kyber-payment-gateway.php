@@ -23,7 +23,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     public function __construct() {
         $this->id = 'kyber';
         $this->method_title = __( 'Kyber', 'woocommerce-gateway-kyber' );
-        $this->method_description = sprintf( __('Kyber allow user to pay by using tokens') );
+        $this->method_description = sprintf( __('Kyber allow user to pay by using tokens', 'woocommerce-gateway-kyber') );
         $this->order_button_text = __( 'Place order', 'woocommerce-gateway-kyber' );
         $this->has_fields = true;
         $this->supports = array(
@@ -159,60 +159,34 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( $order_tx != "" ) {
             $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
-            Order transaction hash: </td>
+            %s </td>
             <td class='woocommerce-table__product-total product-total'>
             <a href='https://%s.etherscan.io/tx/%s' target='_blank'>%s</a>
-            </td></tr>", $network, $order_tx, $order_tx);
+            </td></tr>", __('Order transaction hash', 'woocommerce-gateway-kyber'), $network, $order_tx, $order_tx);
         }
 
         if ( $tx_status != "" ) {
             $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
-            Tx Status: </td>
+            %s </td>
             <td class='woocommerce-table__product-total product-total'>
             %s
-            </td></tr>", $tx_status); 
+            </td></tr>", __('Tx Status', 'woocommerce-gateway-kyber'), $tx_status); 
         }
 
         if ( $network != "" ) {
             $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
-            Network: </td>
+            %s </td>
             <td class='woocommerce-table__product-total product-total'>
             %s
-            </td></tr>", $network); 
+            </td></tr>", __('Network', 'woocommerce-gateway-kyber'), $network); 
         }
         echo $response;
     }
 
     /**
-     * 
-     * @param WC_Abstract_Order order
-     * @return string order status
-     * 
-     * @since 0.0.1
-     * 
-     */
-    public function monitor_tx_status ( $order ) {
-
-        $web3 = new Web3(new HttpProvider(new HttpRequestManager('https://ropsten.infura.io', 5)));
-        $tx = '0x940b6606c878919dff9fa5ac5f556b0ee33ecd27327f4596dec22d899bebc49e';
-        $web3->eth->getTransactionReceipt($tx, function ($err, $transaction) {
-            if ($transaction) {
-                error_log(print_r($transaction, true));
-            }
-        });
-
-        $web3->eth->getTransactionByHash($tx, function ($err, $transaction) {
-            if ($transaction) {
-                error_log(print_r($transaction, true));
-            }
-        });
-
-    }
-
-    /**
-     * Check if Kyber gateway config is correct
+     * Check if Kyber g,ateway config is correct
      * 
      * @return bool
      * 
@@ -240,7 +214,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $mode = $this->get_option( 'mode' );
         if ( $mode != 'tab' && $mode != 'iframe' && $mode != 'popup' ) {
-            wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
+            wc_add_notice( __('Widget mode is not valid.', 'woocommerce-gateway-kyber'), 'error' );
             return false;
         }
 
@@ -426,7 +400,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( $order->get_payment_method() == 'kyber' ) {
             $endpoint = $this->get_checkout_url( $order );
 
-            $widget_text = apply_filters( 'kyber_widget_text', 'Pay by tokens' );
+            $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
 
             printf("<a href='%s'
             class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
@@ -458,7 +432,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             "<tr class='my-class'>
 			    <th>%s</th>
 			    <td>%s</td>
-		    </tr>", 'Total', $total_token
+		    </tr>", __('Total', 'woocommerce-gateway-kyber'), $total_token
         );
     }
 

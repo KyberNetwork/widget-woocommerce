@@ -160,13 +160,13 @@ class Monitor{
           if($token->address == $dest['address']){
             $dest['decimal'] = $token->decimal;
             $dest['symbol'] = $token->symbol;
-            $dest['amount'] = $this->toRealAmount($hexActualDestAmount, $token->decimal);
+            $dest['amount'] = $this->toRealAmount(hexdec($hexActualDestAmount), $token->decimal);
             $dest['amount'] = strval($dest['amount']);
           }
           if($token->address == $src['address']){
             $src['decimal'] = $token->decimal;
             $src['symbol'] = $token->symbol;
-            $src['amount'] = $this->toRealAmount($hexActualSrcAmount, $token->decimal);
+            $src['amount'] = $this->toRealAmount(hexdec($hexActualSrcAmount), $token->decimal);
             $src['amount'] = strval($src['amount']);
           }
           if(isset($dest['symbol']) && isset($src['symbol'])) break;
@@ -252,7 +252,7 @@ class Monitor{
   }
 
   public function toRealAmount($amount, $decimal){
-    return hexdec($amount) / pow(10, $decimal);
+    return $amount / pow(10, $decimal);
   }
 
   public function readConfig(){

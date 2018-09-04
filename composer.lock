@@ -523,12 +523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
-                "reference": "54f1bccd4917dd96070fd43490b32a771d1a7b28"
+                "reference": "40154b712861566708ab84e6045eaaddf944d8bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/54f1bccd4917dd96070fd43490b32a771d1a7b28",
-                "reference": "54f1bccd4917dd96070fd43490b32a771d1a7b28",
+                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/40154b712861566708ab84e6045eaaddf944d8bc",
+                "reference": "40154b712861566708ab84e6045eaaddf944d8bc",
                 "shasum": ""
             },
             "require": {

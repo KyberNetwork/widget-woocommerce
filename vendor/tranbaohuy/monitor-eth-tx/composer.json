@@ -1,0 +1,22 @@
+{
+    "name": "tranbaohuy/monitor-eth-tx",
+    "description": "Monitor Ethereum transaction.",
+    "license": "MIT",
+    "type": "Library",
+    "authors": [
+        {
+            "name": "Trần Bảo Huy",
+            "email": "huy23121994@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0",
+        "sc0vu/web3.php": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "ETH\\": "src/"
+        }
+    }
+}

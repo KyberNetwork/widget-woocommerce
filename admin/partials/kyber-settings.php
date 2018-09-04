@@ -61,16 +61,11 @@ return apply_filters( 'wc_kyber_settings',
                 'popup' => 'popup'
             ),
         ),
-        'network_node_endpoint' => array(
-            'title' => __( 'Network node endpoint', 'woocommerce-gateway-kyber' ),
-            'type' => 'text',
-            'description' => __( 'Node endpoint to check transaction status. If you do not have one, create using <a href="https://infura.io/" target="__blank">Infura</a>' )
-        ),
         'block_confirmation' => array(
             'title' => __( 'Block Confirmation', 'woocommerce-gateway-kyber' ),
             'type' => 'number',
             'description' => __( 'Number of block confirmation for confirm tx as success' ),
-            'default' => '10',
+            'default' => '7',
         ),
         'commission_id' => array(
             'title' => __( 'Commission ID', 'woocommerce-gateway-kyber' ),

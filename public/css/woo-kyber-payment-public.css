@@ -3,9 +3,19 @@
  * included in this file.
  */
 
- .kyber-icon {
-    float: right;
-    max-width: 40px;
-    padding-left: 3px;
-    margin: 0;
- }
+.kyber-icon {
+  float: right;
+  max-width: 40px;
+  padding-left: 3px;
+  margin: 0;
+}
+.woocommerce-Price-currencySymbol, .upcase{
+  text-transform: uppercase;
+}
+.kyber_mini_cart_price{
+  margin-left: 22px;
+  text-transform: uppercase;
+}
+.kyber-price{
+  font-size: 0.85em;
+}

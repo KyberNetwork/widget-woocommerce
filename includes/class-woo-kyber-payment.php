@@ -201,32 +201,87 @@ class Woo_Kyber_Payment {
 		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
 		add_filter( 'woocommerce_payment_gateways', array($this, 'add_payment_gateways'),1000 );
 
-		//
-        add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
-   		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
+  	add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
+		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'kyber_display_price_token' ) );
 		add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
 		add_action( 'woocommerce_order_status_on-hold', array($this, 'kyber_on_order_on_hold'), 10, 2 );
+		add_action( 'woocommerce_cart_item_price', array( $this, 'kyber_cart_item_price' ), 10, 2 );
+		add_action( 'woocommerce_widget_cart_item_quantity', array( $this, 'kyber_cart_item_quantity' ), 10, 2 );
+		add_action( 'woocommerce_cart_item_subtotal', array( $this, 'kyber_cart_item_subtotal' ), 10, 2);
 	}
 
-    /**
-     * Adding token price field to a single product
+	public function kyber_cart_item_price($cart_item_html, $cart_item)
+	{
+		$product = wc_get_product( $cart_item['product_id'] );
+		$token_price = $product->get_meta( 'kyber_token_price' );
+		if ( $token_price ) {
+			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+			$token_symbol = $kyber_settings['receive_token_symbol'];
+			$cart_item_html .= sprintf('
+				<div class="kyber-price">
+					<span class="woocommerce-Price-amount amount">(%s 
+						<span class="woocommerce-Price-currencySymbol">%s)</span>
+					</span>
+				</div>',
+				esc_html( $token_price ),
+				esc_html( $token_symbol ));
+		}
+		return $cart_item_html;
+	}
+
+	public function kyber_cart_item_quantity($cart_item_html, $cart_item)
+	{
+		$product = wc_get_product( $cart_item['product_id'] );
+		$_product     = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item );
+		$cart_item_html = '<span class="quantity">' . sprintf( '%s &times; %s', $cart_item['quantity'], WC()->cart->get_product_price( $_product ) ) . '</span>';
+
+		$token_price = $product->get_meta( 'kyber_token_price' );
+		if ( $token_price ) {
+			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+			$token_symbol = $kyber_settings['receive_token_symbol'];
+			$cart_item_html .= sprintf( '<div class="kyber_mini_cart_price">(%s %s)</div>', $token_price * $cart_item['quantity'], $token_symbol );
+		}
+		return $cart_item_html;
+	}
+
+	public function kyber_cart_item_subtotal($cart_item_subtotal_html, $cart_item)
+	{
+		$product = wc_get_product( $cart_item['product_id'] );
+		$token_price = $product->get_meta( 'kyber_token_price' );
+		if ( $token_price ) {
+			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+			$token_symbol = $kyber_settings['receive_token_symbol'];
+			$cart_item_subtotal_html .= sprintf('
+				<div class="kyber-price">
+					<span class="woocommerce-Price-amount amount">(%s 
+						<span class="woocommerce-Price-currencySymbol">%s)</span>
+					</span>
+				</div>',
+				esc_html( $token_price * $cart_item['quantity']),
+				esc_html( $token_symbol ));
+		}
+		return $cart_item_subtotal_html;
+	}
+
+	/**
+	 * Adding token price field to a single product
 	 * 
-     * @since 0.0.1
-     */
-    public function add_token_price_fields() {
+	 * @since 0.0.1
+	 */
+	public function add_token_price_fields() {
 
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 
 		$token_symbol = $kyber_settings['receive_token_symbol'];
 
-        $args = array(
-            'id' => 'kyber_token_price',
-            'label' => __( sprintf( 'Token price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
-            'class' => 'kyber-token-price',
-            'desc_tip' => true,
-            'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
-        );
+		$args = array(
+			'id' => 'kyber_token_price',
+			'label' => __( sprintf( 'Token price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
+			'class' => 'kyber-token-price',
+			'desc_tip' => true,
+			'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
+		);
 
 		woocommerce_wp_text_input( $args );
 	}

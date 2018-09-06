@@ -1,6 +1,7 @@
 <?php
 
 namespace ETH;
+require 'Helper.php';
 
 use Web3\Web3;
 use Web3\Providers\HttpProvider;
@@ -33,7 +34,7 @@ class Monitor{
       $this->txLostTimeout = $params['txLostTimeout'];
     if(isset($params['intervalRefetchTx'])) 
       $this->intervalRefetchTx = $params['intervalRefetchTx'];
-    $this->config = $this->readConfig();
+    $this->config = readConfig($this->network);
     $this->eth = (new Web3(new HttpProvider(new HttpRequestManager($this->node, 5))))->eth;
   }
 
@@ -46,7 +47,7 @@ class Monitor{
         if(!$this->txData['txReceipt']){
           $this->eth->getTransactionReceipt($tx, function ($err, $txReceipt) {
             if ($err) {
-              $this->logDebug($err->getMessage());
+              logDebug($err->getMessage());
               sleep($this->intervalRefetchTx);
             }
             if ($txReceipt) {
@@ -56,7 +57,7 @@ class Monitor{
         }
         if(!$this->txData['tx']){
           $this->eth->getTransactionByHash($tx, function ($err, $txHash) {
-            if ($err) $this->logDebug($err->getMessage());
+            if ($err) logDebug($err->getMessage());
             if ($txHash) {
               $this->txData['tx'] = $txHash;
             }
@@ -81,23 +82,23 @@ class Monitor{
     if($txLost){
       return [ 'status' => 'LOST' ];
     }
+    $currentBlock = null;
     while(true){
-      $this->eth->getBlockByNumber('latest', false, function ($err, $block) {
-        if ($err !== null) $this->logDebug($err->getMessage());
+      $this->eth->getBlockByNumber('latest', false, function ($err, $block) use (&$currentBlock) {
+        if ($err !== null) logDebug($err->getMessage());
         if($block){
-          $this->currentBlock = $block;
+          $currentBlock = hexdec($block->number);
         }
       });
-      if($this->currentBlock){
+      if($currentBlock){
         break;
       }
     }
 
     $txReceipt = $this->txData['txReceipt'];
-    $currentBlock = hexdec($this->currentBlock->number);
-    $txBlock = hexdec($txReceipt->blockNumber);
-    $blockConfirmed = $currentBlock - $txBlock;
-
+    $txBlockNumber = hexdec($txReceipt->blockNumber);
+    $blockConfirmed = $currentBlock - $txBlockNumber;
+    
     if($blockConfirmed > $this->blockConfirm){
       $status = hexdec($txReceipt->status);
       if($status){
@@ -117,13 +118,26 @@ class Monitor{
           $receivedAddress = $transferData['receivedAddress'];
           $type = 'transfer';
         }
+        $txBlock = null;
+        while(true){
+          $this->eth->getBlockByNumber($txBlockNumber, false, function ($err, $block) use (&$txBlock) {
+            if ($err !== null) logDebug($err->getMessage());
+            if($block){
+              $txBlock = $block;
+            }
+          });
+          if($txBlock){
+            break;
+          }
+        }
         return [
           'status' => 'SUCCESS',
           'from' => $from,
           'to' => $to,
           'sentAddress' => $sentAddress,
           'receivedAddress' => $receivedAddress,
-          'type' => $type
+          'timestamp' => hexdec($txBlock->timestamp),
+          'type' => $type,
         ];
       }else{
         return [ 'status' => 'FAIL' ];
@@ -147,26 +161,26 @@ class Monitor{
     $dest = [];
     foreach($txReceipt->logs as $log){
       if($log->topics[0] == $this->config->trade_topic){
-        $readLogData = $this->readTxLog($log->data);
+        $readLogData = readTxLog($log->data);
         $hexSrc = $readLogData[0];
         $hexDest = $readLogData[1];
         $hexActualSrcAmount = $readLogData[2];
         $hexActualDestAmount = $readLogData[3];
 
-        $src['address'] = $this->toAddress($hexSrc);
-        $dest['address'] = $this->toAddress($hexDest);
+        $src['address'] = toAddress($hexSrc);
+        $dest['address'] = toAddress($hexDest);
 
         foreach($this->config->tokens as $token) {
           if($token->address == $dest['address']){
             $dest['decimal'] = $token->decimal;
             $dest['symbol'] = $token->symbol;
-            $dest['amount'] = $this->toRealAmount(hexdec($hexActualDestAmount), $token->decimal);
+            $dest['amount'] = toRealAmount(hexdec($hexActualDestAmount), $token->decimal);
             $dest['amount'] = strval($dest['amount']);
           }
           if($token->address == $src['address']){
             $src['decimal'] = $token->decimal;
             $src['symbol'] = $token->symbol;
-            $src['amount'] = $this->toRealAmount(hexdec($hexActualSrcAmount), $token->decimal);
+            $src['amount'] = toRealAmount(hexdec($hexActualSrcAmount), $token->decimal);
             $src['amount'] = strval($src['amount']);
           }
           if(isset($dest['symbol']) && isset($src['symbol'])) break;
@@ -177,8 +191,8 @@ class Monitor{
       }
     }
 
-    $readInputData = $this->readTxLog($tx->input);
-    $receivedAddress = $this->toAddress($readInputData[3]);
+    $readInputData = readTxLog($tx->input);
+    $receivedAddress = toAddress($readInputData[3]);
 
     return [
       'src' => $src, 
@@ -196,7 +210,7 @@ class Monitor{
     $sentAddress = $tx->from;
     if($value > 0){
       $decimal = $this->config->tokens->$token->decimal;
-      $amount = strval($this->toRealAmount($value, $decimal));
+      $amount = strval(toRealAmount($value, $decimal));
       $receivedAddress = $tx->to;
     }else{
       foreach($this->config->tokens as $t) {
@@ -206,9 +220,9 @@ class Monitor{
           break;
         }
       }
-      $readLogData = $this->readTxLog($tx->input);
-      $receivedAddress = $this->toAddress($readLogData[0]);
-      $amount = strval($this->toRealAmount($readLogData[1], $decimal));
+      $readLogData = readTxLog($tx->input);
+      $receivedAddress = toAddress($readLogData[0]);
+      $amount = strval(toRealAmount(hexdec($readLogData[1]), $decimal));
     }
     return [
       'src' => [
@@ -222,50 +236,6 @@ class Monitor{
       'sentAddress' => $sentAddress, 
       'receivedAddress' => $receivedAddress
     ];
-  }
-
-  protected function readTxLog($logData){
-    $hexLength = 64;
-    $preData = strlen($logData) - (floor(strlen($logData)/$hexLength)) * 64;
-    $data = substr($logData, $preData , strlen($logData));
-    $data_length = strlen($data);
-    $argsCount = $data_length/$hexLength;
-    $args = [];
-
-    for($i = 0; $i < $argsCount; $i++){
-      array_push($args, substr($data, $i * $hexLength, $hexLength));
-    }
-    return $args;
-  }
-
-  public function logDebug($data){
-    $file = 'logs';
-    $fh = fopen($file, 'a') or die("Can't create file");
-    $current = file_get_contents($file);
-    $data = json_encode($data);
-    $current .= "$data\n";
-    file_put_contents($file, $current);
-  }
-
-  public function toAddress($hex){
-    return '0x' . substr($hex, strlen($hex) - 40, strlen($hex));
-  }
-
-  public function toRealAmount($amount, $decimal){
-    return $amount / pow(10, $decimal);
-  }
-
-  public function readConfig(){
-    try{
-      $file = dirname(__FILE__, 2) . "/config/$this->network.json";
-      if ( !file_exists($file) ) {
-        throw new Exception('File not found.');
-      }
-      $current = file_get_contents($file);
-      return json_decode($current);
-    }catch(Exception $e){
-      return false;
-    }
   }
 
 }

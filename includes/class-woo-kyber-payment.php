@@ -407,7 +407,24 @@ class Woo_Kyber_Payment {
 		  $tx = $order->get_meta( 'tx' );
 		
 		  $receipt = $monitor->checkStatus($tx);
+
+		  error_log( print_r( $receipt, 1 ) );
+
 		  if ( $receipt['status'] == 'SUCCESS' ) {
+			  // check timestamp is valid
+			  // if tx mined timestamp is smaller than order created timestamp then it is invalid
+			  $order_timestamp = $order->get_date_created()->getTimestamp();
+			  $tx_mined_timestamp = $receipt['timestamp'];
+
+			  error_log( print_r( $order_timestamp, 1 ) );
+			  error_log( print_r( $tx_mined_timestamp, 1 ) );
+
+			  if ( $order_timestamp > $tx_mined_timestamp ) {
+				  $order->update_meta_data( 'tx_status', 'transaction was mined before ordered' );
+				  $order->save();
+				  return;
+			  }
+
 			  // check tx amount
 			  $tx_amount = $receipt['to']['amount'];
 			  if ( $tx_amount != $order->get_meta( 'total_amount' ) ) {

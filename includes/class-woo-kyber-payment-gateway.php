@@ -320,7 +320,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $valid = $this->validate_callback_params($data);
         if ( !$valid ) {
-            return;
+            status_header( 403 );
+            die();
         }
         
         // get data from callback
@@ -350,13 +351,41 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     }
 
     /**
+     * Check if transaction hash already saved in db
+     * 
+     * @param string tx
+     * @return bool 
+     * 
+     * @since 0.0.1
+     */
+    public function transaction_exists($tx) {
+        $args = array(
+            'post_type'   => 'shop_order',
+            'post_status' => array('wc-cancelled','wc-on-hold', 'wc-processing', 'wc-pending-payment', 'wc-completed', 'wc-refunded', 'wc-failed'),
+            'numberposts' => 5,
+            'meta_key'     => 'tx',
+            'meta_value'   => $tx,
+        );
+        $current_post = get_posts($args);
+
+        if( $current_post ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Validate callback params
      * 
      * @since 0.0.1
      */
     private function validate_callback_params( $request ) {
         $order_id = $request->order_id;
-
+        $tx = $request->tx;
+        if ( $this->transaction_exists($tx) ) {
+            return false;
+        }
         return true;
     }
 

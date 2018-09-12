@@ -39,7 +39,6 @@
 
 	function receiveMessage(event) {
 		if (event.data === "CloseWidget") {
-			closeWidget();
 			window.location.href = "/my-account/orders/";
 		}
 	}

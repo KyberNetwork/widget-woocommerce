@@ -1,6 +1,6 @@
 {
     "minimum-stability": "dev",
     "require": {
-        "tranbaohuy/monitor-eth-tx": "dev-master"
+        "tranbaohuy/monitor-eth-tx": "v1.0.2"
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a47f2b736a075f9a08fe77d263e4efb",
+    "content-hash": "1f104db6e9fd4d922c84ab21ec8a62a1",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -519,16 +519,16 @@
         },
         {
             "name": "tranbaohuy/monitor-eth-tx",
-            "version": "dev-master",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
-                "reference": "4824549e6db8b98156fff68d65e1205a16642f93"
+                "reference": "2d57d4386227572ec29a8c765a74eb07ae5e3738"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/4824549e6db8b98156fff68d65e1205a16642f93",
-                "reference": "4824549e6db8b98156fff68d65e1205a16642f93",
+                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/2d57d4386227572ec29a8c765a74eb07ae5e3738",
+                "reference": "2d57d4386227572ec29a8c765a74eb07ae5e3738",
                 "shasum": ""
             },
             "require": {
@@ -552,15 +552,13 @@
                 }
             ],
             "description": "Monitor Ethereum transaction.",
-            "time": "2018-08-31T11:24:09+00:00"
+            "time": "2018-09-14T09:48:35+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "tranbaohuy/monitor-eth-tx": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

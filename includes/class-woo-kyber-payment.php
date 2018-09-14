@@ -201,16 +201,29 @@ class Woo_Kyber_Payment {
 		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
 		add_filter( 'woocommerce_payment_gateways', array($this, 'add_payment_gateways'),1000 );
 
-  	add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
+  		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
 		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
-		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'kyber_display_price_token' ) );
 		add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
 		add_action( 'woocommerce_order_status_on-hold', array($this, 'kyber_on_order_on_hold'), 10, 2 );
 		add_action( 'woocommerce_cart_item_price', array( $this, 'kyber_cart_item_price' ), 10, 2 );
 		add_action( 'woocommerce_widget_cart_item_quantity', array( $this, 'kyber_cart_item_quantity' ), 10, 2 );
 		add_action( 'woocommerce_cart_item_subtotal', array( $this, 'kyber_cart_item_subtotal' ), 10, 2);
+		add_action( 'woocommerce_get_formatted_order_total', array( $this, 'kyber_order_total' ), 10, 2 );
+		add_action( 'woocommerce_order_formatted_line_subtotal', array( $this, 'kyber_item_token_amount' ), 10, 3 );
+		add_action( 'woocommerce_order_subtotal_to_display', array( $this, 'kyber_order_subtotal' ), 10, 3 );
 	}
 
+	/**
+	 *
+	 * Add token price to cart
+	 *  
+	 * @param string cart_item_html
+	 * @param string cart_item
+	 * 
+	 * @return string cart_item_html with token price
+	 * 
+	 * @since 0.0.1
+	 */
 	public function kyber_cart_item_price($cart_item_html, $cart_item)
 	{
 		$product = wc_get_product( $cart_item['product_id'] );
@@ -230,6 +243,16 @@ class Woo_Kyber_Payment {
 		return $cart_item_html;
 	}
 
+	/**
+	 * Add kyber cart item quantity
+	 * 
+	 * @param string cart_item_html
+	 * @param Abstract_Cart_item cart_item
+	 * 
+	 * @return string cart_item_html with price
+	 * 
+	 * @since 0.0.1
+	 */
 	public function kyber_cart_item_quantity($cart_item_html, $cart_item)
 	{
 		$product = wc_get_product( $cart_item['product_id'] );
@@ -245,6 +268,17 @@ class Woo_Kyber_Payment {
 		return $cart_item_html;
 	}
 
+	/**
+	 * 
+	 * Add cart item subtotal by token to cart
+	 * 
+	 * @param string cart_item_subtotal_html
+	 * @param Abstract_Cart_Item cart_item
+	 * 
+	 * @return string cart_item_subtotal_html with token price
+	 * 
+	 * @since 0.0.1
+	 */
 	public function kyber_cart_item_subtotal($cart_item_subtotal_html, $cart_item)
 	{
 		$product = wc_get_product( $cart_item['product_id'] );
@@ -262,6 +296,110 @@ class Woo_Kyber_Payment {
 				esc_html( $token_symbol ));
 		}
 		return $cart_item_subtotal_html;
+	}
+
+	/**
+	 * Add kyber order total by token
+	 * 
+	 * @param string $order_total_html
+	 * @param WC_Abstract_Order
+	 * 
+	 * @return string $order_total_html
+	 * 
+	 * @since 0.0.1
+	 */
+	public function kyber_order_total( $order_total_html, $order ) {
+        $items = $order->get_items();
+
+        $total = 0;
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		$token_symbol = $kyber_settings['receive_token_symbol'];
+        foreach( $items as $item ) {
+            $product = $item->get_product();
+            $token_price = $product->get_meta( 'kyber_token_price' );
+            if ( !$token_price ) {
+                // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+                return 0;
+            }
+            $total += $token_price*$item->get_quantity();
+		}
+		
+		$order_total_html .= sprintf('
+		<div class="kyber-price">
+			<span class="woocommerce-Price-amount amount">(%s 
+				<span class="woocommerce-Price-currencySymbol">%s)</span>
+			</span>
+		</div>',
+		esc_html( $total ),
+		esc_html( $token_symbol ));
+
+		return $order_total_html;
+	}
+
+	/**
+	 * Add kyber item token amount
+	 * 
+	 * @param string subtotal_html
+	 * @param WC_Abstract_Order_Item item
+	 * @param WC_Abstract_Order order
+	 * 
+	 * @return string subtotal_html with token amount
+	 * 
+	 * @since 0.0.1 
+	 */
+	public function kyber_item_token_amount( $subtotal_html, $item, $order ) {
+        $total = 0;
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		$token_symbol = $kyber_settings['receive_token_symbol'];
+        $product = $item->get_product();
+        $token_price = $product->get_meta( 'kyber_token_price' );
+		if ( !$token_price ) {
+			// wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+			return 0;
+		}
+		$total += $token_price*$item->get_quantity();
+		
+		$subtotal_html .= sprintf('
+		<div class="kyber-price">
+			<span class="woocommerce-Price-amount amount">(%s 
+				<span class="woocommerce-Price-currencySymbol">%s)</span>
+			</span>
+		</div>',
+		esc_html( $total ),
+		esc_html( $token_symbol ));
+
+		return $subtotal_html;	
+	}
+
+	/**
+	 * 
+	 */
+	public function kyber_order_subtotal( $subtotal_html, $compound, $order ) {
+        $items = $order->get_items();
+
+        $total = 0;
+		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		$token_symbol = $kyber_settings['receive_token_symbol'];
+        foreach( $items as $item ) {
+            $product = $item->get_product();
+            $token_price = $product->get_meta( 'kyber_token_price' );
+            if ( !$token_price ) {
+                // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+                return 0;
+            }
+            $total += $token_price*$item->get_quantity();
+		}
+		
+		$subtotal_html .= sprintf('
+		<div class="kyber-price">
+			<span class="woocommerce-Price-amount amount">(%s 
+				<span class="woocommerce-Price-currencySymbol">%s)</span>
+			</span>
+		</div>',
+		esc_html( $total ),
+		esc_html( $token_symbol ));
+
+		return $subtotal_html;
 	}
 
 	/**
@@ -306,34 +444,6 @@ class Woo_Kyber_Payment {
 		$product->update_meta_data( 'kyber_token_price', sanitize_text_field( $token_price) );
 		$product->save();
    }
-
-   /**
-	 * Display price token 
-	 * 
-	 * @since 0.0.1
-	 */
-	function kyber_display_price_token() {
-		global $post;
-		// Check for the custom field value
-		$product = wc_get_product( $post->ID );
-		$price_token = $product->get_meta( 'kyber_token_price' );
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$token_symbol = $kyber_settings['receive_token_symbol'];
-
-		if( $price_token ) {
-			// Only display our field if we've got a value for the field title
-			printf(
-				'<p class="price">%s<span class="woocommerce-Price-amount amount">%s<span class="woocommerce-Price-currencySymbol"></span></span></p>',
-				esc_html( $price_token ),
-				esc_html( $token_symbol )
-			);
-		} else {
-			printf(
-				'<p class="price">%s</p>',
-				__('This product cannot be paid by token.', 'woocommerece-gateway-kyber')
-			);
-		}
-	}
 
 	/**
 	 * Display token price in product list

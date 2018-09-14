@@ -46,10 +46,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
-        add_action( 'woocommerce_review_order_after_order_total', array( $this, 'add_total_by_token_html' ) );
-        add_action( 'woocommerce_after_cart_totals', array( $this, 'add_total_by_token_html' ) );
-        add_action( 'woocommerce_cart_totals_after_order_total', array( $this, 'add_total_by_token_html' ) );
-        add_action( 'woocommerce_review_order_before_payment', array( $this, 'add_total_by_token_html' ) );
     }
 
     /**
@@ -436,34 +432,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
-    }
-
-    /**
-     * Add total by token
-     */
-    public function add_total_by_token_html() {
-        // $total_token = $this->get_order_total_amount_by_token();
-        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-            return;
-        }
-        $items = WC()->cart->get_cart_contents();
-        $total_token = 0;
-        foreach( $items as $item ) {
-            $product = $item["data"];
-            $token_price = $product->get_meta( 'kyber_token_price' );
-            error_log( $token_price );
-            if ( !$token_price ) {
-                continue;
-            }
-            $total_token += $token_price*$item["quantity"];
-        }
-        error_log( print_r( $total_token, 1 ) );
-        printf(
-            "<tr class='my-class'>
-			    <th>%s</th>
-			    <td>%s</td>
-		    </tr>", __('Total', 'woocommerce-gateway-kyber'), $total_token
-        );
     }
 
 }

@@ -19,3 +19,7 @@
 .kyber-price{
   font-size: 0.85em;
 }
+
+.order-tx-hash {
+  word-break: break-all;
+}

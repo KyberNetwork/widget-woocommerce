@@ -160,7 +160,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
             %s </td>
-            <td class='woocommerce-table__product-total product-total'>
+            <td class='woocommerce-table__product-total product-total order-tx-hash'>
             <a href='https://%s.etherscan.io/tx/%s' target='_blank'>%s</a>
             </td></tr>", __('Order transaction hash', 'woocommerce-gateway-kyber'), $network, $order_tx, $order_tx);
         }

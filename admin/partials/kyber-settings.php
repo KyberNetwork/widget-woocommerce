@@ -26,6 +26,17 @@ return apply_filters( 'wc_kyber_settings',
             'default' => __( 'Pay with your coins, tokens supported by Kyber',  'woocommmerce-gateway-kyber'),
             'desc_tip' => true,
         ),
+        'version' => array(
+            'title' => __( 'Description', 'woocommerce-gateway-kyber' ),
+            'type' => 'select',
+            'decription' => __( 'Choose widget version that you want to use', 'woocommerce-gateway-kyber' ),
+            'desc_tip' => false,
+            'default' => 'v0.2',
+            'options' => array(
+                'v0.1' => 'v0.1',
+                'v0.2' => 'v0.2'
+            )
+        ),
         'receive_addr' => array(
             'title' => __( 'Receive Address*', 'woocommerce-gateway-kyber' ),
             'type' => 'text',

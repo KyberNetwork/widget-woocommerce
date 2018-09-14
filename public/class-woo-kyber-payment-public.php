@@ -73,7 +73,7 @@ class Woo_Kyber_Payment_Public {
 		 * class.
 		 */
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-public.css', array(), $this->version, 'all' );
-        wp_enqueue_style( "woo-kyber-pyment-widget-css", 'https://widget.kyber.network/v0.1/widget.css', array(), $this->version, 'all' );
+        wp_enqueue_style( "woo-kyber-pyment-widget-css", 'https://widget.kyber.network/v0.1/widget.css', array(), "0.0.2", 'all' );
 
 	}
 

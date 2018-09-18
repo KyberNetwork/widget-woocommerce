@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              developer.kyber.network
- * @since             1.0.0
+ * @since             0.0.2 
  * @package           Woo_Kyber_Payment
  *
  * @wordpress-plugin
  * Plugin Name:       WooCommerce Kyber Payment
  * Plugin URI:        developer.kyber.network
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           0.0.1 
+ * Version:           0.0.2
  * Author:            Hoang Ha
  * Author URI:        developer.kyber.network
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '0.0.1' );
+define( 'PLUGIN_NAME_VERSION', '0.0.2' );
 define( 'WC_KYBER_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 
 /**
@@ -78,6 +78,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'plugin_action
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-woo-kyber-payment.php';
+include plugin_dir_path( __FILE__ ) . 'update.php';
 
 /**
  * Begins execution of the plugin.
@@ -86,7 +87,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-woo-kyber-payment.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since    0.0.1
  */
 function run_woo_kyber_payment() {
 

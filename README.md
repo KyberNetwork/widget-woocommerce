@@ -11,6 +11,25 @@ Kyber Payment Gateway for WooCommerce
 
 # Installation
 
+## Install from source code
+
+1. Clone code repo to your /wp-content/plugins/
+
+```shell
+git clone https://github.com/KyberNetwork/widget-woocommerce
+```
+
+2. Install required components
+
+```shell
+composer install
+```
+
+3. Activate plugin
+
+
+## Install from zip file
+
 1. Download the plugin [zip file](https://github.com/halink0803/woo-kyber-payment/releases)
 2. Unzip to your wordpress folder /wp-content/plugins
 3. Activate plugin /wp-admin/plugins.php

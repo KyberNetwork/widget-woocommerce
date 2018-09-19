@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "5c7a5c524e556113e7f8685e6880cbc4090c798d"
+                "reference": "c7faf23816251ca3f35463c55f3178a9b60128fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/5c7a5c524e556113e7f8685e6880cbc4090c798d",
-                "reference": "5c7a5c524e556113e7f8685e6880cbc4090c798d",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c7faf23816251ca3f35463c55f3178a9b60128fc",
+                "reference": "c7faf23816251ca3f35463c55f3178a9b60128fc",
                 "shasum": ""
             },
             "require": {
@@ -69,7 +69,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-08-08T04:37:00+00:00"
+            "time": "2018-09-12T15:59:05+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -240,12 +240,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "6189452f1ba699ad64c8b2d6d9c44fa9b46b2468"
+                "reference": "32ce6a0d3e2338d90dee57639bb2b5084d398fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6189452f1ba699ad64c8b2d6d9c44fa9b46b2468",
-                "reference": "6189452f1ba699ad64c8b2d6d9c44fa9b46b2468",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/32ce6a0d3e2338d90dee57639bb2b5084d398fb3",
+                "reference": "32ce6a0d3e2338d90dee57639bb2b5084d398fb3",
                 "shasum": ""
             },
             "require": {
@@ -324,7 +324,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2018-08-21T02:41:18+00:00"
+            "time": "2018-09-17T05:27:42+00:00"
         },
         {
             "name": "psr/http-message",

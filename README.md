@@ -30,7 +30,7 @@ composer install
 
 ## Install from zip file
 
-1. Download the plugin [zip file](https://github.com/halink0803/woo-kyber-payment/releases)
+1. Download the plugin [zip file](https://github.com/KyberNetwork/widget-woocommerce/releases)
 2. Unzip to your wordpress folder /wp-content/plugins
 3. Activate plugin /wp-admin/plugins.php
 

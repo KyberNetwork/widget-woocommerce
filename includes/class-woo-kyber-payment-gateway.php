@@ -316,6 +316,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         error_log( print_r( $data, 1 ) );
 
         $valid = $this->validate_callback_params($data);
+        header( "Access-Control-Allow-Origin: *", true );
         if ( !$valid ) {
             status_header( 403 );
             die();

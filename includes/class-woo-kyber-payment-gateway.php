@@ -334,6 +334,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             return;
         }
 
+        // Reduce stock levels
+        $order->reduce_order_stock();
+
         // Save transaction hash to order
         $order->update_meta_data("tx", $tx);
         $order->update_meta_data("network", $network);
@@ -342,9 +345,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // Mark as on-hold (we're awaiting cheque)
         $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
-
-        // Reduce stock levels
-        $order->reduce_order_stock();
     }
 
     /**
@@ -355,7 +355,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * 
      * @since 0.0.1
      */
-    public function transaction_exists($tx) {
+    public function transaction_exists($tx, $order_id) {
         $args = array(
             'post_type'   => 'shop_order',
             'post_status' => array('wc-cancelled','wc-on-hold', 'wc-processing', 'wc-pending-payment', 'wc-completed', 'wc-refunded', 'wc-failed'),
@@ -365,7 +365,10 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         );
         $current_post = get_posts($args);
 
-        if( $current_post ) {
+        error_log( print_r( $current_post, 1 ) );
+        error_log( print_r( $tx, 1 ) );
+
+        if( $current_post && $current_post[0]->ID != $order_id ) {
             return true;
         } else {
             return false;
@@ -380,7 +383,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     private function validate_callback_params( $request ) {
         $order_id = $request->order_id;
         $tx = $request->tx;
-        if ( $this->transaction_exists($tx) ) {
+        if ( $this->transaction_exists($tx, $order_id) ) {
             return false;
         }
         return true;

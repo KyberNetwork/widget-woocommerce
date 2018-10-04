@@ -1,3 +1,5 @@
+<h1 align="center">Kyber Widget Woocommerce</h1>
+
 # Introduction
 Kyber Payment Gateway for WooCommerce 
 

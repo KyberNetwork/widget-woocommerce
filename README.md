@@ -1,4 +1,6 @@
 # Introduction
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 Kyber Payment Gateway for WooCommerce 
 
 ![screenshot](https://github.com/KyberNetwork/widget-woocommerce/blob/master/assets/images/screenshot-2.png)
@@ -70,3 +72,7 @@ Plugin settings include:
 
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
+  
+## License
+
+[The MIT License (MIT)](LICENSE)

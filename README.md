@@ -1,5 +1,23 @@
+<h1 align="center">Kyber Widget WooCommerce</h1>
+<p align="center" style="text-align: center;">
+<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/version" alt="Latest Stable Version" />
+</a>
+<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/downloads" alt="Total Downloads" />
+</a>
+<a href="//packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/v/unstable" alt="Latest Unstable Version" />
+</a>
+<a href="./LICENSE">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT licensed" />
+</a>
+<a href="https://t.me/KyberDeveloper">
+  <img src="https://img.shields.io/badge/chat%20on-telegram-brightgreen.svg" alt="Social" />
+</a>
+</p>
+
 # Introduction
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 Kyber Payment Gateway for WooCommerce 
 

@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: widget woocommerce\n"
+"POT-Creation-Date: 2018-10-06 08:34+0700\n"
+"PO-Revision-Date: 2018-10-08 01:30-0500\n"
+"Language-Team: Kyber (ha.hoang@kyber.network)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"Last-Translator: \n"
+"Language: es\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/partials/kyber-settings.php:9
+msgid "Enable/Disable"
+msgstr "Habilitar/Deshabilitar"
+
+#: admin/partials/kyber-settings.php:10
+msgid "Enable Kyber"
+msgstr "Habilitar Kyber"
+
+#: admin/partials/kyber-settings.php:16
+msgid "Title"
+msgstr "Título"
+
+#: admin/partials/kyber-settings.php:19
+msgid "Coins, Tokens"
+msgstr "Monedas, Tokens"
+
+#: admin/partials/kyber-settings.php:23
+msgid "Description"
+msgstr "Descripción"
+
+#: admin/partials/kyber-settings.php:25
+msgid "This is description for kyber payment method"
+msgstr "Esta es una descripción para el método de pago de kyber"
+
+#: admin/partials/kyber-settings.php:26
+msgid "Pay with your coins, tokens supported by Kyber"
+msgstr "Pagar con tus monedas, tokens soportados por Kyber"
+
+#: admin/partials/kyber-settings.php:30
+msgid "Version"
+msgstr "Versión"
+
+#: admin/partials/kyber-settings.php:32
+msgid "Choose widget version that you want to use"
+msgstr "Escoja la versión de widget que desea utilizar"
+
+#: admin/partials/kyber-settings.php:41
+msgid "Receive Address*"
+msgstr "Dirección de Recibo*"
+
+#: admin/partials/kyber-settings.php:46
+#: includes/class-woo-kyber-payment-gateway.php:179
+msgid "Network"
+msgstr "Red"
+
+#: admin/partials/kyber-settings.php:48
+msgid ""
+"Select network which you want payment to run on, Ropsten for test and "
+"Mainnet for produdction"
+msgstr ""
+"Seleccione la red donde desee que se ejecute el pago, Ropsten para pruebas y "
+"Mainnet para producción"
+
+#: admin/partials/kyber-settings.php:52
+msgid "Ropsten"
+msgstr "Ropsten"
+
+#: admin/partials/kyber-settings.php:53
+msgid "Mainnet"
+msgstr "Mainnet"
+
+#: admin/partials/kyber-settings.php:57
+msgid "Receive token symbol"
+msgstr "Recibir el símbolo del token"
+
+#: admin/partials/kyber-settings.php:59
+msgid "Token you would like to receive by payment"
+msgstr "El token que desea recibir como pago"
+
+#: admin/partials/kyber-settings.php:64
+msgid "Payment mode"
+msgstr "Modo de pago"
+
+#: admin/partials/kyber-settings.php:66
+msgid ""
+"This is mode for display Kyber widget style, tab will load Kyber widget in "
+"new tab, iframe will load Kyber widget inside order received page."
+msgstr ""
+"Este es el modo para mostrar el estilo del widget de Kyber, tab cargará el "
+"widget de Kyber en una nueva pestaña, el iframe cargará el widget de Kyber "
+"dentro de la página del pedido recibido."
+
+#: admin/partials/kyber-settings.php:76
+msgid "Block Confirmation"
+msgstr "Confirmación de Bloque"
+
+#: admin/partials/kyber-settings.php:78
+msgid "Number of block confirmation for confirm tx as success"
+msgstr ""
+"Numero de confirmaciones de bloque para confirmar la transacción como exitosa"
+
+#: admin/partials/kyber-settings.php:82
+msgid "Commission ID"
+msgstr "ID de Comisión"
+
+#: admin/partials/kyber-settings.php:84
+msgid ""
+"Your Ethereum wallet to get commission of the fees for the transaction. Your "
+"wallet must be whitelisted by KyberNetwork (the permissionless registration "
+"will be available soon) in order to get the commission, otherwise it will be "
+"ignored."
+msgstr ""
+"Tu billetera de Ethereum para obtener la comisión correspondiente a los fees "
+"de transacción. Tu billetera debe estar en la lista blanca de KyberNetwork "
+"(el registro sin permiso estará disponible pronto) con el fin de obtener la "
+"comisión, caso contrario esta será ignorada."
+
+#: includes/class-woo-kyber-payment-gateway.php:25
+msgid "Kyber"
+msgstr "Kyber"
+
+#: includes/class-woo-kyber-payment-gateway.php:26
+msgid "Kyber allow user to pay by using tokens"
+msgstr "Kyber permite al usuario pagar utilizando tokens"
+
+#: includes/class-woo-kyber-payment-gateway.php:27
+msgid "Place order"
+msgstr "Realizar pedido"
+
+#: includes/class-woo-kyber-payment-gateway.php:161
+msgid "Order transaction hash"
+msgstr "Hash de transacción de la orden"
+
+#: includes/class-woo-kyber-payment-gateway.php:170
+msgid "Tx Status"
+msgstr "Estatus de la Tx"
+
+#: includes/class-woo-kyber-payment-gateway.php:194
+msgid ""
+"Receive address is empty. You cannot use pay by token, please contact your "
+"shop about this issue"
+msgstr ""
+"La dirección de recepción está vacía. No puede utilizar el pago con token, "
+"por favor póngase en contacto con su tienda sobre este tema"
+
+#: includes/class-woo-kyber-payment-gateway.php:200
+msgid "Receive token is not supported."
+msgstr "Token de recepción no soportado."
+
+#: includes/class-woo-kyber-payment-gateway.php:207
+msgid "Network is not valid."
+msgstr "Red no válida."
+
+#: includes/class-woo-kyber-payment-gateway.php:213
+msgid "Widget mode is not valid."
+msgstr "Modo widget no válido"
+
+#: includes/class-woo-kyber-payment-gateway.php:348
+#: includes/class-woo-kyber-payment.php:545
+msgid "Awaiting cheque payment"
+msgstr "Esperando el cheque de pago"
+
+#: includes/class-woo-kyber-payment-gateway.php:433
+msgid "Pay by tokens"
+msgstr "Pagar con tokens"
+
+#: includes/class-woo-kyber-payment.php:421
+msgid "This is price you want to receive by token"
+msgstr "Este es el precio que desea recibir como tokens"
+
+#: includes/class-woo-kyber-payment.php:431
+msgid "This is sale price you want to receive by token"
+msgstr "Este es el precio de venta que desea recibir como token"
+
+#: update.php:73
+msgid ""
+"An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
+"\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+msgstr ""
+"Un error HTTP inesperado ocurrió durante la petición a la API</p> <p><a "
+"href=“?” onclick=“document.location.reload(); return false;”>Inténtelo "
+"nuevamente</a>"
+
+#: update.php:78
+msgid "An unknown error occurred"
+msgstr "Un error desconocido ha ocurrido"

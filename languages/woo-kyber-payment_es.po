@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Kyber Payment Gateway\n"
-"POT-Creation-Date: 2018-09-03 16:45+0700\n"
-"PO-Revision-Date: 2018-10-05 23:01-0500\n"
-"Language-Team: Kyber\n"
+"Project-Id-Version: widget woocommerce\n"
+"POT-Creation-Date: 2018-10-06 08:34+0700\n"
+"PO-Revision-Date: 2018-10-08 01:30-0500\n"
+"Language-Team: Kyber (ha.hoang@kyber.network)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,7 +11,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;esc_attr_e\n"
+"X-Poedit-KeywordsList: __;_e\n"
 "Last-Translator: \n"
 "Language: es\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -42,18 +42,26 @@ msgstr "Esta es una descripción para el método de pago de kyber"
 
 #: admin/partials/kyber-settings.php:26
 msgid "Pay with your coins, tokens supported by Kyber"
-msgstr "Pagar con tus monedas, fichas soportadas por Kyber"
+msgstr "Pagar con tus monedas, tokens soportados por Kyber"
 
 #: admin/partials/kyber-settings.php:30
-msgid "Receive Address*"
-msgstr "Recibir Dirección("
+msgid "Version"
+msgstr "Versión"
 
-#: admin/partials/kyber-settings.php:35
-#: includes/class-woo-kyber-payment-gateway.php:183
+#: admin/partials/kyber-settings.php:32
+msgid "Choose widget version that you want to use"
+msgstr "Escoja la versión de widget que desea utilizar"
+
+#: admin/partials/kyber-settings.php:41
+msgid "Receive Address*"
+msgstr "Dirección de Recibo*"
+
+#: admin/partials/kyber-settings.php:46
+#: includes/class-woo-kyber-payment-gateway.php:179
 msgid "Network"
 msgstr "Red"
 
-#: admin/partials/kyber-settings.php:37
+#: admin/partials/kyber-settings.php:48
 msgid ""
 "Select network which you want payment to run on, Ropsten for test and "
 "Mainnet for produdction"
@@ -61,62 +69,49 @@ msgstr ""
 "Seleccione la red donde desee que se ejecute el pago, Ropsten para pruebas y "
 "Mainnet para producción"
 
-#: admin/partials/kyber-settings.php:41
+#: admin/partials/kyber-settings.php:52
 msgid "Ropsten"
 msgstr "Ropsten"
 
-#: admin/partials/kyber-settings.php:42
+#: admin/partials/kyber-settings.php:53
 msgid "Mainnet"
 msgstr "Mainnet"
 
-#: admin/partials/kyber-settings.php:46
+#: admin/partials/kyber-settings.php:57
 msgid "Receive token symbol"
 msgstr "Recibir el símbolo del token"
 
-#: admin/partials/kyber-settings.php:48
+#: admin/partials/kyber-settings.php:59
 msgid "Token you would like to receive by payment"
-msgstr "El token que desee recibir como pago"
+msgstr "El token que desea recibir como pago"
 
-#: admin/partials/kyber-settings.php:53
+#: admin/partials/kyber-settings.php:64
 msgid "Payment mode"
 msgstr "Modo de pago"
 
-#: admin/partials/kyber-settings.php:55
+#: admin/partials/kyber-settings.php:66
 msgid ""
 "This is mode for display Kyber widget style, tab will load Kyber widget in "
 "new tab, iframe will load Kyber widget inside order received page."
 msgstr ""
 "Este es el modo para mostrar el estilo del widget de Kyber, tab cargará el "
-"widget de Kyber en una nueva pestaña, iframe cargará el widget de Kyber "
-"dentro de la página de pedido recibido."
+"widget de Kyber en una nueva pestaña, el iframe cargará el widget de Kyber "
+"dentro de la página del pedido recibido."
 
-#: admin/partials/kyber-settings.php:65
-msgid "Network node endpoint"
-msgstr "Endpoint del nodo de red"
-
-#: admin/partials/kyber-settings.php:67
-msgid ""
-"Node endpoint to check transaction status. If you do not have one, create "
-"using <a href=\"https://infura.io/\" target=\"__blank\">Infura</a>"
-msgstr ""
-"Endpoint del nodo para verificar el estatus de la transacción. Si no posee "
-"una, puede crear una utilizando <a href=“https://infura.io/“ "
-"target=“__blank”>Infura</a>"
-
-#: admin/partials/kyber-settings.php:70
+#: admin/partials/kyber-settings.php:76
 msgid "Block Confirmation"
 msgstr "Confirmación de Bloque"
 
-#: admin/partials/kyber-settings.php:72
+#: admin/partials/kyber-settings.php:78
 msgid "Number of block confirmation for confirm tx as success"
 msgstr ""
 "Numero de confirmaciones de bloque para confirmar la transacción como exitosa"
 
-#: admin/partials/kyber-settings.php:76
+#: admin/partials/kyber-settings.php:82
 msgid "Commission ID"
 msgstr "ID de Comisión"
 
-#: admin/partials/kyber-settings.php:78
+#: admin/partials/kyber-settings.php:84
 msgid ""
 "Your Ethereum wallet to get commission of the fees for the transaction. Your "
 "wallet must be whitelisted by KyberNetwork (the permissionless registration "
@@ -140,15 +135,15 @@ msgstr "Kyber permite al usuario pagar utilizando tokens"
 msgid "Place order"
 msgstr "Realizar pedido"
 
-#: includes/class-woo-kyber-payment-gateway.php:165
+#: includes/class-woo-kyber-payment-gateway.php:161
 msgid "Order transaction hash"
 msgstr "Hash de transacción de la orden"
 
-#: includes/class-woo-kyber-payment-gateway.php:174
+#: includes/class-woo-kyber-payment-gateway.php:170
 msgid "Tx Status"
 msgstr "Estatus de la Tx"
 
-#: includes/class-woo-kyber-payment-gateway.php:198
+#: includes/class-woo-kyber-payment-gateway.php:194
 msgid ""
 "Receive address is empty. You cannot use pay by token, please contact your "
 "shop about this issue"
@@ -156,35 +151,44 @@ msgstr ""
 "La dirección de recepción está vacía. No puede utilizar el pago con token, "
 "por favor póngase en contacto con su tienda sobre este tema"
 
-#: includes/class-woo-kyber-payment-gateway.php:204
+#: includes/class-woo-kyber-payment-gateway.php:200
 msgid "Receive token is not supported."
 msgstr "Token de recepción no soportado."
 
-#: includes/class-woo-kyber-payment-gateway.php:211
+#: includes/class-woo-kyber-payment-gateway.php:207
 msgid "Network is not valid."
 msgstr "Red no válida."
 
-#: includes/class-woo-kyber-payment-gateway.php:217
+#: includes/class-woo-kyber-payment-gateway.php:213
 msgid "Widget mode is not valid."
 msgstr "Modo widget no válido"
 
-#: includes/class-woo-kyber-payment-gateway.php:346
-#: includes/class-woo-kyber-payment.php:354
+#: includes/class-woo-kyber-payment-gateway.php:348
+#: includes/class-woo-kyber-payment.php:545
 msgid "Awaiting cheque payment"
 msgstr "Esperando el cheque de pago"
 
-#: includes/class-woo-kyber-payment-gateway.php:403
+#: includes/class-woo-kyber-payment-gateway.php:433
 msgid "Pay by tokens"
 msgstr "Pagar con tokens"
 
-#: includes/class-woo-kyber-payment-gateway.php:435
-msgid "Total"
-msgstr "Total"
-
-#: includes/class-woo-kyber-payment.php:228
+#: includes/class-woo-kyber-payment.php:421
 msgid "This is price you want to receive by token"
 msgstr "Este es el precio que desea recibir como tokens"
 
-#: includes/class-woo-kyber-payment.php:269
-msgid "This product cannot be paid by token."
-msgstr "Este producto no puede ser pagado con tokens"
+#: includes/class-woo-kyber-payment.php:431
+msgid "This is sale price you want to receive by token"
+msgstr "Este es el precio de venta que desea recibir como token"
+
+#: update.php:73
+msgid ""
+"An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
+"\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+msgstr ""
+"Un error HTTP inesperado ocurrió durante la petición a la API</p> <p><a "
+"href=“?” onclick=“document.location.reload(); return false;”>Inténtelo "
+"nuevamente</a>"
+
+#: update.php:78
+msgid "An unknown error occurred"
+msgstr "Un error desconocido ha ocurrido"

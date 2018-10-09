@@ -27,7 +27,7 @@ return apply_filters( 'wc_kyber_settings',
             'desc_tip' => true,
         ),
         'version' => array(
-            'title' => __( 'Description', 'woocommerce-gateway-kyber' ),
+            'title' => __( 'Version', 'woocommerce-gateway-kyber' ),
             'type' => 'select',
             'decription' => __( 'Choose widget version that you want to use', 'woocommerce-gateway-kyber' ),
             'desc_tip' => false,

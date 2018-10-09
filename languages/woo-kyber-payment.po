@@ -64,7 +64,7 @@ msgstr ""
 #: admin/partials/kyber-settings.php:48
 msgid ""
 "Select network which you want payment to run on, Ropsten for test and "
-"Mainnet for produdction"
+"Mainnet for production"
 msgstr ""
 
 #: admin/partials/kyber-settings.php:52

@@ -142,7 +142,7 @@ class Woo_Kyber_Payment {
 
 		$plugin_i18n = new Woo_Kyber_Payment_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->add_action( 'plugin_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
 	}
 

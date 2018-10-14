@@ -1,6 +1,20 @@
 {
-"minimum-stability": "dev",
-    "require": {
-        "tranbaohuy/monitor-eth-tx": "v1.0.2"
-    }
+    "name": "kyber-network/widget-woocommerce",
+    "description": "Woocommerce addon to use Kyber widget as a payment gateway, allow shop to accept coins/tokens payment",
+    "license": "MIT",
+    "type": "addon",
+    "homepage": "https://kyber.network",
+    "keywords": ["kyber", "payment", "gateway", "widget"],
+    "authors": [
+        {
+            "name": "Hoang Ha",
+            "email": "ha.hoang@kyber.network",
+            "homepage": "https://kyber.network",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+        "require": {
+           "tranbaohuy/monitor-eth-tx": "v1.0.2"
+        }
 }

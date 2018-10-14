@@ -1,0 +1,193 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: widget woocommerce\n"
+"POT-Creation-Date: 2018-10-06 08:34+0700\n"
+"PO-Revision-Date: 2018-10-10 16:00+0300\n"
+"Last-Translator: \n"
+"Language-Team: Kyber (ha.hoang@kyber.network)\n"
+"Language: lt_LT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && (n%100<11 || n%100>19) ? 0 : n"
+"%10>=2 && n%10<=9 && (n%100<11 || n%100>19) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/partials/kyber-settings.php:9
+msgid "Enable/Disable"
+msgstr "Įjungti/Išjungti"
+
+#: admin/partials/kyber-settings.php:10
+msgid "Enable Kyber"
+msgstr "Įjungti Kyber"
+
+#: admin/partials/kyber-settings.php:16
+msgid "Title"
+msgstr "Antraštė"
+
+#: admin/partials/kyber-settings.php:19
+msgid "Coins, Tokens"
+msgstr "Monetos, žetonai"
+
+#: admin/partials/kyber-settings.php:23
+msgid "Description"
+msgstr "Aprašymas"
+
+#: admin/partials/kyber-settings.php:25
+msgid "This is description for kyber payment method"
+msgstr "Tai yra kyber mokėjimo būdo aprašymas"
+
+#: admin/partials/kyber-settings.php:26
+msgid "Pay with your coins, tokens supported by Kyber"
+msgstr "Mokėti su savo monetomis, žetonais palaikomais Kyber"
+
+#: admin/partials/kyber-settings.php:30
+msgid "Version"
+msgstr "Versija"
+
+#: admin/partials/kyber-settings.php:32
+msgid "Choose widget version that you want to use"
+msgstr "Pasirinkite norimą naudoti valdiklio versiją"
+
+#: admin/partials/kyber-settings.php:41
+msgid "Receive Address*"
+msgstr "Gavimo adresas *"
+
+#: admin/partials/kyber-settings.php:46
+#: includes/class-woo-kyber-payment-gateway.php:179
+msgid "Network"
+msgstr "Tinklas"
+
+#: admin/partials/kyber-settings.php:48
+msgid ""
+"Select network which you want payment to run on, Ropsten for test and "
+"Mainnet for produdction"
+msgstr ""
+"Pasirinkite tinklą, kuriame norite paleisti mokėjimus, Ropsten testavimui ir "
+"Mainnet produkcijai"
+
+#: admin/partials/kyber-settings.php:52
+msgid "Ropsten"
+msgstr "Ropsten"
+
+#: admin/partials/kyber-settings.php:53
+msgid "Mainnet"
+msgstr "Mainnet"
+
+#: admin/partials/kyber-settings.php:57
+msgid "Receive token symbol"
+msgstr "Gauti žetono simbolį"
+
+#: admin/partials/kyber-settings.php:59
+msgid "Token you would like to receive by payment"
+msgstr "Žetonas, kurį norėtumėte gauti apmokant"
+
+#: admin/partials/kyber-settings.php:64
+msgid "Payment mode"
+msgstr "Apmokėjimo būdas"
+
+#: admin/partials/kyber-settings.php:66
+msgid ""
+"This is mode for display Kyber widget style, tab will load Kyber widget in "
+"new tab, iframe will load Kyber widget inside order received page."
+msgstr ""
+"Tai yra Kyber valdiklio rodymo stilius, skirtukas įkelts Kyber valdiklį "
+"naujame skirtuke, iframe bus įkeltas Kyber valdiklis užsakymo gavimo "
+"puslapyje."
+
+#: admin/partials/kyber-settings.php:76
+msgid "Block Confirmation"
+msgstr "Bloko patvirtinimas"
+
+#: admin/partials/kyber-settings.php:78
+msgid "Number of block confirmation for confirm tx as success"
+msgstr "Blokų patvirtinimų skaičius, norint patvirtinti TX sėkmingu"
+
+#: admin/partials/kyber-settings.php:82
+msgid "Commission ID"
+msgstr "Komisinių ID"
+
+#: admin/partials/kyber-settings.php:84
+msgid ""
+"Your Ethereum wallet to get commission of the fees for the transaction. Your "
+"wallet must be whitelisted by KyberNetwork (the permissionless registration "
+"will be available soon) in order to get the commission, otherwise it will be "
+"ignored."
+msgstr ""
+"Jūsų Ethereum piniginės gauti komisinių už pervedimą mokesčiai. Jūsų "
+"piniginė turi būti įtraukta į baltąjį sąrašą KyberNetwork (registracija be "
+"leidimo bus galima greitai) siekiant gauti komisinius, priešingu atveju ji "
+"bus ignoruojama."
+
+#: includes/class-woo-kyber-payment-gateway.php:25
+msgid "Kyber"
+msgstr "Kyber"
+
+#: includes/class-woo-kyber-payment-gateway.php:26
+msgid "Kyber allow user to pay by using tokens"
+msgstr "Kyber leidžia mokėti naudojant žetonus"
+
+#: includes/class-woo-kyber-payment-gateway.php:27
+msgid "Place order"
+msgstr "Pateikti užsakymą"
+
+#: includes/class-woo-kyber-payment-gateway.php:161
+msgid "Order transaction hash"
+msgstr "Užsakymo operacijos maiša"
+
+#: includes/class-woo-kyber-payment-gateway.php:170
+msgid "Tx Status"
+msgstr "TX būsena"
+
+#: includes/class-woo-kyber-payment-gateway.php:194
+msgid ""
+"Receive address is empty. You cannot use pay by token, please contact your "
+"shop about this issue"
+msgstr ""
+"Gavimo adresas yra tuščias. Jūs negalite naudoti mokėjimo žetonų, prašome "
+"susisiekti su jūsų parduotuve dėl šios problemos"
+
+#: includes/class-woo-kyber-payment-gateway.php:200
+msgid "Receive token is not supported."
+msgstr "Gavimo atpažinimo ženklas nepalaikomas."
+
+#: includes/class-woo-kyber-payment-gateway.php:207
+msgid "Network is not valid."
+msgstr "Tinklas neleistinas"
+
+#: includes/class-woo-kyber-payment-gateway.php:213
+msgid "Widget mode is not valid."
+msgstr "Valdiklio režimas neleistinas."
+
+#: includes/class-woo-kyber-payment-gateway.php:348
+#: includes/class-woo-kyber-payment.php:545
+msgid "Awaiting cheque payment"
+msgstr "Laukiama čekių mokėjimo"
+
+#: includes/class-woo-kyber-payment-gateway.php:433
+msgid "Pay by tokens"
+msgstr "Mokėti žetonais"
+
+#: includes/class-woo-kyber-payment.php:421
+msgid "This is price you want to receive by token"
+msgstr "Tai kaina, kurią norite gauti žetonu"
+
+#: includes/class-woo-kyber-payment.php:431
+msgid "This is sale price you want to receive by token"
+msgstr "Tai pardavimo kaina, kurią norite gauti žetonu"
+
+#: update.php:73
+msgid ""
+"An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
+"\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+msgstr ""
+"Įvyko nelaukta HTTP klaida API užklausos metu.</p> <p><a href=\"?\" onclick="
+"\"document.location.reload(); return false;\">Bandykite dar kartą</a>"
+
+#: update.php:78
+msgid "An unknown error occurred"
+msgstr "Įvyko nežinoma klaida"

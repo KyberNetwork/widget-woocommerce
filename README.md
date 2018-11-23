@@ -1,4 +1,24 @@
+<h1 align="center">Kyber Widget WooCommerce</h1>
+<p align="center" style="text-align: center;">
+<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/version" alt="Latest Stable Version" />
+</a>
+<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/downloads" alt="Total Downloads" />
+</a>
+<a href="//packagist.org/packages/kyber-network/widget-woocommerce">
+  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/v/unstable" alt="Latest Unstable Version" />
+</a>
+<a href="./LICENSE">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT licensed" />
+</a>
+<a href="https://t.me/KyberDeveloper">
+  <img src="https://img.shields.io/badge/chat%20on-telegram-brightgreen.svg" alt="Social" />
+</a>
+</p>
+
 # Introduction
+
 Kyber Payment Gateway for WooCommerce 
 
 ![screenshot](https://github.com/KyberNetwork/widget-woocommerce/blob/master/assets/images/screenshot-2.png)
@@ -70,3 +90,7 @@ Plugin settings include:
 
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
+  
+## License
+
+[The MIT License (MIT)](LICENSE)

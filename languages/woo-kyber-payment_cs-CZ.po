@@ -1,0 +1,185 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Kyber Payment Gateway\n"
+"POT-Creation-Date: 2018-09-03 16:45+0700\n"
+"PO-Revision-Date: 2018-10-29 09:15+0100\n"
+"Last-Translator: \n"
+"Language-Team: Kyber\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_attr_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/partials/kyber-settings.php:9
+msgid "Enable/Disable"
+msgstr "Zapnout/Vypnout"
+
+#: admin/partials/kyber-settings.php:10
+msgid "Enable Kyber"
+msgstr "Zapnout Kyber"
+
+#: admin/partials/kyber-settings.php:16
+msgid "Title"
+msgstr "Název"
+
+#: admin/partials/kyber-settings.php:19
+msgid "Coins, Tokens"
+msgstr "Mince, Tokeny"
+
+#: admin/partials/kyber-settings.php:23
+msgid "Description"
+msgstr "Popis"
+
+#: admin/partials/kyber-settings.php:25
+msgid "This is description for kyber payment method"
+msgstr "Toto je popis způsobu platby přes Kyber"
+
+#: admin/partials/kyber-settings.php:26
+msgid "Pay with your coins, tokens supported by Kyber"
+msgstr "Plaťte mincemi, tokeny podporovanými Kyber"
+
+#: admin/partials/kyber-settings.php:30
+msgid "Receive Address*"
+msgstr "Adresa příjemce*"
+
+#: admin/partials/kyber-settings.php:35
+#: includes/class-woo-kyber-payment-gateway.php:183
+msgid "Network"
+msgstr "Síť"
+
+#: admin/partials/kyber-settings.php:37
+msgid ""
+"Select network which you want payment to run on, Ropsten for test and "
+"Mainnet for produdction"
+msgstr ""
+"Vyberte síť, kterou chcete zaplatit, Ropsten pro test a Mainnet pro produkci"
+
+#: admin/partials/kyber-settings.php:41
+msgid "Ropsten"
+msgstr "Ropsten"
+
+#: admin/partials/kyber-settings.php:42
+msgid "Mainnet"
+msgstr "Mainnet"
+
+#: admin/partials/kyber-settings.php:46
+msgid "Receive token symbol"
+msgstr "Symbol příchozího tokenu"
+
+#: admin/partials/kyber-settings.php:48
+msgid "Token you would like to receive by payment"
+msgstr "Token, který chcete získat při platbě"
+
+#: admin/partials/kyber-settings.php:53
+msgid "Payment mode"
+msgstr "Způsob platby"
+
+#: admin/partials/kyber-settings.php:55
+msgid ""
+"This is mode for display Kyber widget style, tab will load Kyber widget in "
+"new tab, iframe will load Kyber widget inside order received page."
+msgstr ""
+"Toto je mód pro zobrazení Kyber widgetu, záložka nahraje widget do nové "
+"záložky, iframe nahraje widget ve stránce s objednávkou."
+
+#: admin/partials/kyber-settings.php:65
+msgid "Network node endpoint"
+msgstr "Endpoint síťového uzlu"
+
+#: admin/partials/kyber-settings.php:67
+msgid ""
+"Node endpoint to check transaction status. If you do not have one, create "
+"using <a href=\"https://infura.io/\" target=\"__blank\">Infura</a>"
+msgstr ""
+"Endpoint uzlu pro ověření stavu transakce. Pokud žádný nemáte, vytvořte ho "
+"pomocí <a href=\"https://infura.io/\" target=\"__blank\">Infura</a>"
+
+#: admin/partials/kyber-settings.php:70
+msgid "Block Confirmation"
+msgstr "Potvrzovací blok"
+
+#: admin/partials/kyber-settings.php:72
+msgid "Number of block confirmation for confirm tx as success"
+msgstr "Počet bloků k potvrzení transakce"
+
+#: admin/partials/kyber-settings.php:76
+msgid "Commission ID"
+msgstr "ID poplatku"
+
+#: admin/partials/kyber-settings.php:78
+msgid ""
+"Your Ethereum wallet to get commission of the fees for the transaction. Your "
+"wallet must be whitelisted by KyberNetwork (the permissionless registration "
+"will be available soon) in order to get the commission, otherwise it will be "
+"ignored."
+msgstr ""
+"Vaše Ethereum peněženka získá záznam o poplatcích této transakce. Pěněženka "
+"musí být na whitelistu KyberNetwork (registrace bude dostupná brzy), aby "
+"bylo možné zaslat poplatek, jinak bude ignorován,"
+
+#: includes/class-woo-kyber-payment-gateway.php:25
+msgid "Kyber"
+msgstr "Kyber"
+
+#: includes/class-woo-kyber-payment-gateway.php:26
+msgid "Kyber allow user to pay by using tokens"
+msgstr "Kyber umožňuje uživatelům platit pomocí tokenů"
+
+#: includes/class-woo-kyber-payment-gateway.php:27
+msgid "Place order"
+msgstr "Vytvořit objednávku"
+
+#: includes/class-woo-kyber-payment-gateway.php:165
+msgid "Order transaction hash"
+msgstr "Hash objednávky"
+
+#: includes/class-woo-kyber-payment-gateway.php:174
+msgid "Tx Status"
+msgstr "Status"
+
+#: includes/class-woo-kyber-payment-gateway.php:198
+msgid ""
+"Receive address is empty. You cannot use pay by token, please contact your "
+"shop about this issue"
+msgstr ""
+"Adresa příjemce je prázdná. Nemůžete zaplatit tokenem, kontaktujte prosím "
+"obchod o této situaci"
+
+#: includes/class-woo-kyber-payment-gateway.php:204
+msgid "Receive token is not supported."
+msgstr "Příchozí token není podporovaný."
+
+#: includes/class-woo-kyber-payment-gateway.php:211
+msgid "Network is not valid."
+msgstr "Síť není validní."
+
+#: includes/class-woo-kyber-payment-gateway.php:217
+msgid "Widget mode is not valid."
+msgstr "Typ widgetu není validní"
+
+#: includes/class-woo-kyber-payment-gateway.php:346
+#: includes/class-woo-kyber-payment.php:354
+msgid "Awaiting cheque payment"
+msgstr "Probíhá platba šekem"
+
+#: includes/class-woo-kyber-payment-gateway.php:403
+msgid "Pay by tokens"
+msgstr "Zaplatit tokeny"
+
+#: includes/class-woo-kyber-payment-gateway.php:435
+msgid "Total"
+msgstr "Celkem"
+
+#: includes/class-woo-kyber-payment.php:228
+msgid "This is price you want to receive by token"
+msgstr "Toto je cena, kterou chcete obdržet pomocí tokenu"
+
+#: includes/class-woo-kyber-payment.php:269
+msgid "This product cannot be paid by token."
+msgstr "Tento produkt nelze uhradit pomocí tokenu."

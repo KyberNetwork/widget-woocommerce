@@ -3,9 +3,6 @@
 <a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
   <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/version" alt="Latest Stable Version" />
 </a>
-<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
-  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/downloads" alt="Total Downloads" />
-</a>
 <a href="//packagist.org/packages/kyber-network/widget-woocommerce">
   <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/v/unstable" alt="Latest Unstable Version" />
 </a>
@@ -90,6 +87,14 @@ Plugin settings include:
 
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
+
+## Sample Walkthrough
+
+You can find a sample walkthough on how to use the plugin (with screenshot) [here](./sample.md)
+
+## Developer documentation and contribution guidelines
+
+If you are a developer and want to contribute to the repository, please check out the [developer docs](./developer.md) and [contribution guidelines](./CONTRIBUTING.MD)
   
 ## License
 

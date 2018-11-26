@@ -2,108 +2,114 @@ msgid ""
 msgstr ""
 "Project-Id-Version: widget woocommerce\n"
 "POT-Creation-Date: 2018-10-06 08:34+0700\n"
-"PO-Revision-Date: 2018-10-06 08:34+0700\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2018-10-09 22:02+0200\n"
 "Language-Team: Kyber (ha.hoang@kyber.network)\n"
-"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e\n"
+"Last-Translator: \n"
+"Language: sl\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/partials/kyber-settings.php:9
 msgid "Enable/Disable"
-msgstr ""
+msgstr "Omogoči/Onemogoči"
 
 #: admin/partials/kyber-settings.php:10
 msgid "Enable Kyber"
-msgstr ""
+msgstr "Omogočite Kyber"
 
 #: admin/partials/kyber-settings.php:16
 msgid "Title"
-msgstr ""
+msgstr "Naslov"
 
 #: admin/partials/kyber-settings.php:19
 msgid "Coins, Tokens"
-msgstr ""
+msgstr "Kriptožetoni"
 
 #: admin/partials/kyber-settings.php:23
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: admin/partials/kyber-settings.php:25
 msgid "This is description for kyber payment method"
-msgstr ""
+msgstr "To je opis kyber načina plačila"
 
 #: admin/partials/kyber-settings.php:26
 msgid "Pay with your coins, tokens supported by Kyber"
-msgstr ""
+msgstr "Plačilo z Vašimi kriptožetoni omogoča Kyber"
 
 #: admin/partials/kyber-settings.php:30
 msgid "Version"
-msgstr ""
+msgstr "Verzija"
 
 #: admin/partials/kyber-settings.php:32
 msgid "Choose widget version that you want to use"
-msgstr ""
+msgstr "Izberite verzijo gradnika, ki jo želite uporabiti"
 
 #: admin/partials/kyber-settings.php:41
 msgid "Receive Address*"
-msgstr ""
+msgstr "Naslov prejemnika*"
 
 #: admin/partials/kyber-settings.php:46
 #: includes/class-woo-kyber-payment-gateway.php:179
 msgid "Network"
-msgstr ""
+msgstr "Omrežje"
 
 #: admin/partials/kyber-settings.php:48
 msgid ""
 "Select network which you want payment to run on, Ropsten for test and "
-"Mainnet for production"
+"Mainnet for produdction"
 msgstr ""
+"Izberite na katerem omrežju naj plačila potekajo, Ropsten za testiranje in "
+"Mainnet za produkcijo"
 
 #: admin/partials/kyber-settings.php:52
 msgid "Ropsten"
-msgstr ""
+msgstr "Ropsten"
 
 #: admin/partials/kyber-settings.php:53
 msgid "Mainnet"
-msgstr ""
+msgstr "Mainnet"
 
 #: admin/partials/kyber-settings.php:57
 msgid "Receive token symbol"
-msgstr ""
+msgstr "Simbol prejemnega kriptožetona"
 
 #: admin/partials/kyber-settings.php:59
 msgid "Token you would like to receive by payment"
-msgstr ""
+msgstr "Kriptožeton, ki bi ga želeli prejeti s plačilom"
 
 #: admin/partials/kyber-settings.php:64
 msgid "Payment mode"
-msgstr ""
+msgstr "Način plačila"
 
 #: admin/partials/kyber-settings.php:66
 msgid ""
 "This is mode for display Kyber widget style, tab will load Kyber widget in "
 "new tab, iframe will load Kyber widget inside order received page."
 msgstr ""
+"To je način prikaza Kyber gradnika. Tab bo odprl Kyber gradnik v novem "
+"zavihku, iframe pa bo naložil Kyber gradnik znotraj strani o prejetem "
+"naročilu."
 
 #: admin/partials/kyber-settings.php:76
 msgid "Block Confirmation"
-msgstr ""
+msgstr "Potrditev bloka"
 
 #: admin/partials/kyber-settings.php:78
 msgid "Number of block confirmation for confirm tx as success"
-msgstr ""
+msgstr "Številka potrditev bloka za potrditev uspešne Tx"
 
 #: admin/partials/kyber-settings.php:82
 msgid "Commission ID"
-msgstr ""
+msgstr "Provizijska ID"
 
 #: admin/partials/kyber-settings.php:84
 msgid ""
@@ -112,68 +118,76 @@ msgid ""
 "will be available soon) in order to get the commission, otherwise it will be "
 "ignored."
 msgstr ""
+"Vaša Ethereum denarnica za prejem provizije ob transakciji. Vaša denarnica "
+"mora biti na KyberNetwork seznamu avtoriziranih denarnic (brez-"
+"avtorizacijska registracija bo kmalu omogočena) za prejem provizije, v "
+"nasprotnem primeru bo ignorirana."
 
 #: includes/class-woo-kyber-payment-gateway.php:25
 msgid "Kyber"
-msgstr ""
+msgstr "Kyber"
 
 #: includes/class-woo-kyber-payment-gateway.php:26
 msgid "Kyber allow user to pay by using tokens"
-msgstr ""
+msgstr "Kyber omogoča uporabnikom plačilo s kriptožetoni"
 
 #: includes/class-woo-kyber-payment-gateway.php:27
 msgid "Place order"
-msgstr ""
+msgstr "Oddajte naročilo"
 
 #: includes/class-woo-kyber-payment-gateway.php:161
 msgid "Order transaction hash"
-msgstr ""
+msgstr "Hash transakcije naročila"
 
 #: includes/class-woo-kyber-payment-gateway.php:170
 msgid "Tx Status"
-msgstr ""
+msgstr "Tx status"
 
 #: includes/class-woo-kyber-payment-gateway.php:194
 msgid ""
 "Receive address is empty. You cannot use pay by token, please contact your "
 "shop about this issue"
 msgstr ""
+"Naslov prejemnika je prazen. Ne morete plačati s kriptožetoni. Prosimo Vas, "
+"da o težavi obvestite prodajalca."
 
 #: includes/class-woo-kyber-payment-gateway.php:200
 msgid "Receive token is not supported."
-msgstr ""
+msgstr "Prejemni žeton ni omogočen."
 
 #: includes/class-woo-kyber-payment-gateway.php:207
 msgid "Network is not valid."
-msgstr ""
+msgstr "Omrežje ni veljavno."
 
 #: includes/class-woo-kyber-payment-gateway.php:213
 msgid "Widget mode is not valid."
-msgstr ""
+msgstr "Način prikaza ni veljaven."
 
 #: includes/class-woo-kyber-payment-gateway.php:348
 #: includes/class-woo-kyber-payment.php:545
 msgid "Awaiting cheque payment"
-msgstr ""
+msgstr "Čaka na plačilo s čekom"
 
 #: includes/class-woo-kyber-payment-gateway.php:433
 msgid "Pay by tokens"
-msgstr ""
+msgstr "Plačajte s kriptožetoni"
 
 #: includes/class-woo-kyber-payment.php:421
 msgid "This is price you want to receive by token"
-msgstr ""
+msgstr "To je cena, ki jo želite prejeti v kriptožetonih"
 
 #: includes/class-woo-kyber-payment.php:431
 msgid "This is sale price you want to receive by token"
-msgstr ""
+msgstr "To je prodajna cena, ki jo želite prejeti v kriptožetonih"
 
 #: update.php:73
 msgid ""
 "An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
 "\" onclick=\"document.location.reload(); return false;\">Try again</a>"
 msgstr ""
+"Med API klicem se je zgodila nepričakovana HTTP napaka.</p> <p><a href=“?” "
+"onclick=“document.location.reload(); return false;”>Poskusite znova</a>"
 
 #: update.php:78
 msgid "An unknown error occurred"
-msgstr ""
+msgstr "Zgodila se je nepričakovana napaka"

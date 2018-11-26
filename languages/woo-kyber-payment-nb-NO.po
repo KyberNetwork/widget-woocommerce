@@ -18,92 +18,96 @@ msgstr ""
 
 #: admin/partials/kyber-settings.php:9
 msgid "Enable/Disable"
-msgstr ""
+msgstr "Aktiver/Deaktiver"
 
 #: admin/partials/kyber-settings.php:10
 msgid "Enable Kyber"
-msgstr ""
+msgstr "Aktiver Kyber"
 
 #: admin/partials/kyber-settings.php:16
 msgid "Title"
-msgstr ""
+msgstr "Tittel"
 
 #: admin/partials/kyber-settings.php:19
 msgid "Coins, Tokens"
-msgstr ""
+msgstr "Mynter, Tokens"
 
 #: admin/partials/kyber-settings.php:23
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: admin/partials/kyber-settings.php:25
 msgid "This is description for kyber payment method"
-msgstr ""
+msgstr "Dette er en beskrivelse for kyber betalingsmetode"
 
 #: admin/partials/kyber-settings.php:26
 msgid "Pay with your coins, tokens supported by Kyber"
-msgstr ""
+msgstr "Betale med dine mynter eller tokens støttet av Kyber"
 
 #: admin/partials/kyber-settings.php:30
 msgid "Version"
-msgstr ""
+msgstr "Versjon"
 
 #: admin/partials/kyber-settings.php:32
 msgid "Choose widget version that you want to use"
-msgstr ""
+msgstr "Velg widgetversjonen du vil bruke"
 
 #: admin/partials/kyber-settings.php:41
-msgid "Receive Address*"
+msgid "Mottaksaddresse*"
 msgstr ""
 
 #: admin/partials/kyber-settings.php:46
 #: includes/class-woo-kyber-payment-gateway.php:179
 msgid "Network"
-msgstr ""
+msgstr "Nettverk"
 
 #: admin/partials/kyber-settings.php:48
 msgid ""
 "Select network which you want payment to run on, Ropsten for test and "
 "Mainnet for production"
 msgstr ""
+"Velg nettverket du vil at betalingen skal gå gjennom, Ropsten for test og"
+"Mainnet for produksjon"
 
 #: admin/partials/kyber-settings.php:52
 msgid "Ropsten"
-msgstr ""
+msgstr "Ropsten"
 
 #: admin/partials/kyber-settings.php:53
 msgid "Mainnet"
-msgstr ""
+msgstr "Mainnet"
 
 #: admin/partials/kyber-settings.php:57
 msgid "Receive token symbol"
-msgstr ""
+msgstr "Motta token symbol"
 
 #: admin/partials/kyber-settings.php:59
 msgid "Token you would like to receive by payment"
-msgstr ""
+msgstr "Token du vil motta ved betaling"
 
 #: admin/partials/kyber-settings.php:64
 msgid "Payment mode"
-msgstr ""
+msgstr "Betalingsmodus"
 
 #: admin/partials/kyber-settings.php:66
 msgid ""
 "This is mode for display Kyber widget style, tab will load Kyber widget in "
 "new tab, iframe will load Kyber widget inside order received page."
 msgstr ""
+"Denne modusen er for vising av Kyber widget utseende, tab vil laste Kyber widget i"
+"en ny fane, iframe vil laste Kyber widgeten."
 
 #: admin/partials/kyber-settings.php:76
 msgid "Block Confirmation"
-msgstr ""
+msgstr "Blokk konfirmasjon"
 
 #: admin/partials/kyber-settings.php:78
 msgid "Number of block confirmation for confirm tx as success"
-msgstr ""
+msgstr "Antall blokkbekreftelser for å bekrefte transaksjonen som suksess"
 
 #: admin/partials/kyber-settings.php:82
 msgid "Commission ID"
-msgstr ""
+msgstr "Provisjon ID"
 
 #: admin/partials/kyber-settings.php:84
 msgid ""
@@ -112,68 +116,76 @@ msgid ""
 "will be available soon) in order to get the commission, otherwise it will be "
 "ignored."
 msgstr ""
+"Din Ethereum lommebok for å motta provisjon av gebyrene for transaksjonen. Din "
+"lommebok må være hvitelistet av KyberNetwork (tillatelsefri registrasjon vil være "
+"tilgjengelig snart) for å motta provisjon, ellers vil den bli ignorert"
+""
 
 #: includes/class-woo-kyber-payment-gateway.php:25
 msgid "Kyber"
-msgstr ""
+msgstr "Kyber"
 
 #: includes/class-woo-kyber-payment-gateway.php:26
 msgid "Kyber allow user to pay by using tokens"
-msgstr ""
+msgstr "Kyber tillater brukeren å betale med tokens"
 
 #: includes/class-woo-kyber-payment-gateway.php:27
 msgid "Place order"
-msgstr ""
+msgstr "Plasser order"
 
 #: includes/class-woo-kyber-payment-gateway.php:161
 msgid "Order transaction hash"
-msgstr ""
+msgstr "Order transaksjonshash"
 
 #: includes/class-woo-kyber-payment-gateway.php:170
 msgid "Tx Status"
-msgstr ""
+msgstr "Tx status"
 
 #: includes/class-woo-kyber-payment-gateway.php:194
 msgid ""
 "Receive address is empty. You cannot use pay by token, please contact your "
 "shop about this issue"
 msgstr ""
+"Mottaksaddresse er tom. Du kan ikke betale med tokens, vennligst kontakt"
+"din butikk angående denne feilen"
 
 #: includes/class-woo-kyber-payment-gateway.php:200
 msgid "Receive token is not supported."
-msgstr ""
+msgstr "Mottakstoken er ikke støttet"
 
 #: includes/class-woo-kyber-payment-gateway.php:207
 msgid "Network is not valid."
-msgstr ""
+msgstr "Nettverk er ikke gyldig"
 
 #: includes/class-woo-kyber-payment-gateway.php:213
 msgid "Widget mode is not valid."
-msgstr ""
+msgstr "Widgetmodus er ikke gyldig"
 
 #: includes/class-woo-kyber-payment-gateway.php:348
 #: includes/class-woo-kyber-payment.php:545
 msgid "Awaiting cheque payment"
-msgstr ""
+msgstr "Avventer sjekk betaling"
 
 #: includes/class-woo-kyber-payment-gateway.php:433
 msgid "Pay by tokens"
-msgstr ""
+msgstr "Betal med tokens"
 
 #: includes/class-woo-kyber-payment.php:421
 msgid "This is price you want to receive by token"
-msgstr ""
+msgstr "Dette er prisen du vil motta med tokens"
 
 #: includes/class-woo-kyber-payment.php:431
 msgid "This is sale price you want to receive by token"
-msgstr ""
+msgstr "Dette er salgsprisen du vil motta med tokens"
 
 #: update.php:73
 msgid ""
 "An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
 "\" onclick=\"document.location.reload(); return false;\">Try again</a>"
 msgstr ""
+"En uventet HTTP error oppstod under API forespørsel. </p> <p><a href=\"?"
+"\" onclick=\"document.location.reload(); return false;\">Prøv igjen</a>"
 
 #: update.php:78
 msgid "An unknown error occurred"
-msgstr ""
+msgstr "En ukjent feil oppstod"

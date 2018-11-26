@@ -90,11 +90,11 @@ Plugin settings include:
 
 ## Sample Walkthrough
 
-You can find a sample walkthough on how to use the plugin (with screenshot) [here](./sample.md)
+You can find a sample walkthough on how to use the plugin (with screenshot) [here](./Sample.md)
 
 ## Developer documentation and contribution guidelines
 
-If you are a developer and want to contribute to the repository, please check out the [developer docs](./developer.md) and [contribution guidelines](./CONTRIBUTING.MD)
+If you are a developer and want to contribute to the repository, please check out the [developer docs](./Developer.md) and [contribution guidelines](./CONTRIBUTING.md)
   
 ## License
 

@@ -3,9 +3,6 @@
 <a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
   <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/version" alt="Latest Stable Version" />
 </a>
-<a href="https://packagist.org/packages/kyber-network/widget-woocommerce">
-  <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/downloads" alt="Total Downloads" />
-</a>
 <a href="//packagist.org/packages/kyber-network/widget-woocommerce">
   <img src="https://poser.pugx.org/kyber-network/widget-woocommerce/v/unstable" alt="Latest Unstable Version" />
 </a>

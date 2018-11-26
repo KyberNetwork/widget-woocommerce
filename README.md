@@ -90,6 +90,14 @@ Plugin settings include:
 
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
+
+## Sample Walkthrough
+
+You can find a sample walkthough on how to use the plugin (with screenshot) [here]()
+
+## Developer documentation and contribution guidelines
+
+
   
 ## License
 

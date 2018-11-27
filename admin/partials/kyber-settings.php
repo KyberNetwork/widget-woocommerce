@@ -31,10 +31,12 @@ return apply_filters( 'wc_kyber_settings',
             'type' => 'select',
             'decription' => __( 'Choose widget version that you want to use', 'woocommerce-gateway-kyber' ),
             'desc_tip' => false,
-            'default' => 'v0.2',
+            'default' => 'v0.4',
             'options' => array(
-                'v0.1' => 'v0.1',
-                'v0.2' => 'v0.2'
+                // 'v0.1' => 'v0.1',
+                // 'v0.2' => 'v0.2',
+                // 'v0.3' => 'v0.3',
+                'v0.4' => 'v0.4'
             )
         ),
         'receive_addr' => array(

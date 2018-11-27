@@ -76,7 +76,8 @@ class Woo_Kyber_Payment_Public {
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$version = $kyber_settings['version'];
 		$version = $version ? $version : "v0.2";
-        wp_enqueue_style( "woo-kyber-pyment-widget-css", sprintf('https://widget.kyber.network/%s/widget.css', $version), array(), "0.0.2", 'all' );
+        // wp_enqueue_style( "woo-kyber-pyment-widget-css", sprintf('https://widget.kyber.network/%s/widget.css', $version), array(), "0.0.2", 'all' );
+        wp_enqueue_style( "woo-kyber-pyment-widget-css", 'https://dev-widget.knstats.com/widget.css', array(), "0.0.2", 'all' );
 
 	}
 
@@ -100,8 +101,9 @@ class Woo_Kyber_Payment_Public {
 		 */
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$version = $kyber_settings['version'];
-		$version = $version ? $version : "v0.2";
+		$version = $version ? $version : "v0.3";
         wp_enqueue_script( "woo-kyber-payment-widget-js", sprintf('https://widget.kyber.network/%s/widget.js', $version), array(), $this->version, true);
+        // wp_enqueue_script( "woo-kyber-payment-widget-js", 'https://dev-widget.knstats.com/widget.js', array(), $this->version, true);
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-public.js', array( 'jquery' ), "0.0.2", true);
 	}
 

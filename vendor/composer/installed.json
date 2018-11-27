@@ -236,6 +236,45 @@
         ]
     },
     {
+        "name": "kyber/monitor-kyber-tx",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
+            "reference": "c8c64e70f9d50ed912ba0b938c8731c1b9623694"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/c8c64e70f9d50ed912ba0b938c8731c1b9623694",
+            "reference": "c8c64e70f9d50ed912ba0b938c8731c1b9623694",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "sc0vu/web3.php": "dev-master"
+        },
+        "time": "2018-11-26T11:45:35+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "ETH\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyber Network",
+                "email": "huy23121994@gmail.com"
+            }
+        ],
+        "description": "Monitor Kyber transaction."
+    },
+    {
         "name": "phpseclib/phpseclib",
         "version": "2.0.x-dev",
         "version_normalized": "2.0.9999999.9999999-dev",
@@ -527,44 +566,5 @@
             "portable",
             "shim"
         ]
-    },
-    {
-        "name": "tranbaohuy/monitor-eth-tx",
-        "version": "v1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
-            "reference": "2d57d4386227572ec29a8c765a74eb07ae5e3738"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/2d57d4386227572ec29a8c765a74eb07ae5e3738",
-            "reference": "2d57d4386227572ec29a8c765a74eb07ae5e3738",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "sc0vu/web3.php": "dev-master"
-        },
-        "time": "2018-09-14T09:48:35+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "ETH\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Trần Bảo Huy",
-                "email": "huy23121994@gmail.com"
-            }
-        ],
-        "description": "Monitor Ethereum transaction."
     }
 ]

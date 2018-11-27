@@ -258,7 +258,14 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_checkout_url( $order ) {
         $version = $this->get_option( 'version' );
-        $endpoint = sprintf("https://widget.kyber.network/%s/?type=pay&theme=light&paramForwarding=true&", $version);
+        if ($version != "v0.4") {
+            $endpoint = sprintf("https://widget.kyber.network/%s/?type=pay&theme=light&paramForwarding=true&", $version);
+        } else {
+            // new version - dev TODO: intended to change to production
+            $endpoint = "https://dev-widget.knstats.com/?type=pay&theme=light&paramForwarding=true&";
+        }
+
+
         $callback_url = get_site_url() . '/wc-api/kyber_callback';
 
         if ( !$this->validate_gateway_settings() ) {
@@ -289,6 +296,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order_id = $order->get_id();
 
         $endpoint .= '&order_id=' . strval($order_id);
+
+        // paymentData will be store on blockchain
+        $endpoint .= '&paymentData=' . strval($order_id);
 
         return $endpoint;
     }

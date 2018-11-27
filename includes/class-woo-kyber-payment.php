@@ -512,7 +512,13 @@ class Woo_Kyber_Payment {
 			'blockConfirm' => $block_confirmation ? $block_confirmation : 30,
 			'txLostTimeout' => 15, // minutes
 			'intervalRefetchTx' => 10, // seconds
+			'checkPaymentValid' => true,
+			'receivedAddress' => $kyber_settings['receive_addr'],
+			'amount' => $order->get_meta( 'total_amount' ),
+			'receivedToken' => $kyber_settings['receive_token_symbol']
 		  ]);
+
+		  error_log( print_r( $monitor, 1 ) );
 
 		  $tx = $order->get_meta( 'tx' );
 		
@@ -521,23 +527,10 @@ class Woo_Kyber_Payment {
 		  error_log( print_r( $receipt, 1 ) );
 
 		  if ( $receipt['status'] == 'SUCCESS' ) {
-			  // check timestamp is valid
-			  // if tx mined timestamp is smaller than order created timestamp then it is invalid
-			  $order_timestamp = $order->get_date_created()->getTimestamp();
-			  $tx_mined_timestamp = $receipt['timestamp'];
 
-			  error_log( print_r( $order_timestamp, 1 ) );
-			  error_log( print_r( $tx_mined_timestamp, 1 ) );
-
-			  if ( $order_timestamp > $tx_mined_timestamp ) {
-				  $order->update_meta_data( 'tx_status', 'transaction was mined before ordered' );
-				  $order->save();
-				  return;
-			  }
-
-			  // check tx amount
-			  $tx_amount = $receipt['to']['amount'];
-			  if ( $tx_amount != $order->get_meta( 'total_amount' ) ) {
+			  // check if payment is valid 
+			  $valid = $receipt['paymentValid'];
+			  if ( !$valid ) {
 				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
 				  return;

@@ -4,7 +4,12 @@
     "license": "MIT",
     "type": "addon",
     "homepage": "https://kyber.network",
-    "keywords": ["kyber", "payment", "gateway", "widget"],
+    "keywords": [
+        "kyber",
+        "payment",
+        "gateway",
+        "widget"
+    ],
     "authors": [
         {
             "name": "Hoang Ha",
@@ -14,7 +19,7 @@
         }
     ],
     "minimum-stability": "dev",
-        "require": {
-           "tranbaohuy/monitor-eth-tx": "v1.0.2"
-        }
+    "require": {
+        "kyber/monitor-kyber-tx": "v1.0.0"
+    }
 }

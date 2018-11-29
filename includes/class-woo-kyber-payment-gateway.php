@@ -57,6 +57,58 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->form_fields = require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kyber-settings.php' );
     }
 
+
+    /**
+     * TODO: implement 
+     */
+    public function validate_title_field( $key, $value ) {
+        error_log( "validate woocommerce kyber title field" );
+        error_log( print_r( $key, 1 ) );
+        error_log( print_r( $value, 1 ) );
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_description_field( $key, $value ) {
+
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_version_field( $key, $value ) {
+
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_receive_addr_field( $key, $value ) {
+
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_receive_token_symbol_field( $key, $value ) {
+
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_mode_field( $key, $value ) {
+
+    }
+
+    /**
+     * TODO: implement
+     */
+    public function validate_block_confirmation_field( $key, $value ) {
+        
+    }
+
     /**
      * Insert Kyber logo into checkout page
      * 

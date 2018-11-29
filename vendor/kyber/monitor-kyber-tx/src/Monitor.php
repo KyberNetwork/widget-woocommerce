@@ -256,15 +256,15 @@ class Monitor{
 
         foreach($this->config->tokens as $token) {
           if($token->address == $dest['address']){
-            $dest['decimal'] = $token->decimal;
+            $dest['decimals'] = $token->decimals;
             $dest['symbol'] = $token->symbol;
-            $dest['amount'] = toRealAmount(hexdec($hexActualDestAmount), $token->decimal);
+            $dest['amount'] = toRealAmount(hexdec($hexActualDestAmount), $token->decimals);
             $dest['amount'] = strval($dest['amount']);
           }
           if($token->address == $src['address']){
-            $src['decimal'] = $token->decimal;
+            $src['decimals'] = $token->decimals;
             $src['symbol'] = $token->symbol;
-            $src['amount'] = toRealAmount(hexdec($hexActualSrcAmount), $token->decimal);
+            $src['amount'] = toRealAmount(hexdec($hexActualSrcAmount), $token->decimals);
             $src['amount'] = strval($src['amount']);
           }
           if(isset($dest['symbol']) && isset($src['symbol'])) break;
@@ -291,20 +291,20 @@ class Monitor{
     $token = 'ETH';
     $sentAddress = $tx->from;
     if($value > 0){
-      $decimal = $this->config->tokens->$token->decimal;
-      $amount = strval(toRealAmount($value, $decimal));
+      $decimals = $this->config->tokens->$token->decimals;
+      $amount = strval(toRealAmount($value, $decimals));
       $receivedAddress = $tx->to;
     }else{
       foreach($this->config->tokens as $t) {
         if($t->address == $tx->to){
           $token = $t->symbol;
-          $decimal = $t->decimal;
+          $decimals = $t->decimals;
           break;
         }
       }
       $readLogData = readTxLog($tx->input);
       $receivedAddress = toAddress($readLogData[0]);
-      $amount = strval(toRealAmount(hexdec($readLogData[1]), $decimal));
+      $amount = strval(toRealAmount(hexdec($readLogData[1]), $decimals));
     }
     return [
       'src' => [
@@ -345,15 +345,15 @@ class Monitor{
 
         foreach($this->config->tokens as $token) {
           if($token->address == $dest['address']){
-            $dest['decimal'] = $token->decimal;
+            $dest['decimals'] = $token->decimals;
             $dest['symbol'] = $token->symbol;
-            $dest['amount'] = toRealAmount(hexdec($hexActualDestAmount), $token->decimal);
+            $dest['amount'] = toRealAmount(hexdec($hexActualDestAmount), $token->decimals);
             $dest['amount'] = strval($dest['amount']);
           }
           if($token->address == $src['address']){
-            $src['decimal'] = $token->decimal;
+            $src['decimals'] = $token->decimals;
             $src['symbol'] = $token->symbol;
-            $src['amount'] = toRealAmount(hexdec($hexActualSrcAmount), $token->decimal);
+            $src['amount'] = toRealAmount(hexdec($hexActualSrcAmount), $token->decimals);
             $src['amount'] = strval($src['amount']);
           }
           if(isset($dest['symbol']) && isset($src['symbol'])) break;

@@ -533,6 +533,7 @@ class Woo_Kyber_Payment {
 			  $valid = $receipt['paymentValid'];
 			  if ( !$valid or is_empty($valid) ) {
 				  $order->update_meta_data( 'tx_status', 'failed' );
+				  $order->update_status( 'failed',  __("Order payment failed", "woocommerce-gateway-kyber"));
 				  $order->save();
 				  return;
 			  }
@@ -541,6 +542,7 @@ class Woo_Kyber_Payment {
 			  $order->save();
 		  } else {
 			  $order->update_meta_data( 'tx_status', 'failed' );
+			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
 			  $order->save();
 		  }
 	}

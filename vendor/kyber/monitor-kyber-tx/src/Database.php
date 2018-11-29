@@ -1,30 +1,30 @@
 <?php
 error_reporting(E_ERROR | E_PARSE);
 
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$db = "kyber_tx";
-
 global $conn;
 
-$conn = new mysqli($servername, $username, $password, $db);
-if ($conn->connect_error) {
-	logDebug("DB connection failed: " . $conn->connect_error);
-}else{
-	$sql = "CREATE TABLE IF NOT EXISTS kyber_txs (
-		id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-		hash VARCHAR(66) NOT NULL UNIQUE,
-		status VARCHAR(10) NOT NULL,
-		payment_valid TINYINT(1),
-		source_amount VARCHAR(20),
-		source_symbol VARCHAR(20),
-		dest_amount VARCHAR(20),
-		dest_symbol VARCHAR(20),
-		created_at TIMESTAMP
-	)";
-
-	runQuery($sql);
+function connectDB($servername = null, $username = null, $password = null, $db = null){
+	if($servername && $username && $password && $db){
+		$GLOBALS['conn'] = new mysqli($servername, $username, $password, $db);
+		if ($GLOBALS['conn']->connect_error) {
+			logDebug("DB connection failed: " . $GLOBALS['conn']->connect_error);
+		}else{
+			$sql = "CREATE TABLE IF NOT EXISTS kyber_txs (
+				id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+				hash VARCHAR(66) NOT NULL UNIQUE,
+				status VARCHAR(10) NOT NULL,
+				payment_valid TINYINT(1),
+				source_amount VARCHAR(20),
+				source_symbol VARCHAR(20),
+				dest_amount VARCHAR(20),
+				dest_symbol VARCHAR(20),
+				created_at TIMESTAMP
+			)";
+			runQuery($sql);
+		}
+		return 1;
+	}
+	return 0;
 }
 
 function insertDB($data){

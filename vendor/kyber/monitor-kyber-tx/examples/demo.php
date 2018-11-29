@@ -8,6 +8,11 @@
     'blockConfirm' => 7,
     'txLostTimeout' => 15, // minutes
     'intervalRefetchTx' => 10, // seconds
+    'checkPaymentValid' => true,
+    'receivedAddress' => '0x3bae9b9e1dca462ad8827f62f4a8b5b3714d7700',
+    'amount' => 6,
+    'receivedToken' => "KNC",
+    'useIntervalLoop' => false,
   ]);
 
   // swap
@@ -24,9 +29,11 @@
   // Pay ETH -> ETH
   $tx = '0xc2a66fd9238d609b3428946f990cc64cd9aa6f34baebf336b4916fabfed9e1a6';
   // Pay ETH -> Token
-  $tx = '0xe3b99c2937f37990fe9f61b2fc24ec9228061d856b6d796483ccc06dd6c443e4';
+  $tx = '0x5388158e57fecefd3a850283f606ab58e4670c29f730f470ab7f413551c01af4';
   // Pay Token -> Token
   $tx = '0x5aa30da4ed81079b8136801ee4ab1e712a73f9c1df8949236fcd8d6f0b988b62';
 
-  var_dump($monitor->checkStatus($tx));
-  die();
+  // Failed tx
+  $tx = '0x125a435d113ceacbe74e814c6fe25e5d53ea678b06e34da801d55ef7f280c631';
+
+  $monitor->checkStatus($tx);

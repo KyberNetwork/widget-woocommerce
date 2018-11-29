@@ -24,23 +24,35 @@ class Monitor{
   protected $receivedAddress = null;
   protected $amount = null;
   protected $receivedToken = null;
+  protected $useIntervalLoop = true;
 
   public function __construct($params = []){
-    if(isset($params['node'])) $this->node = $params['node'];
-    if(isset($params['network'])) $this->network = $params['network'];
-    if(isset($params['blockConfirm']) && $params['blockConfirm'] > 0) 
+    if($params['node']) $this->node = $params['node'];
+    if($params['network']) $this->network = $params['network'];
+    if($params['blockConfirm'] && $params['blockConfirm'] > 0) 
       $this->blockConfirm = $params['blockConfirm'];
-    if(isset($params['txLostTimeout'])) $this->txLostTimeout = $params['txLostTimeout'];
-    if(isset($params['intervalRefetchTx'])) 
+    if($params['txLostTimeout']) $this->txLostTimeout = $params['txLostTimeout'];
+    if($params['intervalRefetchTx']) 
       $this->intervalRefetchTx = $params['intervalRefetchTx'];
-    if(isset($params['useDatabase'])) $this->useDatabase = $params['useDatabase'];
-    if(isset($params['checkPaymentValid'])) 
+    if($params['useDatabase']){
+      $this->useDatabase = $params['useDatabase'];
+      if($params['servername'] && $params['username'] && $params['password'] && $params['db']){
+        connectDB($params['servername'], $params['username'], $params['password'], $params['db']);
+      }else{
+        die('Cannot connect database. Please check again!');
+      }
+    }
+    if($params['checkPaymentValid']) 
       $this->checkPaymentValid = $params['checkPaymentValid'];
-    if(isset($params['receivedAddress'])) $this->receivedAddress = $params['receivedAddress'];
-    if(isset($params['amount'])) $this->amount = $params['amount'];
-    if(isset($params['receivedToken'])) $this->receivedToken = $params['receivedToken'];
+    if($params['receivedAddress']) $this->receivedAddress = $params['receivedAddress'];
+    if($params['amount']) $this->amount = $params['amount'];
+    if($params['receivedToken']) $this->receivedToken = $params['receivedToken'];
+    if($params['useIntervalLoop']) $this->useIntervalLoop = $params['useIntervalLoop'];
     $this->config = readConfig($this->network);
-    $this->eth = (new Web3(new HttpProvider(new HttpRequestManager($this->node, 5))))->eth;
+
+    $web3 = new Web3(new HttpProvider(new HttpRequestManager($this->node, 5)));
+    $this->eth = $web3->eth;
+    $this->utils = $web3->utils;
   }
 
   public function checkStatus($tx){
@@ -90,10 +102,9 @@ class Monitor{
             $txLost = true;
             break;
           }
-
-          // No need to loop, data would be refetch via cronjob if useDatabase was enabled.
-          if($this->useDatabase) return;
         }
+
+        if($this->useDatabase || !$this->useIntervalLoop) return [ 'status' => 'PENDING' ];
       }
     }
     if($txLost){
@@ -137,6 +148,7 @@ class Monitor{
           $to = $payData['dest'];
           $sentAddress = $payData['sentAddress'];
           $receivedAddress = $payData['receivedAddress'];
+          $paymentData = $payData['paymentData'];
         }elseif(strtolower($txReceipt->to) == strtolower($this->config->network)){
           $tradeData = $this->handleTrade();
           $type = 'trade';
@@ -191,10 +203,9 @@ class Monitor{
           'timestamp' => hexdec($txBlock->timestamp),
           'type' => $type,
         ];
-        if($checkPaymentValid){
-          $returnData['paymentValid'] = true;
-        }else{
-          $returnData['paymentValid'] = false;
+        if($this->checkPaymentValid){
+          $returnData['paymentValid'] = $checkPaymentValid ? true : false;
+          $returnData['paymentData'] = $paymentData ? $paymentData : '';
         }
         return $returnData;
       }else{
@@ -207,6 +218,7 @@ class Monitor{
         return [ 'status' => 'FAIL' ];
       }
     }else{
+      if($this->useDatabase || !$this->useIntervalLoop) return [ 'status' => 'PENDING' ];
       $this->txData = [
         'txReceipt' => null,
         'tx' => null,
@@ -312,16 +324,17 @@ class Monitor{
     $txReceipt = $this->txData['txReceipt'];
     $tx = $this->txData['tx'];
     $readInputData = readTxLog($tx->input);
-
     $src = [];
     $dest = [];
 
     $sentAddress = $tx->from;
     $receivedAddress = toAddress($readInputData[3]);
+    $paymentData = null;
 
     foreach($txReceipt->logs as $log){
       if($log->address == $this->config->payWrapper){
         $readLogData = readTxLog($log->data);
+        $paymentData = $this->getPaymentData($log->data);
         $hexSrc = $readInputData[0];
         $hexDest = $readInputData[2];
         $hexActualSrcAmount = $readInputData[1];
@@ -353,8 +366,19 @@ class Monitor{
       'src' => $src, 
       'dest' => $dest, 
       'sentAddress' => $sentAddress, 
-      'receivedAddress' => $receivedAddress
+      'receivedAddress' => $receivedAddress,
+      'paymentData' => $paymentData
     ];
+  }
+
+  protected function getPaymentData($logData){
+    $readLogData = readTxLog($logData);
+    $paymentData = '';
+    foreach($readLogData as $key => $value){
+      if($key < 4) continue;
+      $paymentData = $paymentData . $this->utils->hexToBin($value);
+    }
+    return $paymentData;
   }
 
   public function recheckTxDB(){

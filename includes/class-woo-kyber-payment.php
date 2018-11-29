@@ -515,7 +515,8 @@ class Woo_Kyber_Payment {
 			'checkPaymentValid' => true,
 			'receivedAddress' => $kyber_settings['receive_addr'],
 			'amount' => $order->get_meta( 'total_amount' ),
-			'receivedToken' => $kyber_settings['receive_token_symbol']
+			'receivedToken' => $kyber_settings['receive_token_symbol'],
+			'useIntervalLoop' => false
 		  ]);
 
 		  error_log( print_r( $monitor, 1 ) );
@@ -530,7 +531,7 @@ class Woo_Kyber_Payment {
 
 			  // check if payment is valid 
 			  $valid = $receipt['paymentValid'];
-			  if ( !$valid ) {
+			  if ( !$valid or is_empty($valid) ) {
 				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
 				  return;

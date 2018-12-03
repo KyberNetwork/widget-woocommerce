@@ -1,9 +1,7 @@
 <?php
 
-require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
-use Web3\Web3;    
-use Web3\Providers\HttpProvider;
-use Web3\RequestManagers\HttpRequestManager;
+require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
+use Web3\Utils;    
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -57,56 +55,123 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->form_fields = require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kyber-settings.php' );
     }
 
+    /**
+     * Processes and saves options.
+     * If there is an error thrown, will continue to save and validate fields, but will leave the erroring field out.
+     * @return bool was anything saved?
+     */
+    public function process_admin_options() {
+        $this->init_settings();
+
+        $post_data = $this->get_post_data();
+
+        foreach ( $this->get_form_fields() as $key => $field ) {
+            if ( 'title' !== $this->get_field_type( $field ) ) {
+                try {
+                    $this->settings[ $key ] = $this->get_field_value( $key, $field, $post_data );
+                } catch ( Exception $e ) {
+                    $this->add_error( $e->getMessage() );
+                }
+            }
+        }
+
+        return update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ) );
+    }
+
 
     /**
-     * TODO: implement 
+     * Validate title field
+     * 
+     * @param $key string title
+     * @param $value string
+     * 
+     * @return $value if valid
+     * 
+     * @since 0.0.3
      */
     public function validate_title_field( $key, $value ) {
-        error_log( "validate woocommerce kyber title field" );
-        error_log( print_r( $key, 1 ) );
-        error_log( print_r( $value, 1 ) );
+        $value = trim( $value );
+        if ( $value == "" ) {
+            $this->add_error( "title should not be empty" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * TODO: implement
-     */
-    public function validate_description_field( $key, $value ) {
-
-    }
-
-    /**
-     * TODO: implement
-     */
-    public function validate_version_field( $key, $value ) {
-
-    }
-
-    /**
-     * TODO: implement
+     * Validate receive address
+     * 
+     * @param $key string receive_addr
+     * @param $value string
+     * 
+     * @return $value if valid else display error
+     * 
+     * @since 0.0.3
      */
     public function validate_receive_addr_field( $key, $value ) {
-
+        if ( !Utils::isAddress($value) ) {
+            $this->add_error( "receive address is not valid" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * TODO: implement
+     * Validate receive token symbold
+     * 
+     * @param $key string receive_token_symbol
+     * @param $value string|null
+     * @return $value if valid else display error
+     * 
+     * @since 0.0.3
      */
     public function validate_receive_token_symbol_field( $key, $value ) {
-
+        $support_tokens = $this->get_list_token_supported();
+        if ( !in_array( $value, $support_tokens ) ) {
+            $this->add_error( "receive token is not supported" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * TODO: implement
+     * Validate mode field
+     * @param $key string mode
+     * @param $value string
+     * 
+     * @return $value if valid 
+     * @since 0.0.3
      */
     public function validate_mode_field( $key, $value ) {
-
+        $modes = array("iframe", "tab", "popup");
+        if ( !in_array( $value, $modes ) ) {
+            $this->add_error( "Widget mode is not valid" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
     }
 
     /**
-     * TODO: implement
+     * Validate block confirmation field
+     * 
+     * $key block_confirmation
+     * $value input value
+     * 
+     * return $value if valid/display error if not valid 
+     * @since 0.0.3
      */
     public function validate_block_confirmation_field( $key, $value ) {
-        
+        if ( $value < 1 ) {
+            $this->add_error( "block confirmation must greater than 0" );
+            $this->display_errors();
+        } else {
+            $this->display_errors();
+            return $value;
+        }
     }
 
     /**

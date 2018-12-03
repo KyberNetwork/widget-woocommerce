@@ -23,3 +23,7 @@
 .order-tx-hash {
   word-break: break-all;
 }
+
+.kyber_widget .kyber_widget-import-account-content__info-type-image {
+  display: inline;
+}

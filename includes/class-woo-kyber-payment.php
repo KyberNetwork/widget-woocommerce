@@ -540,7 +540,7 @@ class Woo_Kyber_Payment {
 		      $order->update_status('processing', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
-		  } else {
+		  } else if ( $receipt['status'] == 'FAIL' ) {
 			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
 			  $order->save();

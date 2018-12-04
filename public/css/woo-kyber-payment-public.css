@@ -27,3 +27,7 @@
 .kyber_widget .kyber_widget-import-account-content__info-type-image {
   display: inline;
 }
+
+.kyber_widget .kyber_widget-import-account-content__private-key-input {
+  background-color: #fff !important;
+}

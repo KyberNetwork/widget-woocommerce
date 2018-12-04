@@ -42,12 +42,11 @@ class Monitor{
         die('Cannot connect database. Please check again!');
       }
     }
-    if($params['checkPaymentValid']) 
-      $this->checkPaymentValid = $params['checkPaymentValid'];
+    $this->checkPaymentValid = $params['checkPaymentValid'] ? true : false;
     if($params['receivedAddress']) $this->receivedAddress = $params['receivedAddress'];
     if($params['amount']) $this->amount = $params['amount'];
     if($params['receivedToken']) $this->receivedToken = $params['receivedToken'];
-    if($params['useIntervalLoop']) $this->useIntervalLoop = $params['useIntervalLoop'];
+    $this->useIntervalLoop = $params['useIntervalLoop'] ? true : false;
     $this->config = readConfig($this->network);
 
     $web3 = new Web3(new HttpProvider(new HttpRequestManager($this->node, 5)));
@@ -391,7 +390,7 @@ class Monitor{
   protected function checkPaymentValidFunc($receivedAddress, $amount, $receivedToken){
     if(
       $this->checkPaymentValid &&
-      $receivedAddress == $this->receivedAddress &&
+      strtolower($receivedAddress) == strtolower($this->receivedAddress) &&
       $amount >= $this->amount &&
       $receivedToken == $this->receivedToken
     ){

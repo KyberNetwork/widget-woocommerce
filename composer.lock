@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cef2e6198118c5dc52d69cb84b5eac8",
+    "content-hash": "909dac196c01ed667403a778883af0ee",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -236,16 +236,16 @@
         },
         {
             "name": "kyber/monitor-kyber-tx",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
-                "reference": "ed020389a7fa2c0e85ee0cd595e2b2d0fc0ca59c"
+                "reference": "1cb87f95018ddefbac8b60eb6223b4229b18a5b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/ed020389a7fa2c0e85ee0cd595e2b2d0fc0ca59c",
-                "reference": "ed020389a7fa2c0e85ee0cd595e2b2d0fc0ca59c",
+                "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/1cb87f95018ddefbac8b60eb6223b4229b18a5b2",
+                "reference": "1cb87f95018ddefbac8b60eb6223b4229b18a5b2",
                 "shasum": ""
             },
             "require": {
@@ -269,7 +269,7 @@
                 }
             ],
             "description": "Monitor Kyber transaction.",
-            "time": "2018-11-29T09:18:03+00:00"
+            "time": "2018-12-03T11:46:39+00:00"
         },
         {
             "name": "phpseclib/phpseclib",

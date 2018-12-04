@@ -3,6 +3,13 @@
  * included in this file.
  */
 
+ @font-face{
+   font-family:text-security-disc;
+   font-style:normal;
+   font-weight:400;
+   src:url(text-security-disc.ttf)
+ }
+
 .kyber-icon {
   float: right;
   max-width: 40px;

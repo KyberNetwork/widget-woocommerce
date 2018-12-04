@@ -72,7 +72,7 @@ class Woo_Kyber_Payment_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-public.css', array(), "0.0.2", 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-public.css', array(), "0.0.3", 'all' );
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$version = $kyber_settings['version'];
 		$version = $version ? $version : "v0.2";

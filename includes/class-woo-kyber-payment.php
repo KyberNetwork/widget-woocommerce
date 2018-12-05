@@ -313,7 +313,13 @@ class Woo_Kyber_Payment {
 
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$token_symbol = $kyber_settings['receive_token_symbol'];
+		$order_status = $order->get_status();
+		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
+		} else {
+			$token_symbol = $order->get_meta( 'receive_symbol' );
+		}
+		
         foreach( $items as $item ) {
             $product = $item->get_product();
             $token_price = $product->get_meta( 'kyber_token_price' );
@@ -350,7 +356,12 @@ class Woo_Kyber_Payment {
 	public function kyber_item_token_amount( $subtotal_html, $item, $order ) {
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$token_symbol = $kyber_settings['receive_token_symbol'];
+		$order_status = $order->get_status();
+		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
+		} else {
+			$token_symbol = $order->get_meta( 'receive_symbol' );
+		}
         $product = $item->get_product();
         $token_price = $product->get_meta( 'kyber_token_price' );
 		if ( !$token_price ) {
@@ -379,7 +390,12 @@ class Woo_Kyber_Payment {
 
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$token_symbol = $kyber_settings['receive_token_symbol'];
+		$order_status = $order->get_status();
+		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
+		} else {
+			$token_symbol = $order->get_meta( 'receive_symbol' );
+		}
         foreach( $items as $item ) {
             $product = $item->get_product();
             $token_price = $product->get_meta( 'kyber_token_price' );
@@ -505,6 +521,7 @@ class Woo_Kyber_Payment {
 
 
 		$network = $order->get_meta( 'network' );
+		$receiveToken = $order->get_meta( 'receive_symbol' );
 
 		$monitor = new Monitor([
 			'node' => sprintf('https://%s.infura.io', $network),
@@ -515,7 +532,7 @@ class Woo_Kyber_Payment {
 			'checkPaymentValid' => true,
 			'receivedAddress' => $kyber_settings['receive_addr'],
 			'amount' => $order->get_meta( 'total_amount' ),
-			'receivedToken' => $kyber_settings['receive_token_symbol'],
+			'receivedToken' => $receiveToken,
 			'useIntervalLoop' => false
 		  ]);
 

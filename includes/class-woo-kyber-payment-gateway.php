@@ -245,6 +245,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // update order receive symbol is current receive symbol
         $order->add_meta_data( 'receive_symbol', $this->get_option( 'receive_token_symbol' ), true );
+
         $order->save();
 
         // Return thankyou redirect

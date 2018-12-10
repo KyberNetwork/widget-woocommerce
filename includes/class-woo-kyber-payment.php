@@ -263,6 +263,7 @@ class Woo_Kyber_Payment {
 		if ( $token_price ) {
 			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 			$token_symbol = $kyber_settings['receive_token_symbol'];
+			error_log( print_r( $token_symbol, 1 ) );
 			$cart_item_html .= sprintf( '<div class="kyber_mini_cart_price">(%s %s)</div>', $token_price * $cart_item['quantity'], $token_symbol );
 		}
 		return $cart_item_html;
@@ -522,6 +523,7 @@ class Woo_Kyber_Payment {
 
 		$network = $order->get_meta( 'network' );
 		$receiveToken = $order->get_meta( 'receive_symbol' );
+		$useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
 
 		$monitor = new Monitor([
 			'node' => sprintf('https://%s.infura.io', $network),
@@ -533,7 +535,7 @@ class Woo_Kyber_Payment {
 			'receivedAddress' => $kyber_settings['receive_addr'],
 			'amount' => $order->get_meta( 'total_amount' ),
 			'receivedToken' => $receiveToken,
-			'useIntervalLoop' => false
+			'useIntervalLoop' => $useIntervalLoop 
 		  ]);
 
 		  error_log( print_r( $monitor, 1 ) );
@@ -561,7 +563,12 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
 			  $order->save();
+		  } else if ( $receipt['status'] == 'LOST' ) {
+			  $order->update_meta_data( 'tx_status', 'lost' );
+			  $order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			  $order->save();
 		  }
+		  error_log( "finished monitor" );
 	}
 
 

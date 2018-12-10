@@ -85,6 +85,16 @@ return apply_filters( 'wc_kyber_settings',
             'title' => __( 'Commission ID', 'woocommerce-gateway-kyber' ),
             'type' => 'text',
             'description' => __( 'Your Ethereum wallet to get commission of the fees for the transaction. Your wallet must be whitelisted by KyberNetwork (the permissionless registration will be available soon) in order to get the commission, otherwise it will be ignored.', 'woocommerce-gateway-kyber' )
+        ),
+        'use_cron_job' => array(
+            'title' => __( 'Use cronjob (recommended)', 'woocommerce-gateway-kyber' ),
+            'type' => 'select',
+            'description'=> __( 'Use cronjob to monitor transaction, you can check out how to setup cronjob <a href="">here</a>', 'woocommerce-gateway-kyber' ),
+            'options'=> array(
+                'true' => 'Yes',
+                'false'=> 'No'
+            ),
+            'default' => 'false'
         )
     )
 );

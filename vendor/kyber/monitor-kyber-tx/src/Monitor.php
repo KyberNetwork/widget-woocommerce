@@ -1,13 +1,15 @@
 <?php
 
 namespace ETH;
+
 require_once 'Helper.php';
 require_once 'Database.php';
+require_once 'Connection.php';
 
 use Web3\Web3;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
-use Exception;
+use Connection;
 
 class Monitor{
 
@@ -27,7 +29,6 @@ class Monitor{
   protected $useIntervalLoop = true;
 
   public function __construct($params = []){
-    if($params['node']) $this->node = $params['node'];
     if($params['network']) $this->network = $params['network'];
     if($params['blockConfirm'] && $params['blockConfirm'] > 0) 
       $this->blockConfirm = $params['blockConfirm'];
@@ -48,13 +49,10 @@ class Monitor{
     if($params['receivedToken']) $this->receivedToken = $params['receivedToken'];
     $this->useIntervalLoop = $params['useIntervalLoop'] ? true : false;
     $this->config = readConfig($this->network);
-
-    $web3 = new Web3(new HttpProvider(new HttpRequestManager($this->node, 5)));
-    $this->eth = $web3->eth;
-    $this->utils = $web3->utils;
+    $this->eth = new Connection($this->network, $params['node']);
   }
 
-  public function checkStatus($tx){
+  public function checkStatus($tx, $timeInit = null){
     $txLost = false;
     $this->txData = [
       'txReceipt' => null,
@@ -70,23 +68,10 @@ class Monitor{
       $starttime = time();
       while(true){
         if(!$this->txData['txReceipt']){
-          $this->eth->getTransactionReceipt($tx, function ($err, $txReceipt) {
-            if ($err) {
-              logDebug($err->getMessage());
-              sleep($this->intervalRefetchTx);
-            }
-            if ($txReceipt) {
-              $this->txData['txReceipt'] = $txReceipt;
-            }
-          });
+          $this->txData['txReceipt'] = $this->eth->getTransactionReceipt($tx);
         }
         if(!$this->txData['tx']){
-          $this->eth->getTransactionByHash($tx, function ($err, $txHash) {
-            if ($err) logDebug($err->getMessage());
-            if ($txHash) {
-              $this->txData['tx'] = $txHash;
-            }
-          });
+          $this->txData['tx'] = $this->eth->getTransactionByHash($tx);
         }
         if($this->txData['txReceipt'] && $this->txData['tx']){
           break;
@@ -120,18 +105,7 @@ class Monitor{
   }
 
   protected function handleData($tx){
-    $currentBlock = null;
-    while(true){
-      $this->eth->getBlockByNumber('latest', false, function ($err, $block) use (&$currentBlock) {
-        if ($err !== null) logDebug($err->getMessage());
-        if($block){
-          $currentBlock = hexdec($block->number);
-        }
-      });
-      if($currentBlock){
-        break;
-      }
-    }
+    $currentBlock = $this->eth->getBlockByNumber('latest');
 
     $txReceipt = $this->txData['txReceipt'];
     $txBlockNumber = hexdec($txReceipt->blockNumber);
@@ -163,18 +137,7 @@ class Monitor{
           $receivedAddress = $transferData['receivedAddress'];
           $type = 'transfer';
         }
-        $txBlock = null;
-        while(true){
-          $this->eth->getBlockByNumber($txBlockNumber, false, function ($err, $block) use (&$txBlock) {
-            if ($err !== null) logDebug($err->getMessage());
-            if($block){
-              $txBlock = $block;
-            }
-          });
-          if($txBlock){
-            break;
-          }
-        }
+        $txBlock = $this->eth->getBlockByNumber($txBlockNumber);
         $checkPaymentValid = $this->checkPaymentValidFunc($receivedAddress, $to['amount'], $to['symbol']);
         if($this->useDatabase){
           $updateData = [
@@ -274,7 +237,6 @@ class Monitor{
 
     $sentAddress = toAddress($readLogData[$eventLogParams['srcAddress']]);
     $receivedAddress = toAddress($readLogData[$eventLogParams['destAddress']]);
-
     return [
       'src' => $src, 
       'dest' => $dest, 
@@ -300,6 +262,9 @@ class Monitor{
           $decimals = $t->decimals;
           break;
         }
+      }
+      if(!$decimals){
+        $token = 'UNKNOWN';
       }
       $readLogData = readTxLog($tx->input);
       $receivedAddress = toAddress($readLogData[0]);
@@ -333,7 +298,7 @@ class Monitor{
     foreach($txReceipt->logs as $log){
       if($log->address == $this->config->payWrapper){
         $readLogData = readTxLog($log->data);
-        $paymentData = $this->getPaymentData($log->data);
+        $paymentData = $this->eth->getPaymentData($log->data);
         $hexSrc = $readInputData[0];
         $hexDest = $readInputData[2];
         $hexActualSrcAmount = $readInputData[1];
@@ -370,16 +335,6 @@ class Monitor{
     ];
   }
 
-  protected function getPaymentData($logData){
-    $readLogData = readTxLog($logData);
-    $paymentData = '';
-    foreach($readLogData as $key => $value){
-      if($key < 4) continue;
-      $paymentData = $paymentData . $this->utils->hexToBin($value);
-    }
-    return $paymentData;
-  }
-
   public function recheckTxDB(){
     $pendingTxs = getPendingTx();
     foreach($pendingTxs as $tx){
@@ -398,4 +353,5 @@ class Monitor{
     }
     return false;
   }
+
 }

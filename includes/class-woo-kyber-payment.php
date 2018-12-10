@@ -550,9 +550,11 @@ class Woo_Kyber_Payment {
 
 			  // check if payment is valid 
 			  $valid = $receipt['paymentValid'];
+			  error_log( print_r( "tx is success", 1 ) );
 			  if ( !$valid or is_null($valid) ) {
-				  $order->update_meta_data( 'tx_status', 'failed' );
+				  error_log( "but payment is invalid" );
 				  $order->update_status( 'failed',  __("Order payment failed", "woocommerce-gateway-kyber"));
+				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
 				  return;
 			  }
@@ -560,15 +562,17 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'FAIL' ) {
-			  $order->update_meta_data( 'tx_status', 'failed' );
+			  error_log( "tx is failed" );
 			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
+			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'LOST' ) {
-			  $order->update_meta_data( 'tx_status', 'lost' );
+			  error_log( "tx is lost" );
 			  $order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
-		  error_log( "finished monitor" );
+		  error_log( print_r(sprintf("finished monitor: %s", $tx), r) );
 	}
 
 

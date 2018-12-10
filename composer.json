@@ -20,6 +20,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "kyber/monitor-kyber-tx": "v1.0.5"
+        "kyber/monitor-kyber-tx": "v1.0.7"
     }
 }

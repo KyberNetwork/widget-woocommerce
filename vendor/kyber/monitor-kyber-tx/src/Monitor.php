@@ -88,7 +88,7 @@ class Monitor{
           }
         }
 
-        if($this->useDatabase || !$this->useIntervalLoop) return [ 'status' => 'PENDING' ];
+        if($this->useDatabase || !$this->useIntervalLoop) return [ 'hash' => $tx, 'status' => 'PENDING' ];
       }
     }
     if($txLost){
@@ -98,7 +98,7 @@ class Monitor{
           'status' => 'LOST',
         ]);
       }
-      return [ 'status' => 'LOST' ];
+      return [ 'hash' => $tx, 'status' => 'LOST' ];
     }else{
       return $this->handleData($tx);
     }
@@ -114,7 +114,7 @@ class Monitor{
       $status = hexdec($txReceipt->status);
       if($status){
         $from = $to = $sentAddress = $receivedAddress = null;
-        if(strtolower($txReceipt->to) == strtolower($this->config->payWrapper)){
+        if(strcasecmp($txReceipt->to, $this->config->payWrapper) == 0){
           $payData = $this->handlePay();
           $type = 'pay';
           $from = $payData['src'];
@@ -122,7 +122,7 @@ class Monitor{
           $sentAddress = $payData['sentAddress'];
           $receivedAddress = $payData['receivedAddress'];
           $paymentData = $payData['paymentData'];
-        }elseif(strtolower($txReceipt->to) == strtolower($this->config->network)){
+        }elseif(strcasecmp($txReceipt->to, $this->config->network) == 0){
           $tradeData = $this->handleTrade();
           $type = 'trade';
           $from = $tradeData['src'];
@@ -180,7 +180,7 @@ class Monitor{
         return [ 'status' => 'FAIL' ];
       }
     }else{
-      if($this->useDatabase || !$this->useIntervalLoop) return [ 'status' => 'PENDING' ];
+      if($this->useDatabase || !$this->useIntervalLoop) return [ 'hash' => $tx, 'status' => 'PENDING' ];
       $this->txData = [
         'txReceipt' => null,
         'tx' => null,
@@ -296,7 +296,7 @@ class Monitor{
     $paymentData = null;
 
     foreach($txReceipt->logs as $log){
-      if($log->address == $this->config->payWrapper){
+      if(strcasecmp($log->address, $this->config->payWrapper) == 0){
         $readLogData = readTxLog($log->data);
         $paymentData = $this->eth->getPaymentData($log->data);
         $hexSrc = $readInputData[0];
@@ -306,6 +306,7 @@ class Monitor{
 
         $src['address'] = toAddress($hexSrc);
         $dest['address'] = toAddress($hexDest);
+
 
         foreach($this->config->tokens as $token) {
           if($token->address == $dest['address']){
@@ -345,7 +346,7 @@ class Monitor{
   protected function checkPaymentValidFunc($receivedAddress, $amount, $receivedToken){
     if(
       $this->checkPaymentValid &&
-      strtolower($receivedAddress) == strtolower($this->receivedAddress) &&
+      strcasecmp($receivedAddress,$this->receivedAddress) == 0&&
       $amount >= $this->amount &&
       $receivedToken == $this->receivedToken
     ){

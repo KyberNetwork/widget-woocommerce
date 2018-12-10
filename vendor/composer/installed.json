@@ -237,24 +237,24 @@
     },
     {
         "name": "kyber/monitor-kyber-tx",
-        "version": "v1.0.3",
-        "version_normalized": "1.0.3.0",
+        "version": "v1.0.5",
+        "version_normalized": "1.0.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/KyberNetwork/widget-monitor-php.git",
-            "reference": "1cb87f95018ddefbac8b60eb6223b4229b18a5b2"
+            "reference": "aeaa6c719f08ae2451784141c69d9629c5d4ff7c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/1cb87f95018ddefbac8b60eb6223b4229b18a5b2",
-            "reference": "1cb87f95018ddefbac8b60eb6223b4229b18a5b2",
+            "url": "https://api.github.com/repos/KyberNetwork/widget-monitor-php/zipball/aeaa6c719f08ae2451784141c69d9629c5d4ff7c",
+            "reference": "aeaa6c719f08ae2451784141c69d9629c5d4ff7c",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0",
             "sc0vu/web3.php": "dev-master"
         },
-        "time": "2018-12-03T11:46:39+00:00",
+        "time": "2018-12-10T04:49:36+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

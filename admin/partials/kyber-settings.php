@@ -94,7 +94,7 @@ return apply_filters( 'wc_kyber_settings',
                 'true' => 'Yes',
                 'false'=> 'No'
             ),
-            'default' => 'false'
+            'default' => 'true'
         )
     )
 );

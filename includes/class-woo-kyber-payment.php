@@ -199,7 +199,7 @@ class Woo_Kyber_Payment {
 		}
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-payment-gateway.php';
 		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
-		add_filter( 'woocommerce_payment_gateways', array($this, 'add_payment_gateways'),1000 );
+		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_payment_gateways' ),1000 );
 
   		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
 		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
@@ -211,6 +211,38 @@ class Woo_Kyber_Payment {
 		add_action( 'woocommerce_get_formatted_order_total', array( $this, 'kyber_order_total' ), 10, 2 );
 		add_action( 'woocommerce_order_formatted_line_subtotal', array( $this, 'kyber_item_token_amount' ), 10, 3 );
 		add_action( 'woocommerce_order_subtotal_to_display', array( $this, 'kyber_order_subtotal' ), 10, 3 );
+		add_action( 'kyber_order_checking_cron', array( $this, 'kyber_order_checking_cron_function' ) );
+		add_filter( 'cron_schedules', array( $this , 'kyber_cron_add_intervals') );
+		add_action( 'wp', array( $this, 'kyber_schedule_cron') );
+	}
+
+	public function kyber_schedule_cron() {
+		error_log( "running here" );
+		if ( !wp_next_scheduled( 'kyber_order_checking_cron' ) ) {
+			wp_schedule_event(time(), 'custom_time', 'kyber_order_checking_cron');
+		}
+	}
+
+	public function kyber_cron_add_intervals( $schedules ) {
+		error_log( "add schedules custom time" );
+		$schedules['custom_time'] = array(
+			'interval' => 30,
+			'display' => __( 'Every 30 seconds', 'woocommerce-kyber-gateway' )
+		);
+		return $schedules;
+	}
+
+	public function kyber_order_checking_cron_function() {
+		error_log( "test cron" );
+		$orders = wc_get_orders( array(
+			'status' => 'on-hold',
+			'payment_method' => 'kyber',
+			'numberposts'=> -1
+		));
+		$numberOfOrders = count( $orders );
+		for ( $index = 0; $index <= $numberOfOrders-1; $index++ ) {
+			$this->kyber_on_order_on_hold( $orders[$index]->get_id(), $orders[$index] );
+		}
 	}
 
 	/**
@@ -263,7 +295,6 @@ class Woo_Kyber_Payment {
 		if ( $token_price ) {
 			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 			$token_symbol = $kyber_settings['receive_token_symbol'];
-			error_log( print_r( $token_symbol, 1 ) );
 			$cart_item_html .= sprintf( '<div class="kyber_mini_cart_price">(%s %s)</div>', $token_price * $cart_item['quantity'], $token_symbol );
 		}
 		return $cart_item_html;
@@ -523,6 +554,8 @@ class Woo_Kyber_Payment {
 
 		$network = $order->get_meta( 'network' );
 		$receiveToken = $order->get_meta( 'receive_symbol' );
+
+		error_log( print_r( $kyber_settings, 1 ) );
 		$useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
 
 		$monitor = new Monitor([
@@ -537,8 +570,6 @@ class Woo_Kyber_Payment {
 			'receivedToken' => $receiveToken,
 			'useIntervalLoop' => $useIntervalLoop 
 		  ]);
-
-		  error_log( print_r( $monitor, 1 ) );
 
 		  $tx = $order->get_meta( 'tx' );
 		

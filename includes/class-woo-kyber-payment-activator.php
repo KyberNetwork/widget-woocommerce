@@ -30,7 +30,5 @@ class Woo_Kyber_Payment_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
 	}
-
 }

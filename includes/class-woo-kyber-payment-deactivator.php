@@ -30,7 +30,7 @@ class Woo_Kyber_Payment_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		wp_clear_scheduled_hook( 'kyber_order_checking_cron' );
 	}
 
 }

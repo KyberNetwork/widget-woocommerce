@@ -357,7 +357,7 @@ class Woo_Kyber_Payment {
             $token_price = $product->get_meta( 'kyber_token_price' );
             if ( !$token_price ) {
                 // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-                return 0;
+                return $order_total_html;
             }
             $total += $token_price*$item->get_quantity();
 		}
@@ -398,7 +398,7 @@ class Woo_Kyber_Payment {
         $token_price = $product->get_meta( 'kyber_token_price' );
 		if ( !$token_price ) {
 			// wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-			return 0;
+			return $subtotal_html;
 		}
 		$total += $token_price*$item->get_quantity();
 		

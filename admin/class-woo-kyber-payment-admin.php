@@ -95,6 +95,7 @@ class Woo_Kyber_Payment_Admin {
 		 * class.
 		 */
 		wp_enqueue_script( "select2-js", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false);
+		wp_enqueue_script( "sha3-js", plugin_dir_url( __FILE__ ) . 'js/sha3.min.js', array( 'jquery' ), $this->version, false);
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-admin.js', array( 'jquery' ), $this->version, false);
 	}
 

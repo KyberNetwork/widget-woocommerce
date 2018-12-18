@@ -42,6 +42,10 @@
 		}
 		return true;
 	};
+
+	var validBlockConfirmation = function (blockconfirmation) {
+		return blockconfirmation > 0
+	}
 	
 	$(document).ready(function() {
 		 $(".supported-tokens").select2(); 
@@ -56,6 +60,7 @@
 				// remove old error message
 				$(".receive_address_empty").remove();
 				$(".receive_address_invalid").remove();
+				$(".block_confirmation_invalid").remove();
 
 				// do validation
 				var formValid = true
@@ -63,7 +68,7 @@
 				console.log(receiveAddr);
 
 				if ( !isAddress(receiveAddr) ) {
-					formValid = false
+					formValid = false;
 					$("#woocommerce_kyber_receive_addr").css("border-color", "red");
 					
 					if (receiveAddr == "") {
@@ -73,6 +78,14 @@
 						console.log("invalid ethereum address");
 						$("#woocommerce_kyber_receive_addr").after("<p class='receive_address_invalid' style='color: red; font-style: italic;'>Receive Address is not valid.</p>");
 					}
+				}
+
+				var blockconfirmation = $("#woocommerce_kyber_block_confirmation").val()
+				console.log(blockconfirmation)
+				if ( !validBlockConfirmation(blockconfirmation) ) {
+					formValid = false;
+					$("#woocommerce_kyber_block_confirmation").css("border-color", "red");
+					$("#woocommerce_kyber_block_confirmation").after("<p class='block_confirmation_invalid' style='color:red; font-style: italic;'>Block confirmation must greater than 0</p>");
 				}
 				
 				if (formValid) {

@@ -76,11 +76,13 @@
 		 $(".woocommerce-save-button").click(function(e) {
 			e.preventDefault();
 			// remove old error message
+			$(".receive_address_empty").remove();
+			$(".receive_address_invalid").remove();
+			
 			// do validation
 			var formValid = true
 			var receiveAddr = $("#woocommerce_kyber_receive_addr").val()
 			console.log(receiveAddr);
-
 			if ( !isAddress(receiveAddr) ) {
 				formValid = false
 				$("#woocommerce_kyber_receive_addr").css("border-color", "red");

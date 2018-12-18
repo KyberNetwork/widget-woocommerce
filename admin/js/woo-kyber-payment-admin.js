@@ -2,33 +2,6 @@
 	'use strict';
 
 	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
-	/**
 	 * Checks if the given string is an address
 	 *
 	 * @method isAddress
@@ -74,29 +47,37 @@
 		 $(".supported-tokens").select2(); 
 
 		 $(".woocommerce-save-button").click(function(e) {
-			e.preventDefault();
-			// remove old error message
-			$(".receive_address_empty").remove();
-			$(".receive_address_invalid").remove();
-			
-			// do validation
-			var formValid = true
-			var receiveAddr = $("#woocommerce_kyber_receive_addr").val()
-			console.log(receiveAddr);
-			if ( !isAddress(receiveAddr) ) {
-				formValid = false
-				$("#woocommerce_kyber_receive_addr").css("border-color", "red");
-				if (receiveAddr == "") {
-					console.log("receive address is empty")
-					$("#woocommerce_kyber_receive_addr").after("<p class='receive_address_empty' style='color: red; font-style: italic;'>Receive Address should not be empty.</p>");
-				} else {
-					console.log("invalid ethereum address");
-					$("#woocommerce_kyber_receive_addr").after("<p class='receive_address_invalid' style='color: red; font-style: italic;'>Receive Address is not valid.</p>");
+			// check if current url is section kyber
+			// this part only run if it is in kyber section
+			var url = new URL(window.location.href);
+
+			if (url.searchParams.get("section") == "kyber") {
+				e.preventDefault();
+				// remove old error message
+				$(".receive_address_empty").remove();
+				$(".receive_address_invalid").remove();
+
+				// do validation
+				var formValid = true
+				var receiveAddr = $("#woocommerce_kyber_receive_addr").val()
+				console.log(receiveAddr);
+
+				if ( !isAddress(receiveAddr) ) {
+					formValid = false
+					$("#woocommerce_kyber_receive_addr").css("border-color", "red");
+					
+					if (receiveAddr == "") {
+						console.log("receive address is empty")
+						$("#woocommerce_kyber_receive_addr").after("<p class='receive_address_empty' style='color: red; font-style: italic;'>Receive Address should not be empty.</p>");
+					} else {
+						console.log("invalid ethereum address");
+						$("#woocommerce_kyber_receive_addr").after("<p class='receive_address_invalid' style='color: red; font-style: italic;'>Receive Address is not valid.</p>");
+					}
 				}
-			}
-			
-			if (formValid) {
-				$("#mainform").submit();
+				
+				if (formValid) {
+					$("#mainform").submit();
+				}
 			}
 		 })
 	});

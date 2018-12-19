@@ -550,8 +550,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function embed_kyber_widget_button( $order_id ) {
         $order = wc_get_order($order_id);
+        $order_status = $order->get_status();
 
-        if ( $order->get_payment_method() == 'kyber' ) {
+        if ( $order->get_payment_method() == 'kyber' && ( $order_status == "pending" || $order_status == "failed" )  ) {
             $endpoint = $this->get_checkout_url( $order );
 
             $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );

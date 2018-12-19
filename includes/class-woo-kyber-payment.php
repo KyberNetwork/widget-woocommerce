@@ -471,13 +471,18 @@ class Woo_Kyber_Payment {
 
 		woocommerce_wp_text_input( $args );
 
-        woocommerce_wp_text_input(array(
-            'id' => 'kyber_token_sale_price',
-            'label' => __( sprintf( 'Token sale price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
-            'class' => 'kyber-token-price',
-            'desc_tip' => true,
-            'description' => __( 'This is sale price you want to receive by token', 'woocommerce-gateway-kyber' ),
-        ));
+		/**
+		 * TODO: consider adding back sale price by token later 
+		 * This will bring more work with display sale price and sale scheduling
+		 **/
+
+        // woocommerce_wp_text_input(array(
+        //     'id' => 'kyber_token_sale_price',
+        //     'label' => __( sprintf( 'Token sale price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
+        //     'class' => 'kyber-token-price',
+        //     'desc_tip' => true,
+        //     'description' => __( 'This is sale price you want to receive by token', 'woocommerce-gateway-kyber' ),
+        // ));
 
 	}
 	

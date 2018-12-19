@@ -89,7 +89,7 @@ return apply_filters( 'wc_kyber_settings',
         'use_cron_job' => array(
             'title' => __( 'Use cronjob (recommended)', 'woocommerce-gateway-kyber' ),
             'type' => 'select',
-            'description'=> __( 'Use cronjob to monitor transaction, you can check out how to setup cronjob <a href="">here</a>', 'woocommerce-gateway-kyber' ),
+            'description'=> __( 'Use cronjob to monitor transaction, you can check out how to setup cronjob <a href="https://github.com/KyberNetwork/widget-woocommerce/wiki/Transaction-monitor">here</a>', 'woocommerce-gateway-kyber' ),
             'options'=> array(
                 'true' => 'Yes',
                 'false'=> 'No'

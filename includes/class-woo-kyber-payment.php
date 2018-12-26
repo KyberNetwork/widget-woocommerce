@@ -346,7 +346,8 @@ class Woo_Kyber_Payment {
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$order_status = $order->get_status();
-		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+		error_log( print_r( $order->get_payment_method(), 1 ) );
+		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
 			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
 		} else {
 			$token_symbol = $order->get_meta( 'receive_symbol' );
@@ -389,7 +390,7 @@ class Woo_Kyber_Payment {
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$order_status = $order->get_status();
-		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
 			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
 		} else {
 			$token_symbol = $order->get_meta( 'receive_symbol' );
@@ -423,7 +424,7 @@ class Woo_Kyber_Payment {
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$order_status = $order->get_status();
-		if ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) {
+		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) ) {
 			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
 		} else {
 			$token_symbol = $order->get_meta( 'receive_symbol' );

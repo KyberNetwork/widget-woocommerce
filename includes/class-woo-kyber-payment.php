@@ -562,7 +562,8 @@ class Woo_Kyber_Payment {
 		$receiveToken = $order->get_meta( 'receive_symbol' );
 
 		error_log( print_r( $kyber_settings, 1 ) );
-		$useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
+		// $useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
+		$useIntervalLoop = false;
 
 		$monitor = new Monitor([
 			'node' => sprintf('https://%s.infura.io', $network),

@@ -77,7 +77,7 @@ class Woo_Kyber_Payment_Public {
 		$version = $kyber_settings['version'];
 		$version = $version ? $version : "v0.2";
         // wp_enqueue_style( "woo-kyber-pyment-widget-css", sprintf('https://widget.kyber.network/%s/widget.css', $version), array(), "0.0.2", 'all' );
-        wp_enqueue_style( "woo-kyber-pyment-widget-css", 'https://dev-widget.knstats.com/widget.css', array(), "0.0.2", 'all' );
+        wp_enqueue_style( "woo-kyber-payment-widget-css", 'https://dev-widget.knstats.com/widget.css', array(), "", 'all' );
 
 	}
 

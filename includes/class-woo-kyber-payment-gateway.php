@@ -558,7 +558,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
 
             printf("<a href='%s'
-            class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
+            class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
     }

@@ -376,8 +376,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_checkout_url( $order ) {
         // $version = $this->get_option( 'version' );
-        // new version - dev TODO: intended to change to production
-        $endpoint = "https://dev-widget.knstats.com/?type=pay&theme=light&paramForwarding=true&";
+        $endpoint = "https://widget.kyber.network/v0.4/?type=pay&theme=light&paramForwarding=true&";
 
 
         $callback_url = get_site_url() . '/wc-api/kyber_callback';

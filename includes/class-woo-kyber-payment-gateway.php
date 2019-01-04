@@ -1,9 +1,7 @@
 <?php
 
-require_once dirname(__FILE__, 2) . '/vendor/autoload.php';
-use Web3\Web3;    
-use Web3\Providers\HttpProvider;
-use Web3\RequestManagers\HttpRequestManager;
+require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
+use Web3\Utils;    
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -55,6 +53,125 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function init_form_fields() {
         $this->form_fields = require( plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/kyber-settings.php' );
+    }
+
+    /**
+     * Processes and saves options.
+     * If there is an error thrown, will continue to save and validate fields, but will leave the erroring field out.
+     * @return bool was anything saved?
+     */
+    public function process_admin_options() {
+        $this->init_settings();
+
+        $post_data = $this->get_post_data();
+
+        foreach ( $this->get_form_fields() as $key => $field ) {
+            if ( 'title' !== $this->get_field_type( $field ) ) {
+                try {
+                    $this->settings[ $key ] = $this->get_field_value( $key, $field, $post_data );
+                } catch ( Exception $e ) {
+                    $this->add_error( $e->getMessage() );
+                }
+            }
+        }
+
+        return update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ) );
+    }
+
+
+    /**
+     * Validate title field
+     * 
+     * @param $key string title
+     * @param $value string
+     * 
+     * @return $value if valid
+     * 
+     * @since 0.0.3
+     */
+    public function validate_title_field( $key, $value ) {
+        $value = trim( $value );
+        if ( $value == "" ) {
+            $this->add_error( "title should not be empty" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Validate receive address
+     * 
+     * @param $key string receive_addr
+     * @param $value string
+     * 
+     * @return $value if valid else display error
+     * 
+     * @since 0.0.3
+     */
+    public function validate_receive_addr_field( $key, $value ) {
+        if ( !Utils::isAddress($value) ) {
+            $this->add_error( "receive address is not valid" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Validate receive token symbold
+     * 
+     * @param $key string receive_token_symbol
+     * @param $value string|null
+     * @return $value if valid else display error
+     * 
+     * @since 0.0.3
+     */
+    public function validate_receive_token_symbol_field( $key, $value ) {
+        $support_tokens = $this->get_list_token_supported();
+        if ( !in_array( $value, $support_tokens ) ) {
+            $this->add_error( "receive token is not supported" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Validate mode field
+     * @param $key string mode
+     * @param $value string
+     * 
+     * @return $value if valid 
+     * @since 0.0.3
+     */
+    public function validate_mode_field( $key, $value ) {
+        $modes = array("iframe", "tab", "popup");
+        if ( !in_array( $value, $modes ) ) {
+            $this->add_error( "Widget mode is not valid" );
+            // $this->display_errors();
+        } else {
+            return $value;
+        }
+    }
+
+    /**
+     * Validate block confirmation field
+     * 
+     * $key block_confirmation
+     * $value input value
+     * 
+     * return $value if valid/display error if not valid 
+     * @since 0.0.3
+     */
+    public function validate_block_confirmation_field( $key, $value ) {
+        if ( $value < 1 ) {
+            $this->add_error( "block confirmation must greater than 0" );
+            $this->display_errors();
+        } else {
+            $this->display_errors();
+            return $value;
+        }
     }
 
     /**
@@ -128,6 +245,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         // update order receive symbol is current receive symbol
         $order->add_meta_data( 'receive_symbol', $this->get_option( 'receive_token_symbol' ), true );
+
         $order->save();
 
         // Return thankyou redirect
@@ -257,8 +375,10 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * @since 0.0.1
      */
     public function get_checkout_url( $order ) {
-        $version = $this->get_option( 'version' );
-        $endpoint = sprintf("https://widget.kyber.network/%s/?type=pay&theme=light&paramForwarding=true&", $version);
+        // $version = $this->get_option( 'version' );
+        $endpoint = "https://widget.kyber.network/v0.4/?type=pay&theme=light&paramForwarding=true&";
+
+
         $callback_url = get_site_url() . '/wc-api/kyber_callback';
 
         if ( !$this->validate_gateway_settings() ) {
@@ -289,6 +409,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order_id = $order->get_id();
 
         $endpoint .= '&order_id=' . strval($order_id);
+
+        // paymentData will be store on blockchain
+        $endpoint .= '&paymentData=' . strval($order_id);
 
         return $endpoint;
     }
@@ -342,6 +465,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order->update_meta_data("tx", $tx);
         $order->update_meta_data("network", $network);
         $order->add_meta_data("tx_status", "pending", true);
+        $order->update_meta_data("payment_time", time());
         $order->save();
 
         // Mark as on-hold (we're awaiting cheque)
@@ -426,14 +550,15 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function embed_kyber_widget_button( $order_id ) {
         $order = wc_get_order($order_id);
+        $order_status = $order->get_status();
 
-        if ( $order->get_payment_method() == 'kyber' ) {
+        if ( $order->get_payment_method() == 'kyber' && ( $order_status == "pending" || $order_status == "failed" )  ) {
             $endpoint = $this->get_checkout_url( $order );
 
             $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
 
             printf("<a href='%s'
-            class='kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
+            class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
     }

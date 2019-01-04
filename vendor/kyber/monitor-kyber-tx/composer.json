@@ -1,11 +1,11 @@
 {
-    "name": "tranbaohuy/monitor-eth-tx",
-    "description": "Monitor Ethereum transaction.",
+    "name": "kyber/monitor-kyber-tx",
+    "description": "Monitor Kyber transaction.",
     "license": "MIT",
     "type": "Library",
     "authors": [
         {
-            "name": "Trần Bảo Huy",
+            "name": "Kyber Network",
             "email": "huy23121994@gmail.com"
         }
     ],

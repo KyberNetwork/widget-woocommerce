@@ -88,6 +88,9 @@ Plugin settings include:
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
 
+## Transaction Monitoring:
+- In order to check if the payment is success, we use [widget-monitor-php](https://github.com/KyberNetwork/widget-monitor-php) to monitor transaction, you can find details information [here](./tx_monitor.md)
+
 ## Sample Walkthrough
 
 You can find a sample walkthough on how to use the plugin (with screenshot) [here](./Sample.md)

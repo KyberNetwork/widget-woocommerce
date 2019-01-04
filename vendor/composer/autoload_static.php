@@ -83,7 +83,7 @@ class ComposerStaticInit0608fef2f87283c780dd28dd96b4a4df
         ),
         'ETH\\' => 
         array (
-            0 => __DIR__ . '/..' . '/tranbaohuy/monitor-eth-tx/src',
+            0 => __DIR__ . '/..' . '/kyber/monitor-kyber-tx/src',
         ),
     );
 

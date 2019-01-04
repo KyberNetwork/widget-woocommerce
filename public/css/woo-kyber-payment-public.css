@@ -3,6 +3,13 @@
  * included in this file.
  */
 
+ @font-face{
+   font-family:text-security-disc;
+   font-style:normal;
+   font-weight:400;
+   src:url(text-security-disc.ttf)
+ }
+
 .kyber-icon {
   float: right;
   max-width: 40px;
@@ -22,4 +29,12 @@
 
 .order-tx-hash {
   word-break: break-all;
+}
+
+.kyber_widget .kyber_widget-import-account-content__info-type-image {
+  display: inline;
+}
+
+.kyber_widget .kyber_widget-import-account-content__private-key-input {
+  background-color: #fff !important;
 }

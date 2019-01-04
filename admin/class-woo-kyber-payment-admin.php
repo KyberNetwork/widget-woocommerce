@@ -72,9 +72,8 @@ class Woo_Kyber_Payment_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		wp_enqueue_style( "select2-css", plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-admin.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
@@ -95,9 +94,9 @@ class Woo_Kyber_Payment_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script( "select2-js", plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false);
+		wp_enqueue_script( "sha3-js", plugin_dir_url( __FILE__ ) . 'js/sha3.min.js', array( 'jquery' ), $this->version, false);
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-admin.js', array( 'jquery' ), $this->version, false);
 	}
 
 }

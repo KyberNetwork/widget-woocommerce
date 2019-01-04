@@ -5,7 +5,7 @@
 
 
 $api_url = 'http://128.199.130.120/';
-$plugin_slug = 'woo-kyber-payment';
+$plugin_slug = 'widget-woocommerce';
 
 
 // Take over the update check

@@ -26,17 +26,19 @@ return apply_filters( 'wc_kyber_settings',
             'default' => __( 'Pay with your coins, tokens supported by Kyber',  'woocommmerce-gateway-kyber'),
             'desc_tip' => true,
         ),
-        'version' => array(
-            'title' => __( 'Version', 'woocommerce-gateway-kyber' ),
-            'type' => 'select',
-            'decription' => __( 'Choose widget version that you want to use', 'woocommerce-gateway-kyber' ),
-            'desc_tip' => false,
-            'default' => 'v0.2',
-            'options' => array(
-                'v0.1' => 'v0.1',
-                'v0.2' => 'v0.2'
-            )
-        ),
+        // 'version' => array(
+        //     'title' => __( 'Version', 'woocommerce-gateway-kyber' ),
+        //     'type' => 'select',
+        //     'decription' => __( 'Choose widget version that you want to use', 'woocommerce-gateway-kyber' ),
+        //     'desc_tip' => false,
+        //     'default' => 'v0.4',
+        //     'options' => array(
+        //         // 'v0.1' => 'v0.1',
+        //         // 'v0.2' => 'v0.2',
+        //         // 'v0.3' => 'v0.3',
+        //         'v0.4' => 'v0.4'
+        //     )
+        // ),
         'receive_addr' => array(
             'title' => __( 'Receive Address*', 'woocommerce-gateway-kyber' ),
             'type' => 'text',
@@ -57,6 +59,7 @@ return apply_filters( 'wc_kyber_settings',
             'title' => __( 'Receive token symbol', 'woocommerce-gateway-kyber' ),
             'type' => 'select',
             'description' => __('Token you would like to receive by payment', 'woocommerce-gateway-kyber'),
+            'class' => 'supported-tokens',
             'default' => '',
             'options' => $this->get_list_token_supported(),
         ),
@@ -83,5 +86,15 @@ return apply_filters( 'wc_kyber_settings',
             'type' => 'text',
             'description' => __( 'Your Ethereum wallet to get commission of the fees for the transaction. Your wallet must be whitelisted by KyberNetwork (the permissionless registration will be available soon) in order to get the commission, otherwise it will be ignored.', 'woocommerce-gateway-kyber' )
         )
+        // 'use_cron_job' => array(
+        //     'title' => __( 'Use cronjob (recommended)', 'woocommerce-gateway-kyber' ),
+        //     'type' => 'select',
+        //     'description'=> __( 'Use cronjob to monitor transaction, you can check out how to setup cronjob <a href="https://github.com/KyberNetwork/widget-woocommerce/wiki/Transaction-monitor">here</a>', 'woocommerce-gateway-kyber' ),
+        //     'options'=> array(
+        //         'true' => 'Yes',
+        //         'false'=> 'No'
+        //     ),
+        //     'default' => 'true'
+        // )
     )
 );

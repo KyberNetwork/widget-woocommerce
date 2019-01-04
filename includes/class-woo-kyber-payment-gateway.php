@@ -465,6 +465,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order->update_meta_data("tx", $tx);
         $order->update_meta_data("network", $network);
         $order->add_meta_data("tx_status", "pending", true);
+        $order->update_meta_data("payment_time", time());
         $order->save();
 
         // Mark as on-hold (we're awaiting cheque)

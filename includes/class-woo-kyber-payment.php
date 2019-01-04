@@ -610,7 +610,15 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
-		  error_log( print_r(sprintf("finished monitor: %s", $tx), r) );
+		  error_log( print_r( (time()-$order->get_meta( "payment_time" )) / 60, 1 ) );
+		  // if monitor time is more than 15 min then this tx consider lost
+		  if ( (time() - $order->get_meta( "payment_time" )) / 60 > 15 ) {
+			error_log( "tx is lost" );
+			$order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			$order->update_meta_data( 'tx_status', 'lost' );
+			$order->save();	
+		  }
+		  error_log( print_r(sprintf("finished monitor: %s", $tx), 1) );
 	}
 
 

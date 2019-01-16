@@ -22,8 +22,8 @@ Kyber Payment Gateway for WooCommerce
 
 # Requirements
 
-- PHP version 5.6+
-- WordPress 3.8+
+- PHP version 7.2+
+- WordPress 4.0+
 - WooCommerce 3.0+
 
 # Installation

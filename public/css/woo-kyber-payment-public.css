@@ -10,9 +10,8 @@
    src:url(text-security-disc.ttf)
  }
 
-.kyber-icon {
-  float: right;
-  max-width: 40px;
+.woocommerce .kyber-icon {
+  max-width: 25px;
   padding-left: 3px;
   margin: 0;
 }

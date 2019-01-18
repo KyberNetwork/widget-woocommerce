@@ -12,12 +12,11 @@ use Web3\RequestManagers\HttpRequestManager;
 use Connection;
 
 class Monitor{
-
   protected $node = 'https://ropsten.infura.io';
   protected $blockConfirm = 7;
   protected $txLostTimeout = 15; // minutes
   protected $intervalRefetchTx = 5; // sec
-  protected $currentBlock = null;
+  protected $txBlockNumber = null;
   protected $eth = null;
   protected $network = 'ropsten';
   protected $config = null;
@@ -109,6 +108,7 @@ class Monitor{
 
     $txReceipt = $this->txData['txReceipt'];
     $txBlockNumber = hexdec($txReceipt->blockNumber);
+    $this->txBlockNumber = $txBlockNumber;
     $blockConfirmed = $currentBlock - $txBlockNumber;
     if($blockConfirmed > $this->blockConfirm){
       $status = hexdec($txReceipt->status);
@@ -194,19 +194,12 @@ class Monitor{
     $txReceipt = $this->txData['txReceipt'];
     $tx = $this->txData['tx'];
     
-    $eventLogParams = [
-      'srcAddress' => 0, 
-      'srcToken' => 1, 
-      'srcAmount' => 2, 
-      'destAddress' => 3, 
-      'destToken' => 4, 
-      'destAmount' => 5
-    ];
+    $eventLogParams = $this->getKyberTradeParams();
 
     $src = [];
     $dest = [];
     foreach($txReceipt->logs as $log){
-      if($log->topics[0] == $this->config->trade_topic){
+      if($log->topics[0] == $eventLogParams['trade_topic']){
         $readLogData = readTxLog($log->data);
         $hexSrc = $readLogData[$eventLogParams['srcToken']];
         $hexDest = $readLogData[$eventLogParams['destToken']];
@@ -235,7 +228,7 @@ class Monitor{
       }
     }
 
-    $sentAddress = toAddress($readLogData[$eventLogParams['srcAddress']]);
+    $sentAddress = toAddress($readLogData[$eventLogParams['destAddress']]);
     $receivedAddress = toAddress($readLogData[$eventLogParams['destAddress']]);
     return [
       'src' => $src, 
@@ -353,6 +346,28 @@ class Monitor{
       return true;
     }
     return false;
+  }
+
+  protected function getKyberTradeParams(){
+    if($this->txBlockNumber > $this->config->changedKyberTradeBlock){
+      return [
+        'srcToken' => 0, 
+        'destToken' => 1, 
+        'srcAmount' => 2, 
+        'destAmount' => 3, 
+        'destAddress' => 4, 
+        'trade_topic' => $this->config->trade_topic_2
+      ];
+    }
+    return [
+      'srcAddress' => 0,
+      'srcToken' => 1,
+      'srcAmount' => 2,
+      'destAddress' => 3,
+      'destToken' => 4,
+      'destAmount' => 5,
+      'trade_topic' => $this->config->trade_topic_1
+    ];
   }
 
 }

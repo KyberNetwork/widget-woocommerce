@@ -53,10 +53,10 @@ Currently, the following options are supported.
 |     receivedToken       |  String   |                               |     Token your want to receive after transaction                    |
 |     useIntervalLoop     |  Boolean  | false                         |     If you don't want to get response data until tx success         |
 |     useDatabase         |  Boolean  | false                         |     Set true if you want to use database to store tx, table with name "kyber_tx" would be created. And you should config server to run cronjob to update tx status (See example below)        |
-|     servername          |  String   |                               |     Database server name                                            |
+|     servername          |  String   |                               |     Database server name (only support MySql version in this version)|
 |     username            |  String   |                               |     Database username                                               |
 |     password            |  String   |                               |     Database password                                               |
-|     db                  |  String   |                               |     Database db                                                     |
+|     db                  |  String   |                               |     Database db name                                                |
 
 #### Response data
 

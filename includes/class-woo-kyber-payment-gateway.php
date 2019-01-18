@@ -24,6 +24,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->method_description = sprintf( __('Kyber allow user to pay by using tokens', 'woocommerce-gateway-kyber') );
         $this->order_button_text = __( 'Place order', 'woocommerce-gateway-kyber' );
         $this->has_fields = true;
+
         $this->supports = array(
             'products',
             'refunds',
@@ -38,7 +39,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->title = $this->get_option( 'title' );
         $this->enabled = $this->get_option( 'enabled' );
         $this->description = $this->get_option( 'description' );
+        $this->network = $this->get_option( 'network' );
+        $this->description = $this->get_option( 'description' );
 
+        if ( $this->network == "ropsten" ) {
+            $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woocommerce-gateway-kyber") );
+        }
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
@@ -376,7 +382,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_checkout_url( $order ) {
         // $version = $this->get_option( 'version' );
-        $endpoint = "https://widget.kyber.network/v0.4/?type=pay&theme=light&paramForwarding=true&";
+        $endpoint = "https://widget.kyber.network/v0.5/?type=pay&theme=light&paramForwarding=true&";
 
 
         $callback_url = get_site_url() . '/wc-api/kyber_callback';

@@ -494,6 +494,99 @@
       "icon": "dcc.svg",
       "isNew": true,
       "expireDate": "2018/11/05"
+    },
+    "CNN": {
+      "name": "CNN Token",
+      "symbol": "CNN",
+      "decimals": 18,
+      "address": "0x8713d26637CF49e1b6B4a7Ce57106AaBc9325343"
+    },
+    "SSP": {
+      "name": "Smartshare Token",
+      "symbol": "SSP",
+      "decimals": 4,
+      "address": "0x624d520BAB2E4aD83935Fa503fB130614374E850"
+    },
+    "PRO": {
+      "name": "Propy",
+      "symbol": "PRO",
+      "decimals": 8,
+      "address": "0x226bb599a12C826476e3A771454697EA52E9E220"
+    },
+    "OCN": {
+      "name": "OCoin",
+      "symbol": "OCN",
+      "decimals": 18,
+      "address": "0x4092678e4E78230F46A1534C0fbc8fA39780892B"
+    },
+    "EKO":{
+      "name": "EchoLink",
+      "symbol": "EKO",
+      "address": "0xa6a840e50bcaa50da017b91a0d86b8b2d41156ee",
+      "decimals": 18
+    },
+    "HOT": {
+      "name": "Hydro Protocol",
+      "symbol": "HOT",
+      "address": "0x9af839687f6c94542ac5ece2e317daae355493a1",
+      "decimals": 18
+    },
+    "OST": {
+      "name": "Open Simple Token",
+      "symbol": "OST",
+      "address": "0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca",
+      "decimals": 18
+    },
+    "DTH":{
+      "name": "Dether",
+      "symbol" : "DTH",
+      "decimals": 18,
+      "address": "0x5adc961D6AC3f7062D2eA45FEFB8D8167d44b190",
+      "hidden": 1542891600000       
+    },
+    "TVND":{
+      "name": "TrueVND",
+      "symbol" : "TVND",
+      "decimals": 18,
+      "address": "0x3Dc0501c32beE0cc1e629d590302A4b909797474",
+      "hidden": true       
+    },
+    "WBTC":{
+      "name": "Wrapped BTC",
+      "symbol" : "WBTC",
+      "decimals": 8,
+      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "hidden": true       
+    },
+
+    "ABYSS":{
+      "name": "ABYSS",
+      "symbol" : "ABYSS",
+      "decimals": 18,
+      "address": "0x0E8d6b471e332F140e7d9dbB99E5E3822F728DA6",
+      "hidden": true       
+    },
+    "PT":{
+      "name": "Promotion Token",
+      "symbol" : "PT",
+      "decimals": 18,
+      "address": "0x094c875704c14783049ddf8136e298b3a099c446",
+      "hidden": 1543938161000       
+    },
+
+    "TTC":{
+      "name": "TTC Protocol",
+      "symbol" : "TTC",
+      "decimals": 18,
+      "address": "0x9389434852b94bbad4c8afed5b7bdbc5ff0c2275",
+      "hidden": 1546088400000       
+    },
+    "INF":{
+      "name": "InfinitusTokens",
+      "symbol" : "INF",
+      "decimals": 18,
+      "address": "0x00e150d741eda1d49d341189cae4c08a73a49c95",
+      "hidden": 1545048000000       
     }
   },
   "ethScanUrl": "https://etherscan.io/",
@@ -502,7 +595,9 @@
   "network": "0x818e6fecd516ecc3849daf6845e3ec868087b755",
   "wrapper": "0x6172afc8c00c46e0d07ce3af203828198194620a",
   "payWrapper": "0xFa71B63935cF9878E009ba6595Da08f6d75C4Aa1",
-  "trade_topic":"0x1c8399ecc5c956b9cb18c820248b10b634cca4af308755e07cd467655e8ec3c7",
+  "trade_topic_1": "0x1c8399ecc5c956b9cb18c820248b10b634cca4af308755e07cd467655e8ec3c7",
+  "changedKyberTradeBlock": 7024980,
+  "trade_topic_2":"0xd30ca399cb43507ecec6a629a35cf45eb98cda550c27696dcb0d8c4a3873ce6c",
   "endpoint": "wss://mainnet.infura.io/ws",
   "averageBlockTime": 15000,
   "networkId": 1,

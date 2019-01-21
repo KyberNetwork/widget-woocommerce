@@ -11,6 +11,17 @@
 
 ### Compatibility
 
+0.1.1 (2018-01-18)
+
+### Features:
+- Support variable product
+
+### Bug fixes:
+
+### Improvements:
+
+### Compatibility:
+
 0.1 (2018-01-04)
 
 ### Features:

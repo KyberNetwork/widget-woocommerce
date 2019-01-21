@@ -354,9 +354,13 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $items = $order->get_items();
 
         $total = 0;
-        foreach( $items as $item ) {
+        foreach( $items as $item_id => $item ) {
             $product = $item->get_product();
-            $token_price = $product->get_meta( 'kyber_token_price' );
+            $product_id = $product->get_parent_id();
+            if ( !$product_id )  {
+                $product_id = $product->get_id();
+            }
+            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
             if ( !$token_price ) {
                 wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
                 return 0;

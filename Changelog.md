@@ -11,6 +11,31 @@
 
 ### Compatibility
 
+0.1.2 (2018-01-18)
+
+### Features:
+- Support variable product
+
+### Bug fixes:
+
+### Improvements:
+- Update price css
+
+### Compatibility:
+
+0.1.1 (2018-01-18)
+
+### Features:
+
+### Bug fixes:
+
+### Improvements:
+- Update css
+- Update monitoring lib
+- Update test mode enabled message
+
+### Compatibility:
+
 0.1 (2018-01-04)
 
 ### Features:

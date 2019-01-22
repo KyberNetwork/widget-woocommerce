@@ -521,7 +521,7 @@ class Woo_Kyber_Payment {
 		if ( $token_price ) {
 			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 			$token_symbol = $kyber_settings['receive_token_symbol'];
-			$price .= sprintf('<div><span class="woocommerce-Price-amount amount">%s <span class="woocommerce-Price-currencySymbol">%s</span></span></div>',
+			$price .= sprintf('<span><span class="woocommerce-Price-amount amount"> (%s <span class="woocommerce-Price-currencySymbol">%s) </span></span></span>',
 								esc_html( $token_price ),
 								esc_html( $token_symbol ));
 		}

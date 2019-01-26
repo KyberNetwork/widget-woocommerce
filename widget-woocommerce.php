@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              developer.kyber.network
- * @since             0.0.2 
+ * @since             0.1.0
  * @package           Woo_Kyber_Payment
  *
  * @wordpress-plugin
  * Plugin Name:       WooCommerce Kyber Payment
  * Plugin URI:        github.com/KyberNetwork/widget-woocommerce
  * Description:       Allow Woocommerce site to accept pay by token.
- * Version:           0.0.2
+ * Version:           0.1.2
  * Author:            Kyber Network
  * Author URI:        developer.kyber.network
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '0.0.2' );
+define( 'PLUGIN_NAME_VERSION', '0.1.2' );
 define( 'WC_KYBER_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 
 /**
@@ -87,7 +87,7 @@ include plugin_dir_path( __FILE__ ) . 'update.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    0.0.1
+ * @since    0.1.0
  */
 function run_woo_kyber_payment() {
 

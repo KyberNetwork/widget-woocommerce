@@ -24,6 +24,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->method_description = sprintf( __('Kyber allow user to pay by using tokens', 'woocommerce-gateway-kyber') );
         $this->order_button_text = __( 'Place order', 'woocommerce-gateway-kyber' );
         $this->has_fields = true;
+
         $this->supports = array(
             'products',
             'refunds',
@@ -38,7 +39,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->title = $this->get_option( 'title' );
         $this->enabled = $this->get_option( 'enabled' );
         $this->description = $this->get_option( 'description' );
+        $this->network = $this->get_option( 'network' );
+        $this->description = $this->get_option( 'description' );
 
+        if ( $this->network == "ropsten" ) {
+            $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woocommerce-gateway-kyber") );
+        }
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
@@ -348,9 +354,13 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $items = $order->get_items();
 
         $total = 0;
-        foreach( $items as $item ) {
+        foreach( $items as $item_id => $item ) {
             $product = $item->get_product();
-            $token_price = $product->get_meta( 'kyber_token_price' );
+            $product_id = $product->get_parent_id();
+            if ( !$product_id )  {
+                $product_id = $product->get_id();
+            }
+            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
             if ( !$token_price ) {
                 wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
                 return 0;
@@ -376,8 +386,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_checkout_url( $order ) {
         // $version = $this->get_option( 'version' );
-        // new version - dev TODO: intended to change to production
-        $endpoint = "https://dev-widget.knstats.com/?type=pay&theme=light&paramForwarding=true&";
+        $endpoint = "https://widget.kyber.network/v0.5/?type=pay&theme=light&paramForwarding=true&";
 
 
         $callback_url = get_site_url() . '/wc-api/kyber_callback';
@@ -466,6 +475,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order->update_meta_data("tx", $tx);
         $order->update_meta_data("network", $network);
         $order->add_meta_data("tx_status", "pending", true);
+        $order->update_meta_data("payment_time", time());
         $order->save();
 
         // Mark as on-hold (we're awaiting cheque)

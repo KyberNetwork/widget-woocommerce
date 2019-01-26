@@ -22,8 +22,8 @@ Kyber Payment Gateway for WooCommerce
 
 # Requirements
 
-- PHP version 5.6+
-- WordPress 3.8+
+- PHP version 7.2+
+- WordPress 4.0+
 - WooCommerce 3.0+
 
 # Installation
@@ -87,6 +87,9 @@ Plugin settings include:
 
 - **Commission ID**
   Registered ETH address that is part of the [fee sharing program](https://developer.kyber.network/docs/FeeSharingGuide)
+
+## Transaction Monitoring:
+- In order to check if the payment is success, we use [widget-monitor-php](https://github.com/KyberNetwork/widget-monitor-php) to monitor transaction, you can find details information [here](./tx_monitor.md)
 
 ## Sample Walkthrough
 

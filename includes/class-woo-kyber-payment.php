@@ -354,8 +354,13 @@ class Woo_Kyber_Payment {
 		}
 		
         foreach( $items as $item ) {
-            $product = $item->get_product();
-            $token_price = $product->get_meta( 'kyber_token_price' );
+			$product = $item->get_product();
+			$product_id = $product->get_parent_id();
+			if ( !$product_id ) {
+				$product_id = $product->get_id();
+			}
+			$token_price = get_post_meta( $product_id, 'kyber_token_price', true );
+			error_log( print_r($token_price, 1) );
             if ( !$token_price ) {
                 // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
                 return $order_total_html;
@@ -396,7 +401,7 @@ class Woo_Kyber_Payment {
 			$token_symbol = $order->get_meta( 'receive_symbol' );
 		}
         $product = $item->get_product();
-        $token_price = $product->get_meta( 'kyber_token_price' );
+		$token_price = $product->get_meta( 'kyber_token_price' );
 		if ( !$token_price ) {
 			// wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
 			return $subtotal_html;
@@ -430,8 +435,12 @@ class Woo_Kyber_Payment {
 			$token_symbol = $order->get_meta( 'receive_symbol' );
 		}
         foreach( $items as $item ) {
-            $product = $item->get_product();
-            $token_price = $product->get_meta( 'kyber_token_price' );
+			$product = $item->get_product();
+			$product_id = $product->get_parent_id();
+			if ( !$product_id ) {
+				$product_id = $product->get_id();
+			}
+            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
             if ( !$token_price ) {
                 // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
                 return $subtotal_html;
@@ -513,7 +522,7 @@ class Woo_Kyber_Payment {
 		if ( $token_price ) {
 			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 			$token_symbol = $kyber_settings['receive_token_symbol'];
-			$price .= sprintf('<div><span class="woocommerce-Price-amount amount">%s <span class="woocommerce-Price-currencySymbol">%s</span></span></div>',
+			$price .= sprintf('<span><span class="woocommerce-Price-amount amount"> (%s <span class="woocommerce-Price-currencySymbol">%s) </span></span></span>',
 								esc_html( $token_price ),
 								esc_html( $token_symbol ));
 		}
@@ -610,7 +619,15 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
-		  error_log( print_r(sprintf("finished monitor: %s", $tx), r) );
+		  error_log( print_r( (time()-$order->get_meta( "payment_time" )) / 60, 1 ) );
+		  // if monitor time is more than 15 min then this tx consider lost
+		  if ( (time() - $order->get_meta( "payment_time" )) / 60 > 15 ) {
+			error_log( "tx is lost" );
+			$order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			$order->update_meta_data( 'tx_status', 'lost' );
+			$order->save();	
+		  }
+		  error_log( print_r(sprintf("finished monitor: %s", $tx), 1) );
 	}
 
 

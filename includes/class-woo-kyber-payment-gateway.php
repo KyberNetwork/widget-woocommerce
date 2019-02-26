@@ -353,6 +353,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     public function get_order_total_amount_by_token( $order ) {
         $items = $order->get_items();
 
+        error_log( print_r($order->get_total(), 1) );
+
         $total = 0;
         foreach( $items as $item_id => $item ) {
             $product = $item->get_product();

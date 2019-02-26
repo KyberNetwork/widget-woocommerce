@@ -194,17 +194,7 @@ class Monitor{
     $txReceipt = $this->txData['txReceipt'];
     $tx = $this->txData['tx'];
     
-<<<<<<< HEAD
     $eventLogParams = $this->getKyberTradeParams();
-=======
-    $eventLogParams = [
-      'srcToken' => 0, 
-      'destToken' => 1, 
-      'srcAmount' => 2, 
-      'destAmount' => 3, 
-      'destAddress' => 4, 
-    ];
->>>>>>> ade4f9d... update monitoring lib
 
     $src = [];
     $dest = [];

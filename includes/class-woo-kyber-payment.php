@@ -217,14 +217,12 @@ class Woo_Kyber_Payment {
 	}
 
 	public function kyber_schedule_cron() {
-		error_log( "running here" );
 		if ( !wp_next_scheduled( 'kyber_order_checking_cron' ) ) {
 			wp_schedule_event(time(), 'custom_time', 'kyber_order_checking_cron');
 		}
 	}
 
 	public function kyber_cron_add_intervals( $schedules ) {
-		error_log( "add schedules custom time" );
 		$schedules['custom_time'] = array(
 			'interval' => 30,
 			'display' => __( 'Every 30 seconds', 'woocommerce-kyber-gateway' )
@@ -233,7 +231,6 @@ class Woo_Kyber_Payment {
 	}
 
 	public function kyber_order_checking_cron_function() {
-		error_log( "test cron" );
 		$orders = wc_get_orders( array(
 			'status' => 'on-hold',
 			'payment_method' => 'kyber',
@@ -346,7 +343,6 @@ class Woo_Kyber_Payment {
         $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$order_status = $order->get_status();
-		error_log( print_r( $order->get_payment_method(), 1 ) );
 		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
 			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
 		} else {
@@ -360,7 +356,6 @@ class Woo_Kyber_Payment {
 				$product_id = $product->get_id();
 			}
 			$token_price = get_post_meta( $product_id, 'kyber_token_price', true );
-			error_log( print_r($token_price, 1) );
             if ( !$token_price ) {
                 // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
                 return $order_total_html;
@@ -570,7 +565,6 @@ class Woo_Kyber_Payment {
 		$network = $order->get_meta( 'network' );
 		$receiveToken = $order->get_meta( 'receive_symbol' );
 
-		error_log( print_r( $kyber_settings, 1 ) );
 		// $useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
 		$useIntervalLoop = false;
 
@@ -591,15 +585,11 @@ class Woo_Kyber_Payment {
 		
 		  $receipt = $monitor->checkStatus($tx);
 
-		  error_log( print_r( $receipt, 1 ) );
-
 		  if ( $receipt['status'] == 'SUCCESS' ) {
 
 			  // check if payment is valid 
 			  $valid = $receipt['paymentValid'];
-			  error_log( print_r( "tx is success", 1 ) );
 			  if ( !$valid or is_null($valid) ) {
-				  error_log( "but payment is invalid" );
 				  $order->update_status( 'failed',  __("Order payment failed", "woocommerce-gateway-kyber"));
 				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
@@ -609,25 +599,20 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'FAIL' ) {
-			  error_log( "tx is failed" );
 			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
 			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'LOST' ) {
-			  error_log( "tx is lost" );
 			  $order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
 			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
-		  error_log( print_r( (time()-$order->get_meta( "payment_time" )) / 60, 1 ) );
 		  // if monitor time is more than 15 min then this tx consider lost
 		  if ( (time() - $order->get_meta( "payment_time" )) / 60 > 15 ) {
-			error_log( "tx is lost" );
 			$order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
 			$order->update_meta_data( 'tx_status', 'lost' );
 			$order->save();	
 		  }
-		  error_log( print_r(sprintf("finished monitor: %s", $tx), 1) );
 	}
 
 

@@ -457,7 +457,7 @@ class EthApiTest extends TestCase
             if ($err !== null) {
                 return $this->assertTrue($err !== null);
             }
-            $this->assertTrue($transaction !== null);
+            $this->assertTrue($transaction == null);
         });
     }
 
@@ -474,7 +474,7 @@ class EthApiTest extends TestCase
             if ($err !== null) {
                 return $this->assertTrue($err !== null);
             }
-            $this->assertTrue($transaction !== null);
+            $this->assertTrue($transaction == null);
         });
     }
 
@@ -508,7 +508,7 @@ class EthApiTest extends TestCase
             if ($err !== null) {
                 return $this->assertTrue($err !== null);
             }
-            $this->assertTrue($transaction !== null);
+            $this->assertTrue($transaction == null);
         });
     }
 
@@ -543,24 +543,6 @@ class EthApiTest extends TestCase
                 return $this->assertTrue($err !== null);
             }
             $this->assertTrue($uncle !== null);
-        });
-    }
-
-    /**
-     * testGetCompilers
-     * 
-     * @return void
-     */    
-    public function testGetCompilers()
-    {
-        $eth = $this->eth;
-
-        $eth->getCompilers(function ($err, $compilers) {
-            if ($err !== null) {
-                return $this->assertTrue($err !== null);
-            }
-            $this->assertTrue(is_array($compilers));
-            $this->assertEquals($compilers[0], 'solidity');
         });
     }
 

@@ -73,11 +73,11 @@ class Woo_Kyber_Payment_Public {
 		 * class.
 		 */
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/woo-kyber-payment-public.css', array(), "0.0.3", 'all' );
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$version = $kyber_settings['version'];
-		$version = $version ? $version : "v0.2";
+		// $kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		// $version = $kyber_settings['version'];
+		// $version = $version ? $version : "v0.2";
         // wp_enqueue_style( "woo-kyber-pyment-widget-css", sprintf('https://widget.kyber.network/%s/widget.css', $version), array(), "0.0.2", 'all' );
-        wp_enqueue_style( "woo-kyber-payment-widget-css", 'https://widget.kyber.network/v0.5/widget.css', array(), "", 'all' );
+        wp_enqueue_style( "woo-kyber-payment-widget-css", 'https://widget.kyber.network/v0.6.2/widget.css', array(), "", 'all' );
 
 	}
 
@@ -99,11 +99,11 @@ class Woo_Kyber_Payment_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$version = $kyber_settings['version'];
-		$version = $version ? $version : "v0.3";
+		// $kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+		// $version = $kyber_settings['version'];
+		// $version = $version ? $version : "v0.3";
         // wp_enqueue_script( "woo-kyber-payment-widget-js", sprintf('https://widget.kyber.network/%s/widget.js', $version), array(), $this->version, true);
-        wp_enqueue_script( "woo-kyber-payment-widget-js", 'https://widget.kyber.network/v0.5/widget.js', array(), $this->version, true);
+        wp_enqueue_script( "woo-kyber-payment-widget-js", 'https://widget.kyber.network/v0.6.2/widget.js', array(), $this->version, true);
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-kyber-payment-public.js', array( 'jquery' ), "0.0.2", true);
 	}
 

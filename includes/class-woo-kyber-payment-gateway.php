@@ -582,9 +582,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
         $token_price_html = sprintf('</br><p></p>
         <div class="kyber-cart-token-price">
-        <strong>%s</strong>
-        <span class="receive-token">%s</span>
+        <img style="float:left; margin-right: 5px;" src="%s" height="24px" width="24px">
+        <strong>%.3f</strong>
+        <span class="receive-token"><strong>%s</strong></span>
         </div>',
+        esc_html(sprintf("https://files.kyber.network/DesignAssets/tokens/%s.svg", strtolower($receiveToken))),
         esc_html($token_price),
         esc_html($receiveToken));
 

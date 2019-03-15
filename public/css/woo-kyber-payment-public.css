@@ -37,3 +37,8 @@
 .kyber_widget .kyber_widget-import-account-content__private-key-input {
   background-color: #fff !important;
 }
+
+.kyber-cart-token-price {
+  margin-top: 20px;
+  margin-left: 10px;
+}

@@ -24,11 +24,11 @@ class Stream implements StreamInterface
             'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
             'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
             'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a+' => true
+            'x+t' => true, 'c+t' => true, 'a+' => true, 'rb+' => true,
         ],
         'write' => [
             'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
-            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
+            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true, 'rb+' => true,
             'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
             'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
         ]
@@ -197,6 +197,8 @@ class Stream implements StreamInterface
 
     public function seek($offset, $whence = SEEK_SET)
     {
+        $whence = (int) $whence;
+        
         if (!isset($this->stream)) {
             throw new \RuntimeException('Stream is detached');
         }

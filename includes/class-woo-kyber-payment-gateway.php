@@ -2,6 +2,9 @@
 
 require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
 use Web3\Utils;    
+use Web3\Contract;
+use Web3\Providers\HttpProvider;
+use Web3\RequestManagers\HttpRequestManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -17,6 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
+
+    protected $dai = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359";
+    protected $eth = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+    protected $gwei = "1000000000000000000"; // gwei const
+    protected $abi = '[{"constant":false,"inputs":[{"name":"alerter","type":"address"}],"name":"removeAlerter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"enabled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"pendingAdmin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getOperators","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"destAddress","type":"address"},{"name":"maxDestAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"},{"name":"walletId","type":"address"},{"name":"hint","type":"bytes"}],"name":"tradeWithHint","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"}],"name":"swapTokenToEther","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"amount","type":"uint256"},{"name":"sendTo","type":"address"}],"name":"withdrawToken","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"maxGasPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newAlerter","type":"address"}],"name":"addAlerter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"kyberNetworkContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"user","type":"address"}],"name":"getUserCapInWei","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"minConversionRate","type":"uint256"}],"name":"swapTokenToToken","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newAdmin","type":"address"}],"name":"transferAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"claimAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"minConversionRate","type":"uint256"}],"name":"swapEtherToToken","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"newAdmin","type":"address"}],"name":"transferAdminQuickly","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAlerters","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"srcQty","type":"uint256"}],"name":"getExpectedRate","outputs":[{"name":"expectedRate","type":"uint256"},{"name":"slippageRate","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"user","type":"address"},{"name":"token","type":"address"}],"name":"getUserCapInTokenWei","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOperator","type":"address"}],"name":"addOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_kyberNetworkContract","type":"address"}],"name":"setKyberNetworkContract","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"operator","type":"address"}],"name":"removeOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"field","type":"bytes32"}],"name":"info","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"destAddress","type":"address"},{"name":"maxDestAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"},{"name":"walletId","type":"address"}],"name":"trade","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"},{"name":"sendTo","type":"address"}],"name":"withdrawEther","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"token","type":"address"},{"name":"user","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_admin","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"trader","type":"address"},{"indexed":false,"name":"src","type":"address"},{"indexed":false,"name":"dest","type":"address"},{"indexed":false,"name":"actualSrcAmount","type":"uint256"},{"indexed":false,"name":"actualDestAmount","type":"uint256"}],"name":"ExecuteTrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newNetworkContract","type":"address"},{"indexed":false,"name":"oldNetworkContract","type":"address"}],"name":"KyberNetworkSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"token","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"sendTo","type":"address"}],"name":"TokenWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"sendTo","type":"address"}],"name":"EtherWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"pendingAdmin","type":"address"}],"name":"TransferAdminPending","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newAdmin","type":"address"},{"indexed":false,"name":"previousAdmin","type":"address"}],"name":"AdminClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newAlerter","type":"address"},{"indexed":false,"name":"isAdd","type":"bool"}],"name":"AlerterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newOperator","type":"address"},{"indexed":false,"name":"isAdd","type":"bool"}],"name":"OperatorAdded","type":"event"}]';
+    protected $supported_tokens = array();
 
     public function __construct() {
         $this->id = 'kyber';
@@ -46,10 +55,16 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woocommerce-gateway-kyber") );
         }
 
+        $timeout = 30;
+        $network_endpoint = sprintf("https://%s.infura.io", $this->network);
+        $provider = new HttpProvider(new HttpRequestManager($network_endpoint, $timeout));
+        $this->proxy_contract =  new Contract($provider, $this->abi);
+
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
+        add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
     }
 
     /**
@@ -212,6 +227,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $result = array();
         for ( $index = 0; $index < count( $data); $index++ ) {
             $result[$data[$index]->symbol] = $data[$index]->symbol;
+            $this->supported_tokens[$data[$index]->symbol] = $data[$index]->contractAddress;
         }
 
         return $result;
@@ -235,13 +251,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( !$setting_ok ) {
             return;
         }
-
-        // check if all products in order are supported pay by token
-        $products_ok = $this->get_order_total_amount_by_token( $order );
-        if ( !$products_ok ) {
-            return;
-        }
-        $order->add_meta_data( 'total_amount', $products_ok, true );
 
         // update order network is current network setting
         $order->update_meta_data( 'network', $this->get_option( 'network' ) );
@@ -327,7 +336,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
        
         $network = $this->get_option( 'network' );
         if ( $network != 'ropsten' && $network != 'mainnet' ) {
-            error_log( $network );
             wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
             return false;
         }
@@ -339,41 +347,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
 
         return true;
-    }
-
-    /**
-     * If there is an item is not supported for token payment
-     * return 0
-     * 
-     * @param WC_Abstract_Order order to calculate amount
-     * @return mixed total amount of order by token
-     * 
-     * @since 0.0.1
-     */
-    public function get_order_total_amount_by_token( $order ) {
-        $items = $order->get_items();
-
-        $total = 0;
-        foreach( $items as $item_id => $item ) {
-            $product = $item->get_product();
-            $product_id = $product->get_parent_id();
-            if ( !$product_id )  {
-                $product_id = $product->get_id();
-            }
-            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
-            if ( !$token_price ) {
-                wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-                return 0;
-            }
-            $total += $token_price*$item->get_quantity();
-        }
-
-        if ( $total == 0 ) {
-            wc_add_notice( __( sprintf( 'Order total should be greater than zero' ), 'woocommerce-gateway-kyber' ), 'error' );
-            return 0;
-        }
-
-        return $total;
     }
 
     /**
@@ -404,7 +377,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $mode = $this->get_option( 'mode' );
         
 
-        $receiveAmount = $this->get_order_total_amount_by_token($order);
+        $receiveAmount = $order->get_meta( 'token_price' );
+        if ( !$receiveAmount ) {
+            $receiveAmount = $this->get_token_price( $order );
+            error_log( print_r( sprintf("cannot get token price from order meta data, try to get from blockchain: %s", $receiveAmount), 1 ) );
+        }
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
         $endpoint .= '&network=' . $network;
@@ -445,8 +422,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $dataJSON = json_encode($dataStr);
             $data = json_decode($dataJSON);
         }
-
-        error_log( print_r( $data, 1 ) );
 
         $valid = $this->validate_callback_params($data);
         header( "Access-Control-Allow-Origin: *", true );
@@ -499,9 +474,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             'meta_value'   => $tx,
         );
         $current_post = get_posts($args);
-
-        error_log( print_r( $current_post, 1 ) );
-        error_log( print_r( $tx, 1 ) );
 
         if( $current_post && $current_post[0]->ID != $order_id ) {
             return true;
@@ -571,6 +543,90 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
+    }
+
+    /**
+     * Get token rate from dai to receive token and return it in payment method description
+     *
+     * @return string token price for cart
+     * @since 0.2
+     */
+    public function payment_fields() {
+        $description = $this->description;
+        if ( $description ) {
+            echo $description;
+        }
+        $total = WC()->cart->total;
+        if (!$total) {
+            global $wp;
+            $order_id = $wp->query_vars['order-pay'];
+            $order = new WC_Order( $order_id );
+            $total = $order->get_total();
+        }
+        $receiveToken = $this->get_option( "receive_token_symbol" );
+        $receiveTokenAddress = $this->supported_tokens[$receiveToken];
+        $dai = $this->supported_tokens["DAI"];
+
+        $functionName = "getExpectedRate";
+        $src_qty = 1000000000000000000;
+        $rate = 0;
+        $this->proxy_contract->at("0x818E6FECD516Ecc3849DAf6845e3EC868087B755")->call($functionName, $dai, $receiveTokenAddress, $src_qty, function( $err, $result ) use (&$rate) {
+            if ($err != null) {
+                error_log( print_r( $err->getMessage(), 1 ) );
+            }
+            $expectedRate =  strval($result['expectedRate']->value);
+            $rate = bcdiv( $expectedRate, $this->gwei, 18); 
+        });
+
+        $token_price = $rate * $total;
+
+        $token_price_html = sprintf('</br><p></p>
+        <div class="kyber-cart-token-price">
+        <img style="float:left; margin-right: 5px;" src="%s" height="24px" width="24px">
+        <strong>%.3f</strong>
+        <span class="receive-token"><strong>%s</strong></span>
+        </div>',
+        esc_html(sprintf("https://files.kyber.network/DesignAssets/tokens/%s.svg", strtolower($receiveToken))),
+        esc_html($token_price),
+        esc_html($receiveToken));
+
+        echo $token_price_html;
+    }
+
+    /**
+     * Get token price for order
+     * 
+     * @return float token price
+     * 
+     * @since 0.2
+     */
+    public function get_token_price( $order ) {
+        $receiveToken = $this->get_option( "receive_token_symbol" );
+        $receiveTokenAddress = $this->supported_tokens[$receiveToken];
+        $dai = $this->supported_tokens["DAI"];
+
+        $functionName = "getExpectedRate";
+        $src_qty = 1000000000000000000;
+        $rate = 0;
+        $this->proxy_contract->at("0x818E6FECD516Ecc3849DAf6845e3EC868087B755")->call($functionName, $dai, $receiveTokenAddress, $src_qty, 
+        function( $err, $result ) use (&$rate) {
+            if ($err != null) {
+                error_log( print_r( sprintf("get dai rate from blockchain failed: %s", $err->getMessage()), 1 ) );
+            }
+            $expectedRate =  strval($result['expectedRate']->value);
+            $rate = bcdiv( $expectedRate, $this->gwei, 18); 
+        }); 
+
+        $token_price = $order->get_total() * $rate;
+        $order->add_meta_data( "token_price", $token_price, true );
+        
+        return $token_price;
+    }
+
+    public function kyber_price_filter( $order_id ) {
+        error_log( print_r( sprintf("kyber price filter: %s", $order_id), 1) );
+        $total_order_token_price_html = sprintf('<p>%s</p>', esc_html($order_id));
+        return $total_order_token_price_html;
     }
 
 }

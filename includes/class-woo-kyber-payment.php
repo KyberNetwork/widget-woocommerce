@@ -201,30 +201,28 @@ class Woo_Kyber_Payment {
 		// require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-woo-kyber-logger.php'; 
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_payment_gateways' ),1000 );
 
-  		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
-		add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
-		add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
+  		// add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_token_price_fields' ) );
+		// add_action( 'woocommerce_process_product_meta', array( $this, 'kyber_save_price_token') );
+		// add_action( 'woocommerce_get_price_html', array( $this, 'kyber_admin_product_list_token_price' ), 10, 2 );
 		add_action( 'woocommerce_order_status_on-hold', array($this, 'kyber_on_order_on_hold'), 10, 2 );
-		add_action( 'woocommerce_cart_item_price', array( $this, 'kyber_cart_item_price' ), 10, 2 );
+		// add_action( 'woocommerce_cart_item_price', array( $this, 'kyber_cart_item_price' ), 10, 2 );
 		add_action( 'woocommerce_widget_cart_item_quantity', array( $this, 'kyber_cart_item_quantity' ), 10, 2 );
-		add_action( 'woocommerce_cart_item_subtotal', array( $this, 'kyber_cart_item_subtotal' ), 10, 2);
-		add_action( 'woocommerce_get_formatted_order_total', array( $this, 'kyber_order_total' ), 10, 2 );
-		add_action( 'woocommerce_order_formatted_line_subtotal', array( $this, 'kyber_item_token_amount' ), 10, 3 );
-		add_action( 'woocommerce_order_subtotal_to_display', array( $this, 'kyber_order_subtotal' ), 10, 3 );
+		// add_action( 'woocommerce_cart_item_subtotal', array( $this, 'kyber_cart_item_subtotal' ), 10, 2);
+		// add_action( 'woocommerce_get_formatted_order_total', array( $this, 'kyber_order_total' ), 10, 2 );
+		// add_action( 'woocommerce_order_formatted_line_subtotal', array( $this, 'kyber_item_token_amount' ), 10, 3 );
+		// add_action( 'woocommerce_order_subtotal_to_display', array( $this, 'kyber_order_subtotal' ), 10, 3 );
 		add_action( 'kyber_order_checking_cron', array( $this, 'kyber_order_checking_cron_function' ) );
 		add_filter( 'cron_schedules', array( $this , 'kyber_cron_add_intervals') );
 		add_action( 'wp', array( $this, 'kyber_schedule_cron') );
 	}
 
 	public function kyber_schedule_cron() {
-		error_log( "running here" );
 		if ( !wp_next_scheduled( 'kyber_order_checking_cron' ) ) {
 			wp_schedule_event(time(), 'custom_time', 'kyber_order_checking_cron');
 		}
 	}
 
 	public function kyber_cron_add_intervals( $schedules ) {
-		error_log( "add schedules custom time" );
 		$schedules['custom_time'] = array(
 			'interval' => 30,
 			'display' => __( 'Every 30 seconds', 'woocommerce-kyber-gateway' )
@@ -233,7 +231,6 @@ class Woo_Kyber_Payment {
 	}
 
 	public function kyber_order_checking_cron_function() {
-		error_log( "test cron" );
 		$orders = wc_get_orders( array(
 			'status' => 'on-hold',
 			'payment_method' => 'kyber',
@@ -341,40 +338,22 @@ class Woo_Kyber_Payment {
 	 * @since 0.0.1
 	 */
 	public function kyber_order_total( $order_total_html, $order ) {
-        $items = $order->get_items();
-
-        $total = 0;
 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 		$order_status = $order->get_status();
-		error_log( print_r( $order->get_payment_method(), 1 ) );
 		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
 			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
 		} else {
 			$token_symbol = $order->get_meta( 'receive_symbol' );
 		}
 		
-        foreach( $items as $item ) {
-			$product = $item->get_product();
-			$product_id = $product->get_parent_id();
-			if ( !$product_id ) {
-				$product_id = $product->get_id();
-			}
-			$token_price = get_post_meta( $product_id, 'kyber_token_price', true );
-			error_log( print_r($token_price, 1) );
-            if ( !$token_price ) {
-                // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-                return $order_total_html;
-            }
-            $total += $token_price*$item->get_quantity();
-		}
-		
+		$order_token_price = $order->get_meta("token_price");
 		$order_total_html .= sprintf('
 		<div class="kyber-price">
 			<span class="woocommerce-Price-amount amount">(%s 
 				<span class="woocommerce-Price-currencySymbol">%s)</span>
 			</span>
 		</div>',
-		esc_html( $total ),
+		esc_html( $order_token_price),
 		esc_html( $token_symbol ));
 
 		return $order_total_html;
@@ -391,122 +370,122 @@ class Woo_Kyber_Payment {
 	 * 
 	 * @since 0.0.1 
 	 */
-	public function kyber_item_token_amount( $subtotal_html, $item, $order ) {
-        $total = 0;
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$order_status = $order->get_status();
-		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
-			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
-		} else {
-			$token_symbol = $order->get_meta( 'receive_symbol' );
-		}
-        $product = $item->get_product();
-		$token_price = $product->get_meta( 'kyber_token_price' );
-		if ( !$token_price ) {
-			// wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-			return $subtotal_html;
-		}
-		$total += $token_price*$item->get_quantity();
+	// public function kyber_item_token_amount( $subtotal_html, $item, $order ) {
+    //     $total = 0;
+	// 	$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+	// 	$order_status = $order->get_status();
+	// 	if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' )) {
+	// 		$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
+	// 	} else {
+	// 		$token_symbol = $order->get_meta( 'receive_symbol' );
+	// 	}
+    //     $product = $item->get_product();
+	// 	$token_price = $product->get_meta( 'kyber_token_price' );
+	// 	if ( !$token_price ) {
+	// 		// wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+	// 		return $subtotal_html;
+	// 	}
+	// 	$total += $token_price*$item->get_quantity();
 		
-		$subtotal_html .= sprintf('
-		<div class="kyber-price">
-			<span class="woocommerce-Price-amount amount">(%s 
-				<span class="woocommerce-Price-currencySymbol">%s)</span>
-			</span>
-		</div>',
-		esc_html( $total ),
-		esc_html( $token_symbol ));
+	// 	$subtotal_html .= sprintf('
+	// 	<div class="kyber-price">
+	// 		<span class="woocommerce-Price-amount amount">(%s 
+	// 			<span class="woocommerce-Price-currencySymbol">%s)</span>
+	// 		</span>
+	// 	</div>',
+	// 	esc_html( $total ),
+	// 	esc_html( $token_symbol ));
 
-		return $subtotal_html;	
-	}
+	// 	return $subtotal_html;	
+	// }
 
 	/**
 	 * 
 	 */
-	public function kyber_order_subtotal( $subtotal_html, $compound, $order ) {
-        $items = $order->get_items();
+	// public function kyber_order_subtotal( $subtotal_html, $compound, $order ) {
+    //     $items = $order->get_items();
 
-        $total = 0;
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-		$order_status = $order->get_status();
-		if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) ) {
-			$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
-		} else {
-			$token_symbol = $order->get_meta( 'receive_symbol' );
-		}
-        foreach( $items as $item ) {
-			$product = $item->get_product();
-			$product_id = $product->get_parent_id();
-			if ( !$product_id ) {
-				$product_id = $product->get_id();
-			}
-            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
-            if ( !$token_price ) {
-                // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-                return $subtotal_html;
-            }
-            $total += $token_price*$item->get_quantity();
-		}
+    //     $total = 0;
+	// 	$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+	// 	$order_status = $order->get_status();
+	// 	if ( $order->get_payment_method() != "kyber" || ( $order_status ==  'pending_payment' || $order_status == 'failed' || $order_status == 'cancelled' ) ) {
+	// 		$token_symbol = $kyber_settings[ 'receive_token_symbol' ];
+	// 	} else {
+	// 		$token_symbol = $order->get_meta( 'receive_symbol' );
+	// 	}
+    //     foreach( $items as $item ) {
+	// 		$product = $item->get_product();
+	// 		$product_id = $product->get_parent_id();
+	// 		if ( !$product_id ) {
+	// 			$product_id = $product->get_id();
+	// 		}
+    //         $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
+    //         if ( !$token_price ) {
+    //             // wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
+    //             return $subtotal_html;
+    //         }
+    //         $total += $token_price*$item->get_quantity();
+	// 	}
 		
-		$subtotal_html .= sprintf('
-		<div class="kyber-price">
-			<span class="woocommerce-Price-amount amount">(%s 
-				<span class="woocommerce-Price-currencySymbol">%s)</span>
-			</span>
-		</div>',
-		esc_html( $total ),
-		esc_html( $token_symbol ));
+	// 	$subtotal_html .= sprintf('
+	// 	<div class="kyber-price">
+	// 		<span class="woocommerce-Price-amount amount">(%s 
+	// 			<span class="woocommerce-Price-currencySymbol">%s)</span>
+	// 		</span>
+	// 	</div>',
+	// 	esc_html( $total ),
+	// 	esc_html( $token_symbol ));
 
-		return $subtotal_html;
-	}
+	// 	return $subtotal_html;
+	// }
 
 	/**
 	 * Adding token price field to a single product
 	 * 
 	 * @since 0.0.1
 	 */
-	public function add_token_price_fields() {
+	// public function add_token_price_fields() {
 
-		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+	// 	$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
 
-		$token_symbol = $kyber_settings['receive_token_symbol'];
+	// 	$token_symbol = $kyber_settings['receive_token_symbol'];
 
-		$args = array(
-			'id' => 'kyber_token_price',
-			'label' => __( sprintf( 'Token price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
-			'class' => 'kyber-token-price',
-			'desc_tip' => true,
-			'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
-		);
+	// 	$args = array(
+	// 		'id' => 'kyber_token_price',
+	// 		'label' => __( sprintf( 'Token price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
+	// 		'class' => 'kyber-token-price',
+	// 		'desc_tip' => true,
+	// 		'description' => __( 'This is price you want to receive by token', 'woocommerce-gateway-kyber' ),
+	// 	);
 
-		woocommerce_wp_text_input( $args );
+	// 	woocommerce_wp_text_input( $args );
 
-		/**
-		 * TODO: consider adding back sale price by token later 
-		 * This will bring more work with display sale price and sale scheduling
-		 **/
+	// 	/**
+	// 	 * TODO: consider adding back sale price by token later 
+	// 	 * This will bring more work with display sale price and sale scheduling
+	// 	 **/
 
-        // woocommerce_wp_text_input(array(
-        //     'id' => 'kyber_token_sale_price',
-        //     'label' => __( sprintf( 'Token sale price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
-        //     'class' => 'kyber-token-price',
-        //     'desc_tip' => true,
-        //     'description' => __( 'This is sale price you want to receive by token', 'woocommerce-gateway-kyber' ),
-        // ));
+    //     // woocommerce_wp_text_input(array(
+    //     //     'id' => 'kyber_token_sale_price',
+    //     //     'label' => __( sprintf( 'Token sale price (%s)', $token_symbol ), 'woocommerce-gateway-kyber' ),
+    //     //     'class' => 'kyber-token-price',
+    //     //     'desc_tip' => true,
+    //     //     'description' => __( 'This is sale price you want to receive by token', 'woocommerce-gateway-kyber' ),
+    //     // ));
 
-	}
+	// }
 	
 	/**
 	 * Save the token price 
 	 * 
 	 * @since 0.0.1
 	 */
-	function kyber_save_price_token( $post_id ) {
-		$product = wc_get_product( $post_id );
-		$token_price = isset( $_POST['kyber_token_price'] ) ? $_POST['kyber_token_price'] : '';
-		$product->update_meta_data( 'kyber_token_price', sanitize_text_field( $token_price) );
-		$product->save();
-   }
+// 	function kyber_save_price_token( $post_id ) {
+// 		$product = wc_get_product( $post_id );
+// 		$token_price = isset( $_POST['kyber_token_price'] ) ? $_POST['kyber_token_price'] : '';
+// 		$product->update_meta_data( 'kyber_token_price', sanitize_text_field( $token_price) );
+// 		$product->save();
+//    }
 
 	/**
 	 * Display token price in product list
@@ -517,17 +496,17 @@ class Woo_Kyber_Payment {
 	 * 
 	 * @since 0.0.1
 	 */
-	function kyber_admin_product_list_token_price( $price, $product ) {
-		$token_price = $product->get_meta( 'kyber_token_price' );
-		if ( $token_price ) {
-			$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
-			$token_symbol = $kyber_settings['receive_token_symbol'];
-			$price .= sprintf('<span><span class="woocommerce-Price-amount amount"> (%s <span class="woocommerce-Price-currencySymbol">%s) </span></span></span>',
-								esc_html( $token_price ),
-								esc_html( $token_symbol ));
-		}
-		return $price;
-	}
+	// function kyber_admin_product_list_token_price( $price, $product ) {
+	// 	$token_price = $product->get_meta( 'kyber_token_price' );
+	// 	if ( $token_price ) {
+	// 		$kyber_settings= get_option( 'woocommerce_kyber_settings', 1 );
+	// 		$token_symbol = $kyber_settings['receive_token_symbol'];
+	// 		$price .= sprintf('<span><span class="woocommerce-Price-amount amount"> (%s <span class="woocommerce-Price-currencySymbol">%s) </span></span></span>',
+	// 							esc_html( $token_price ),
+	// 							esc_html( $token_symbol ));
+	// 	}
+	// 	return $price;
+	// }
 
 	/**
 	 * 
@@ -570,7 +549,6 @@ class Woo_Kyber_Payment {
 		$network = $order->get_meta( 'network' );
 		$receiveToken = $order->get_meta( 'receive_symbol' );
 
-		error_log( print_r( $kyber_settings, 1 ) );
 		// $useIntervalLoop = $kyber_settings['use_cron_job'] == 'true' ? false : true;
 		$useIntervalLoop = false;
 
@@ -591,15 +569,11 @@ class Woo_Kyber_Payment {
 		
 		  $receipt = $monitor->checkStatus($tx);
 
-		  error_log( print_r( $receipt, 1 ) );
-
 		  if ( $receipt['status'] == 'SUCCESS' ) {
 
 			  // check if payment is valid 
 			  $valid = $receipt['paymentValid'];
-			  error_log( print_r( "tx is success", 1 ) );
 			  if ( !$valid or is_null($valid) ) {
-				  error_log( "but payment is invalid" );
 				  $order->update_status( 'failed',  __("Order payment failed", "woocommerce-gateway-kyber"));
 				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
@@ -609,25 +583,20 @@ class Woo_Kyber_Payment {
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'FAIL' ) {
-			  error_log( "tx is failed" );
 			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
 			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'LOST' ) {
-			  error_log( "tx is lost" );
 			  $order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
 			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
-		  error_log( print_r( (time()-$order->get_meta( "payment_time" )) / 60, 1 ) );
 		  // if monitor time is more than 15 min then this tx consider lost
 		  if ( (time() - $order->get_meta( "payment_time" )) / 60 > 15 ) {
-			error_log( "tx is lost" );
 			$order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
 			$order->update_meta_data( 'tx_status', 'lost' );
 			$order->save();	
 		  }
-		  error_log( print_r(sprintf("finished monitor: %s", $tx), 1) );
 	}
 
 

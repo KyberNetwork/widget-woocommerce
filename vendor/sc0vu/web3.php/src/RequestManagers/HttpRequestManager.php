@@ -2,9 +2,9 @@
 
 /**
  * This file is part of web3.php package.
- * 
+ *
  * (c) Kuan-Cheng,Lai <alk03073135@gmail.com>
- * 
+ *
  * @author Peter Lai <alk03073135@gmail.com>
  * @license MIT
  */
@@ -12,6 +12,7 @@
 namespace Web3\RequestManagers;
 
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException as RPCException;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -23,14 +24,14 @@ class HttpRequestManager extends RequestManager implements IRequestManager
 {
     /**
      * client
-     * 
+     *
      * @var \GuzzleHttp
      */
     protected $client;
 
     /**
      * construct
-     * 
+     *
      * @param string $host
      * @param int $timeout
      * @return void
@@ -43,7 +44,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
 
     /**
      * sendPayload
-     * 
+     *
      * @param string $payload
      * @param callable $callback
      * @return void
@@ -53,22 +54,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
         if (!is_string($payload)) {
             throw new \InvalidArgumentException('Payload must be string.');
         }
-        // $promise = $this->client->postAsync($this->host, [
-        //     'headers' => [
-        //         'content-type' => 'application/json'
-        //     ],
-        //     'body' => $payload
-        // ]);
-        // $promise->then(
-        //     function (ResponseInterface $res) use ($callback) {
-        //         var_dump($res->body());
-        //         call_user_func($callback, null, $res);
-        //     },
-        //     function (RequestException $err) use ($callback) {
-        //         var_dump($err->getMessage());
-        //         call_user_func($callback, $err, null);
-        //     }
-        // );
+
         try {
             $res = $this->client->post($this->host, [
                 'headers' => [
@@ -78,7 +64,12 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                 'timeout' => $this->timeout,
                 'connect_timeout' => $this->timeout
             ]);
-            $json = json_decode($res->getBody());
+            /**
+             * @var StreamInterface $stream ;
+             */
+            $stream = $res->getBody();
+            $json = json_decode($stream);
+            $stream->close();
 
             if (JSON_ERROR_NONE !== json_last_error()) {
                 call_user_func($callback, new InvalidArgumentException('json_decode error: ' . json_last_error_msg()), null);
@@ -89,7 +80,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                 $errors = [];
 
                 foreach ($json as $result) {
-                    if (isset($result->result)) {
+                    if (property_exists($result,'result')) {
                         $results[] = $result->result;
                     } else {
                         if (isset($json->error)) {
@@ -105,7 +96,7 @@ class HttpRequestManager extends RequestManager implements IRequestManager
                 } else {
                     call_user_func($callback, null, $results);
                 }
-            } elseif (isset($json->result)) {
+            } elseif (property_exists($json,'result')) {
                 call_user_func($callback, null, $json->result);
             } else {
                 if (isset($json->error)) {

@@ -2,9 +2,6 @@
 
 require_once dirname(__DIR__, 1) . '/vendor/autoload.php';
 use Web3\Utils;    
-use Web3\Contract;
-use Web3\Providers\HttpProvider;
-use Web3\RequestManagers\HttpRequestManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -21,10 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
-    protected $dai = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359";
-    protected $eth = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-    protected $gwei = "1000000000000000000"; // gwei const
-    protected $abi = '[{"constant":false,"inputs":[{"name":"alerter","type":"address"}],"name":"removeAlerter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"enabled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"pendingAdmin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getOperators","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"destAddress","type":"address"},{"name":"maxDestAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"},{"name":"walletId","type":"address"},{"name":"hint","type":"bytes"}],"name":"tradeWithHint","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"}],"name":"swapTokenToEther","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"amount","type":"uint256"},{"name":"sendTo","type":"address"}],"name":"withdrawToken","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"maxGasPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newAlerter","type":"address"}],"name":"addAlerter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"kyberNetworkContract","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"user","type":"address"}],"name":"getUserCapInWei","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"minConversionRate","type":"uint256"}],"name":"swapTokenToToken","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newAdmin","type":"address"}],"name":"transferAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"claimAdmin","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"minConversionRate","type":"uint256"}],"name":"swapEtherToToken","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"newAdmin","type":"address"}],"name":"transferAdminQuickly","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getAlerters","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"src","type":"address"},{"name":"dest","type":"address"},{"name":"srcQty","type":"uint256"}],"name":"getExpectedRate","outputs":[{"name":"expectedRate","type":"uint256"},{"name":"slippageRate","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"user","type":"address"},{"name":"token","type":"address"}],"name":"getUserCapInTokenWei","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOperator","type":"address"}],"name":"addOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_kyberNetworkContract","type":"address"}],"name":"setKyberNetworkContract","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"operator","type":"address"}],"name":"removeOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"field","type":"bytes32"}],"name":"info","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"srcAmount","type":"uint256"},{"name":"dest","type":"address"},{"name":"destAddress","type":"address"},{"name":"maxDestAmount","type":"uint256"},{"name":"minConversionRate","type":"uint256"},{"name":"walletId","type":"address"}],"name":"trade","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"},{"name":"sendTo","type":"address"}],"name":"withdrawEther","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"token","type":"address"},{"name":"user","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_admin","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"trader","type":"address"},{"indexed":false,"name":"src","type":"address"},{"indexed":false,"name":"dest","type":"address"},{"indexed":false,"name":"actualSrcAmount","type":"uint256"},{"indexed":false,"name":"actualDestAmount","type":"uint256"}],"name":"ExecuteTrade","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newNetworkContract","type":"address"},{"indexed":false,"name":"oldNetworkContract","type":"address"}],"name":"KyberNetworkSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"token","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"sendTo","type":"address"}],"name":"TokenWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"sendTo","type":"address"}],"name":"EtherWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"pendingAdmin","type":"address"}],"name":"TransferAdminPending","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newAdmin","type":"address"},{"indexed":false,"name":"previousAdmin","type":"address"}],"name":"AdminClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newAlerter","type":"address"},{"indexed":false,"name":"isAdd","type":"bool"}],"name":"AlerterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newOperator","type":"address"},{"indexed":false,"name":"isAdd","type":"bool"}],"name":"OperatorAdded","type":"event"}]';
     protected $supported_tokens = array();
 
     public function __construct() {
@@ -54,11 +47,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( $this->network == "ropsten" ) {
             $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woocommerce-gateway-kyber") );
         }
-
-        $timeout = 30;
-        $network_endpoint = sprintf("https://%s.infura.io", $this->network);
-        $provider = new HttpProvider(new HttpRequestManager($network_endpoint, $timeout));
-        $this->proxy_contract =  new Contract($provider, $this->abi);
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
@@ -218,19 +206,46 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * @since 0.0.1
      */
     public function get_list_token_supported() {
-        $tracker_url = sprintf('https://tracker.kyber.network/api/tokens/supported?chain=%s', $this->get_option( 'network' ) );
+        $network  = $this->get_option('network');
+        if ( $network == "ropsten" ) {
+            $tracker_url = 'https://ropsten-api.kyber.network/currencies';
+        } else {
+            $tracker_url = 'https://api.kyber.network/currencies';
+        }
         $response = wp_remote_get( $tracker_url );
 
         $response_body= $response['body'];
         $data = json_decode( $response_body );
 
         $result = array();
-        for ( $index = 0; $index < count( $data); $index++ ) {
-            $result[$data[$index]->symbol] = $data[$index]->symbol;
-            $this->supported_tokens[$data[$index]->symbol] = $data[$index]->contractAddress;
+        for ( $index = 0; $index < count( $data->data ); $index++ ) {
+            $result[$data->data[$index]->symbol] = $data->data[$index]->symbol;
         }
 
         return $result;
+    }
+
+    public function get_token_rate( $token ) {
+        $network  = $this->get_option('network');
+        if ( $network == "ropsten" ) {
+            $tracker_url = 'https://ropsten-api.kyber.network/token_price?currency=USD';
+        } else {
+            $tracker_url = 'https://api.kyber.network/token_price?currency=USD';
+        }
+        $response = wp_remote_get( $tracker_url );
+
+        $response_body= $response['body'];
+        $data = json_decode( $response_body );
+        $rate = 0;
+
+        for ( $index = 0; $index < count( $data->data ); $index++ ) {
+            if ( $data->data[$index]->symbol == $token ) {
+                $rate = $data->data[$index]->price;
+                break;
+            }
+        }
+
+        return $rate;
     }
 
     /**
@@ -564,21 +579,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $total = $order->get_total();
         }
         $receiveToken = $this->get_option( "receive_token_symbol" );
-        $receiveTokenAddress = $this->supported_tokens[$receiveToken];
-        $dai = $this->supported_tokens["DAI"];
+        $rate = $this->get_token_rate( $receiveToken );
 
-        $functionName = "getExpectedRate";
-        $src_qty = 1000000000000000000;
-        $rate = 0;
-        $this->proxy_contract->at("0x818E6FECD516Ecc3849DAf6845e3EC868087B755")->call($functionName, $dai, $receiveTokenAddress, $src_qty, function( $err, $result ) use (&$rate) {
-            if ($err != null) {
-                error_log( print_r( $err->getMessage(), 1 ) );
-            }
-            $expectedRate =  strval($result['expectedRate']->value);
-            $rate = bcdiv( $expectedRate, $this->gwei, 18); 
-        });
-
-        $token_price = $rate * $total;
+        $token_price = 0;
+        if ( $rate != 0 ) {
+            $token_price = $total / $rate;
+        }
 
         $token_price_html = sprintf('</br><p></p>
         <div class="kyber-cart-token-price">
@@ -602,22 +608,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_token_price( $order ) {
         $receiveToken = $this->get_option( "receive_token_symbol" );
-        $receiveTokenAddress = $this->supported_tokens[$receiveToken];
-        $dai = $this->supported_tokens["DAI"];
+        $rate = $this->get_token_rate( $receiveToken );
 
-        $functionName = "getExpectedRate";
-        $src_qty = 1000000000000000000;
-        $rate = 0;
-        $this->proxy_contract->at("0x818E6FECD516Ecc3849DAf6845e3EC868087B755")->call($functionName, $dai, $receiveTokenAddress, $src_qty, 
-        function( $err, $result ) use (&$rate) {
-            if ($err != null) {
-                error_log( print_r( sprintf("get dai rate from blockchain failed: %s", $err->getMessage()), 1 ) );
-            }
-            $expectedRate =  strval($result['expectedRate']->value);
-            $rate = bcdiv( $expectedRate, $this->gwei, 18); 
-        }); 
-
-        $token_price = $order->get_total() * $rate;
+        $token_price = 0;
+        if ( $rate != 0 ) {
+            $token_price = $order->get_total() / $rate;
+        }
         $order->add_meta_data( "token_price", $token_price, true );
         
         return $token_price;

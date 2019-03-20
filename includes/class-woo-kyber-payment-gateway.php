@@ -5,6 +5,7 @@ use Web3\Utils;
 use Web3\Contract;
 use Web3\Providers\HttpProvider;
 use Web3\RequestManagers\HttpRequestManager;
+use chillerlan\QRCode\QRCode;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -539,9 +540,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
             $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
 
+            $qr = '<img src="'.(new QRCode)->render($endpoint).'" />';
+
             printf("<a href='%s'
             class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
-            target='_blank'>%s</a>", $endpoint, $widget_text);
+            target='_blank'>%s</a>%s", $endpoint, $widget_text, $qr);
         }
     }
 

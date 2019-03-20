@@ -21,6 +21,6 @@
     "minimum-stability": "dev",
     "require": {
         "kyber/monitor-kyber-tx": "v1.0.9",
-        "endroid/qr-code": "^3.0@dev"
+        "chillerlan/php-qrcode": "dev-master"
     }
 }

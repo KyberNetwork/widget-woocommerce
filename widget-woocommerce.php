@@ -16,7 +16,7 @@
  * Plugin Name:       WooCommerce Kyber Payment
  * Plugin URI:        github.com/KyberNetwork/widget-woocommerce
  * Description:       Allow Woocommerce site to accept pay by token.
- * Version:           0.1.2
+ * Version:           0.2.1
  * Author:            Kyber Network
  * Author URI:        developer.kyber.network
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '0.1.2' );
+define( 'PLUGIN_NAME_VERSION', '0.2.1' );
 define( 'WC_KYBER_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
 
 /**

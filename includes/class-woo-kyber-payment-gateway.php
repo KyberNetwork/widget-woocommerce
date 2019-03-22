@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
+    protected $supported_tokens = array();
+
     public function __construct() {
         $this->id = 'kyber';
         $this->method_title = __( 'Kyber', 'woocommerce-gateway-kyber' );
@@ -50,6 +52,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
+        add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
     }
 
     /**
@@ -203,18 +206,46 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      * @since 0.0.1
      */
     public function get_list_token_supported() {
-        $tracker_url = sprintf('https://tracker.kyber.network/api/tokens/supported?chain=%s', $this->get_option( 'network' ) );
+        $network  = $this->get_option('network');
+        if ( $network == "ropsten" ) {
+            $tracker_url = 'https://ropsten-api.kyber.network/currencies';
+        } else {
+            $tracker_url = 'https://api.kyber.network/currencies';
+        }
         $response = wp_remote_get( $tracker_url );
 
         $response_body= $response['body'];
         $data = json_decode( $response_body );
 
         $result = array();
-        for ( $index = 0; $index < count( $data); $index++ ) {
-            $result[$data[$index]->symbol] = $data[$index]->symbol;
+        for ( $index = 0; $index < count( $data->data ); $index++ ) {
+            $result[$data->data[$index]->symbol] = $data->data[$index]->symbol;
         }
 
         return $result;
+    }
+
+    public function get_token_rate( $token ) {
+        $network  = $this->get_option('network');
+        if ( $network == "ropsten" ) {
+            $tracker_url = 'https://ropsten-api.kyber.network/token_price?currency=USD';
+        } else {
+            $tracker_url = 'https://api.kyber.network/token_price?currency=USD';
+        }
+        $response = wp_remote_get( $tracker_url );
+
+        $response_body= $response['body'];
+        $data = json_decode( $response_body );
+        $rate = 0;
+
+        for ( $index = 0; $index < count( $data->data ); $index++ ) {
+            if ( $data->data[$index]->symbol == $token ) {
+                $rate = $data->data[$index]->price;
+                break;
+            }
+        }
+
+        return $rate;
     }
 
     /**
@@ -235,13 +266,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( !$setting_ok ) {
             return;
         }
-
-        // check if all products in order are supported pay by token
-        $products_ok = $this->get_order_total_amount_by_token( $order );
-        if ( !$products_ok ) {
-            return;
-        }
-        $order->add_meta_data( 'total_amount', $products_ok, true );
 
         // update order network is current network setting
         $order->update_meta_data( 'network', $this->get_option( 'network' ) );
@@ -327,7 +351,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
        
         $network = $this->get_option( 'network' );
         if ( $network != 'ropsten' && $network != 'mainnet' ) {
-            error_log( $network );
             wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
             return false;
         }
@@ -339,41 +362,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
 
         return true;
-    }
-
-    /**
-     * If there is an item is not supported for token payment
-     * return 0
-     * 
-     * @param WC_Abstract_Order order to calculate amount
-     * @return mixed total amount of order by token
-     * 
-     * @since 0.0.1
-     */
-    public function get_order_total_amount_by_token( $order ) {
-        $items = $order->get_items();
-
-        $total = 0;
-        foreach( $items as $item_id => $item ) {
-            $product = $item->get_product();
-            $product_id = $product->get_parent_id();
-            if ( !$product_id )  {
-                $product_id = $product->get_id();
-            }
-            $token_price = get_post_meta( $product_id, 'kyber_token_price', true );
-            if ( !$token_price ) {
-                wc_add_notice( __( sprintf( 'Item %s does not support pay by token.', $product->get_name() ), 'woocommerce-gateway-kyber' ), 'error' );
-                return 0;
-            }
-            $total += $token_price*$item->get_quantity();
-        }
-
-        if ( $total == 0 ) {
-            wc_add_notice( __( sprintf( 'Order total should be greater than zero' ), 'woocommerce-gateway-kyber' ), 'error' );
-            return 0;
-        }
-
-        return $total;
     }
 
     /**
@@ -404,7 +392,11 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $mode = $this->get_option( 'mode' );
         
 
-        $receiveAmount = $this->get_order_total_amount_by_token($order);
+        $receiveAmount = $order->get_meta( 'token_price' );
+        if ( !$receiveAmount ) {
+            $receiveAmount = $this->get_token_price( $order );
+            error_log( print_r( sprintf("cannot get token price from order meta data, try to get from blockchain: %s", $receiveAmount), 1 ) );
+        }
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
         $endpoint .= '&network=' . $network;
@@ -445,8 +437,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $dataJSON = json_encode($dataStr);
             $data = json_decode($dataJSON);
         }
-
-        error_log( print_r( $data, 1 ) );
 
         $valid = $this->validate_callback_params($data);
         header( "Access-Control-Allow-Origin: *", true );
@@ -499,9 +489,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             'meta_value'   => $tx,
         );
         $current_post = get_posts($args);
-
-        error_log( print_r( $current_post, 1 ) );
-        error_log( print_r( $tx, 1 ) );
 
         if( $current_post && $current_post[0]->ID != $order_id ) {
             return true;
@@ -571,6 +558,71 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
             target='_blank'>%s</a>", $endpoint, $widget_text);
         }
+    }
+
+    /**
+     * Get token rate from dai to receive token and return it in payment method description
+     *
+     * @return string token price for cart
+     * @since 0.2
+     */
+    public function payment_fields() {
+        $description = $this->description;
+        if ( $description ) {
+            echo $description;
+        }
+        $total = WC()->cart->total;
+        if (!$total) {
+            global $wp;
+            $order_id = $wp->query_vars['order-pay'];
+            $order = new WC_Order( $order_id );
+            $total = $order->get_total();
+        }
+        $receiveToken = $this->get_option( "receive_token_symbol" );
+        $rate = $this->get_token_rate( $receiveToken );
+
+        $token_price = 0;
+        if ( $rate != 0 ) {
+            $token_price = $total / $rate;
+        }
+
+        $token_price_html = sprintf('</br><p></p>
+        <div class="kyber-cart-token-price">
+        <img style="float:left; margin-right: 5px;" src="%s" height="24px" width="24px">
+        <strong>%.3f</strong>
+        <span class="receive-token"><strong>%s</strong></span>
+        </div>',
+        esc_html(sprintf("https://files.kyber.network/DesignAssets/tokens/%s.svg", strtolower($receiveToken))),
+        esc_html($token_price),
+        esc_html($receiveToken));
+
+        echo $token_price_html;
+    }
+
+    /**
+     * Get token price for order
+     * 
+     * @return float token price
+     * 
+     * @since 0.2
+     */
+    public function get_token_price( $order ) {
+        $receiveToken = $this->get_option( "receive_token_symbol" );
+        $rate = $this->get_token_rate( $receiveToken );
+
+        $token_price = 0;
+        if ( $rate != 0 ) {
+            $token_price = $order->get_total() / $rate;
+        }
+        $order->add_meta_data( "token_price", $token_price, true );
+        
+        return $token_price;
+    }
+
+    public function kyber_price_filter( $order_id ) {
+        error_log( print_r( sprintf("kyber price filter: %s", $order_id), 1) );
+        $total_order_token_price_html = sprintf('<p>%s</p>', esc_html($order_id));
+        return $total_order_token_price_html;
     }
 
 }

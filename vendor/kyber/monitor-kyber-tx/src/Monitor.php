@@ -195,7 +195,6 @@ class Monitor{
     $tx = $this->txData['tx'];
     
     $eventLogParams = $this->getKyberTradeParams();
-
     $src = [];
     $dest = [];
     foreach($txReceipt->logs as $log){

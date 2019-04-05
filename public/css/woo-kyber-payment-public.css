@@ -42,3 +42,18 @@
   margin-top: 20px;
   margin-left: 10px;
 }
+
+.kyber_widget .kyber_widget-common__input {
+  font: 400 11px system-ui;
+  box-shadow: none;
+  color: #606d7b;
+  position: relative;
+}
+
+.hentry .entry-content .kyber-widget-button {
+  text-decoration: none !important;
+}
+
+.kyber_widget-broadcast__copy img {
+  max-width: max-content;
+}

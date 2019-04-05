@@ -62,3 +62,21 @@
 a.kyber-widget-button {
   outline: 0 !important;
 }
+
+.kyber-payment-button-wrap {
+  display: inline-flex;
+  /* justify-content: space-around; */
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.kyber-payment-button-wrap .kyber-payment-qr-wrap,
+.kyber-payment-button-wrap .kyber-payment-link-wrap {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.kyber-payment-button-wrap .kyber-payment-qr {
+  width: 250px;
+}

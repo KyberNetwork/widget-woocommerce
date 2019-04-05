@@ -560,11 +560,17 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
             $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
 
-            $qr = '<img src="'.(new QRCode)->render($endpoint).'" />';
+            $qr = (new QRCode)->render($endpoint);
 
-            printf("<a href='%s'
-            class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens'
-            target='_blank'>%s</a>%s", $endpoint, $widget_text, $qr);
+            printf("
+            <div class='kyber-payment-button-wrap'>
+              <div class='kyber-payment-link-wrap'>
+                <a href='%s' class='theme-emerald kyber-widget-button' name='KyberWidget - Powered by KyberNetwork' title='Pay by tokens' target='_blank'>%s</a>
+              </div>
+              <div class='kyber-payment-qr-wrap'>
+                <img src='%s' class='kyber-payment-qr' />
+              </div>
+            </div>", $endpoint, $widget_text, $qr);
         }
     }
 
@@ -625,12 +631,6 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order->add_meta_data( "token_price", $token_price, true );
         
         return $token_price;
-    }
-
-    public function kyber_price_filter( $order_id ) {
-        error_log( print_r( sprintf("kyber price filter: %s", $order_id), 1) );
-        $total_order_token_price_html = sprintf('<p>%s</p>', esc_html($order_id));
-        return $total_order_token_price_html;
     }
 
 }

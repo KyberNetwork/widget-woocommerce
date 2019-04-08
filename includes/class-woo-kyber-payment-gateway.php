@@ -54,6 +54,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
         add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
+        add_action( 'woocommerce_email_order_meta', array( $this, 'add_tx_hash_to_email' ), 10, 3 );
     }
 
     /**
@@ -402,6 +403,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( !$receiveAmount ) {
             $receiveAmount = $this->get_token_price( $order );
             error_log( print_r( sprintf("cannot get token price from order meta data, try to get from blockchain: %s", $receiveAmount), 1 ) );
+            $order->add_meta_data( "token_price", $receiveAmount, true );
+            $order->save();
         }
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
@@ -465,7 +468,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
 
         // Reduce stock levels
-        $order->reduce_order_stock();
+        wc_reduce_stock_levels($order_id);
 
         // Save transaction hash to order
         $order->update_meta_data("tx", $tx);
@@ -629,8 +632,38 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $token_price = $order->get_total() / $rate;
         }
         $order->add_meta_data( "token_price", $token_price, true );
+        $order->save();
         
         return $token_price;
+    }
+
+    /**
+     * Add tx hash to email
+     * 
+     * @return string order meta data
+     * 
+     * @since 0.3
+     */
+    public function add_tx_hash_to_email( $order, $sent_to_admin, $plain_text ) {
+        $tx_hash = $order->get_meta( "tx" );
+        if ( empty($tx_hash) ) {
+            return;
+        }
+        $network = $order->get_meta( "network" );
+        $etherscan_url = "https://etherscan.io/tx/" + $tx_hash;
+        if ( $network == "ropsten" ) {
+        $etherscan_url = sprintf("https://%s.etherscan.io/tx/%s", $network, $tx_hash);
+        } 
+        $metadata = "";
+        if ($plain_text) {
+            $metadata = sprintf("Transaction hash: %s", $tx_hash);
+        } else {
+            $metadata = "<h3>Transaction hash: </h3>";
+            $metadata .= sprintf("<a href='%s'>
+            %s
+            </a>", $etherscan_url, $tx_hash);
+        }
+        echo $metadata;
     }
 
 }

@@ -57,3 +57,8 @@
 .kyber_widget-broadcast__copy img {
   max-width: max-content;
 }
+
+.kyber_widget .kyber_widget-broadcast__text-bold.kyber_widget-link,
+a.kyber-widget-button {
+  outline: 0 !important;
+}

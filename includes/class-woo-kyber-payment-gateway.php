@@ -302,12 +302,17 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $response = '';
 
         if ( $order_tx != "" ) {
+            if ( $network == "ropsten" ) {
+                $etherscan_url = sprintf("https://%s.etherscan.io/tx/%s", $network, $order_tx);
+            } else {
+                $etherscan_url = sprintf("https://etherscan.io/tx/%s", $order_tx);
+            };
             $response .= sprintf("<tr class='woocommerce-table__line-item order_item' >
             <td class='woocommerce-table__product-name product-name'> 
             %s </td>
             <td class='woocommerce-table__product-total product-total order-tx-hash'>
-            <a href='https://%s.etherscan.io/tx/%s' target='_blank'>%s</a>
-            </td></tr>", __('Order transaction hash', 'woocommerce-gateway-kyber'), $network, $order_tx, $order_tx);
+            <a href='%s' target='_blank'>%s</a>
+            </td></tr>", __('Order transaction hash', 'woocommerce-gateway-kyber'), $etherscan_url, $order_tx);
         }
 
         if ( $tx_status != "" ) {

@@ -52,7 +52,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
-        // add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
+        add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
         // add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
         add_action( 'woocommerce_email_order_meta', array( $this, 'add_tx_hash_to_email' ), 10, 3 );
     }

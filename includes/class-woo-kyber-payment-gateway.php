@@ -53,7 +53,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
-        add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
+        // add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
+        add_action( 'woocommerce_email_order_meta', array( $this, 'add_tx_hash_to_email' ), 10, 3 );
     }
 
     /**
@@ -226,12 +227,12 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         return $result;
     }
 
-    public function get_token_rate( $token ) {
+    public function get_token_rate( $token, $base ) {
         $network  = $this->get_option('network');
         if ( $network == "ropsten" ) {
-            $tracker_url = 'https://ropsten-api.kyber.network/token_price?currency=USD';
+            $tracker_url = sprintf('https://ropsten-api.kyber.network/token_price?currency=%s', $base);
         } else {
-            $tracker_url = 'https://api.kyber.network/token_price?currency=USD';
+            $tracker_url = sprintf('https://api.kyber.network/token_price?currency=%s', $base);
         }
         $response = wp_remote_get( $tracker_url );
 
@@ -402,6 +403,8 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( !$receiveAmount ) {
             $receiveAmount = $this->get_token_price( $order );
             error_log( print_r( sprintf("cannot get token price from order meta data, try to get from blockchain: %s", $receiveAmount), 1 ) );
+            $order->add_meta_data( "token_price", $receiveAmount, true );
+            $order->save();
         }
 
         $endpoint .= 'mode='. $mode .'&receiveAddr=' . $receiveAddr . '&receiveToken=' . $receiveToken . '&callback=' . $callback_url . '&receiveAmount=' . $receiveAmount;
@@ -465,7 +468,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         }
 
         // Reduce stock levels
-        $order->reduce_order_stock();
+        wc_reduce_stock_levels($order_id);
 
         // Save transaction hash to order
         $order->update_meta_data("tx", $tx);
@@ -593,17 +596,32 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             $total = $order->get_total();
         }
         $receiveToken = $this->get_option( "receive_token_symbol" );
-        $rate = $this->get_token_rate( $receiveToken );
+        $rate = $this->get_token_rate( $receiveToken, "USD" );
 
         $token_price = 0;
         if ( $rate != 0 ) {
             $token_price = $total / $rate;
         }
 
+        if ( $receiveToken != "ETH" ) {
+            $rate_eth = $this->get_token_rate( $receiveToken, "ETH" );
+        } else {
+            $rate_eth = 1;
+        }
+
+        if ( $token_price*$rate_eth < 0.001 ) {
+            $token_price_html = sprintf(
+            "<br><br>
+            <p>Total value of token is <strong>%f%s</strong> which is smaller than <strong>0.001ETH</strong>. 
+            Kyber Widget only can handle amount which is equal or bigger than <strong>0.001ETH</strong> equivalent. Please add more items or choose another payment method.</p>", $token_price, $receiveToken);
+            echo $token_price_html;
+            return;
+        };
+
         $token_price_html = sprintf('</br><p></p>
         <div class="kyber-cart-token-price">
         <img style="float:left; margin-right: 5px;" src="%s" height="24px" width="24px">
-        <strong>%.3f</strong>
+        <strong>%.5f</strong>
         <span class="receive-token"><strong>%s</strong></span>
         </div>',
         esc_html(sprintf("https://files.kyber.network/DesignAssets/tokens/%s.svg", strtolower($receiveToken))),
@@ -622,15 +640,45 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
      */
     public function get_token_price( $order ) {
         $receiveToken = $this->get_option( "receive_token_symbol" );
-        $rate = $this->get_token_rate( $receiveToken );
+        $rate = $this->get_token_rate( $receiveToken, "USD" );
 
         $token_price = 0;
         if ( $rate != 0 ) {
             $token_price = $order->get_total() / $rate;
         }
         $order->add_meta_data( "token_price", $token_price, true );
+        $order->save();
         
         return $token_price;
+    }
+
+    /**
+     * Add tx hash to email
+     * 
+     * @return string order meta data
+     * 
+     * @since 0.3
+     */
+    public function add_tx_hash_to_email( $order, $sent_to_admin, $plain_text ) {
+        $tx_hash = $order->get_meta( "tx" );
+        if ( empty($tx_hash) ) {
+            return;
+        }
+        $network = $order->get_meta( "network" );
+        $etherscan_url = "https://etherscan.io/tx/" + $tx_hash;
+        if ( $network == "ropsten" ) {
+        $etherscan_url = sprintf("https://%s.etherscan.io/tx/%s", $network, $tx_hash);
+        } 
+        $metadata = "";
+        if ($plain_text) {
+            $metadata = sprintf("Transaction hash: %s", $tx_hash);
+        } else {
+            $metadata = "<h3>Transaction hash: </h3>";
+            $metadata .= sprintf("<a href='%s'>
+            %s
+            </a>", $etherscan_url, $tx_hash);
+        }
+        echo $metadata;
     }
 
 }

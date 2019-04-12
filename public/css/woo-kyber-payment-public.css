@@ -42,3 +42,41 @@
   margin-top: 20px;
   margin-left: 10px;
 }
+
+.kyber_widget .kyber_widget-common__input {
+  font: 400 11px system-ui;
+  box-shadow: none;
+  color: #606d7b;
+  position: relative;
+}
+
+.hentry .entry-content .kyber-widget-button {
+  text-decoration: none !important;
+}
+
+.kyber_widget-broadcast__copy img {
+  max-width: max-content;
+}
+
+.kyber_widget .kyber_widget-broadcast__text-bold.kyber_widget-link,
+a.kyber-widget-button {
+  outline: 0 !important;
+}
+
+.kyber-payment-button-wrap {
+  display: inline-flex;
+  /* justify-content: space-around; */
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.kyber-payment-button-wrap .kyber-payment-qr-wrap,
+.kyber-payment-button-wrap .kyber-payment-link-wrap {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.kyber-payment-button-wrap .kyber-payment-qr {
+  width: 250px;
+}

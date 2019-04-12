@@ -20,6 +20,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "kyber/monitor-kyber-tx": "v1.0.11"
+        "kyber/monitor-kyber-tx": "v1.0.11",
+        "chillerlan/php-qrcode": "dev-master"
     }
 }

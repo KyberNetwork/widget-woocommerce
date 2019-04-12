@@ -24,6 +24,11 @@ class ComposerStaticInit0608fef2f87283c780dd28dd96b4a4df
         array (
             'kornrunner\\' => 11,
         ),
+        'c' => 
+        array (
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
+        ),
         'W' => 
         array (
             'Web3\\' => 5,
@@ -56,6 +61,14 @@ class ComposerStaticInit0608fef2f87283c780dd28dd96b4a4df
         'kornrunner\\' => 
         array (
             0 => __DIR__ . '/..' . '/kornrunner/keccak/src',
+        ),
+        'chillerlan\\Settings\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'Web3\\' => 
         array (

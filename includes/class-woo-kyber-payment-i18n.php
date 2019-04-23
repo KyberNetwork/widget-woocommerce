@@ -34,6 +34,8 @@ class Woo_Kyber_Payment_i18n {
 	 */
 	public function load_plugin_textdomain() {
 
+		error_log( print_r( dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/', 1 ) );
+
 		load_plugin_textdomain(
 			'woo-kyber-payment',
 			false,

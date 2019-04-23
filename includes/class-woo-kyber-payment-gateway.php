@@ -23,9 +23,9 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
 
     public function __construct() {
         $this->id = 'kyber';
-        $this->method_title = __( 'Kyber', 'woocommerce-gateway-kyber' );
-        $this->method_description = sprintf( __('Kyber allow user to pay by using tokens', 'woocommerce-gateway-kyber') );
-        $this->order_button_text = __( 'Place order', 'woocommerce-gateway-kyber' );
+        $this->method_title = __( 'Kyber', 'woo-kyber-payment' );
+        $this->method_description = sprintf( __('Kyber allow user to pay by using tokens', 'woo-kyber-payment') );
+        $this->order_button_text = __( 'Place order', 'woo-kyber-payment' );
         $this->has_fields = true;
 
         $this->supports = array(
@@ -46,15 +46,15 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $this->description = $this->get_option( 'description' );
 
         if ( $this->network == "ropsten" ) {
-            $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woocommerce-gateway-kyber") );
+            $this->description .= sprintf( __(" TESTMODE is enabled. The payment by this method now will not be proceed.", "woo-kyber-payment") );
         }
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_api_kyber_callback', array( $this, 'handle_kyber_callback' ) );
         add_action( 'woocommerce_order_details_after_order_table_items', array( $this, 'add_tx_hash_to_order' ) );
         add_action( 'woocommerce_thankyou', array( $this, 'embed_kyber_widget_button' ) );
-        // add_action( 'woocommerce_admin_order_totals_after_total', array( $this, 'kyber_price_filter' ) );
         add_action( 'woocommerce_email_order_meta', array( $this, 'add_tx_hash_to_email' ), 10, 3 );
+        add_filter( 'woocommerce_get_formatted_order_total', array( $this, 'kyber_price_filter' ) );
     }
 
     /**
@@ -313,7 +313,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             %s </td>
             <td class='woocommerce-table__product-total product-total order-tx-hash'>
             <a href='%s' target='_blank'>%s</a>
-            </td></tr>", __('Order transaction hash', 'woocommerce-gateway-kyber'), $etherscan_url, $order_tx);
+            </td></tr>", __('Order transaction hash', 'woo-kyber-payment'), $etherscan_url, $order_tx);
         }
 
         if ( $tx_status != "" ) {
@@ -322,7 +322,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             %s </td>
             <td class='woocommerce-table__product-total product-total'>
             %s
-            </td></tr>", __('Tx Status', 'woocommerce-gateway-kyber'), $tx_status); 
+            </td></tr>", __('Tx Status', 'woo-kyber-payment'), $tx_status); 
         }
 
         if ( $network != "" ) {
@@ -331,7 +331,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             %s </td>
             <td class='woocommerce-table__product-total product-total'>
             %s
-            </td></tr>", __('Network', 'woocommerce-gateway-kyber'), $network); 
+            </td></tr>", __('Network', 'woo-kyber-payment'), $network); 
         }
         echo $response;
     }
@@ -346,25 +346,25 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
     public function validate_gateway_settings() {
         $receiveAddr = $this->get_option( 'receive_addr' );
         if ( !$receiveAddr ) {
-            wc_add_notice( __('Receive address is empty. You cannot use pay by token, please contact your shop about this issue', 'woocommerce-gateway-kyber'), 'error' );
+            wc_add_notice( __('Receive address is empty. You cannot use pay by token, please contact your shop about this issue', 'woo-kyber-payment'), 'error' );
             return false;
         }
 
         $receiveToken = $this->get_option( 'receive_token_symbol' );
         if ( !$receiveToken ) {
-            wc_add_notice( __('Receive token is not supported.', 'woocommerce-gateway-kyber'), 'error' );
+            wc_add_notice( __('Receive token is not supported.', 'woo-kyber-payment'), 'error' );
             return false;
         }
        
         $network = $this->get_option( 'network' );
         if ( $network != 'ropsten' && $network != 'mainnet' ) {
-            wc_add_notice( __('Network is not valid.', 'woocommerce-gateway-kyber'), 'error' );
+            wc_add_notice( __('Network is not valid.', 'woo-kyber-payment'), 'error' );
             return false;
         }
 
         $mode = $this->get_option( 'mode' );
         if ( $mode != 'tab' && $mode != 'iframe' && $mode != 'popup' ) {
-            wc_add_notice( __('Widget mode is not valid.', 'woocommerce-gateway-kyber'), 'error' );
+            wc_add_notice( __('Widget mode is not valid.', 'woo-kyber-payment'), 'error' );
             return false;
         }
 
@@ -478,7 +478,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         $order->save();
 
         // Mark as on-hold (we're awaiting cheque)
-        $order->update_status('on-hold', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
+        $order->update_status('on-hold', __("Awaiting cheque payment", "woo-kyber-payment"));
     }
 
     /**
@@ -561,7 +561,7 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
         if ( $order->get_payment_method() == 'kyber' && ( $order_status == "pending" || $order_status == "failed" )  ) {
             $endpoint = $this->get_checkout_url( $order );
 
-            $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woocommerce-gateway-kyber') );
+            $widget_text = apply_filters( 'kyber_widget_text', __('Pay by tokens', 'woo-kyber-payment') );
 
             $qr = (new QRCode)->render($endpoint);
 
@@ -679,6 +679,24 @@ class WC_Kyber_Payment_Gateway extends WC_Payment_Gateway {
             </a>", $etherscan_url, $tx_hash);
         }
         echo $metadata;
+    }
+
+    /**
+     * Add total token to order total
+     * 
+     * @return string total amount of token
+     * 
+     * @since 0.3
+     */
+    public function kyber_price_filter( $formatted_total ) {
+        global $wp;
+        $order_id = $wp->query_vars['order-received'];
+        $order = new WC_Order( $order_id );
+
+        $receiveToken = $this->get_option( "receive_token_symbol" );
+        $receiveAmount = $order->get_meta( 'token_price' );
+        $formatted_total = $formatted_total . printf("<span>(%.5f <span>%s</span>)</span>", $receiveAmount, $receiveToken);
+        return $formatted_total;
     }
 
 }

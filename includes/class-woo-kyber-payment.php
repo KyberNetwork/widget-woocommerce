@@ -184,7 +184,8 @@ class Woo_Kyber_Payment {
 	 * @since 0.0.1
 	 */
 	public function missing_woocommerce_notice() {
-		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Kyber Payment requires %s to be installed and active.', 'woocommerce-gateway-stripe' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
+		/* translators: warning when missing woocommerce as required plugin */
+		echo '<div class="error"><p><strong>' . sprintf( esc_html__( 'Kyber Payment requires %s to be installed and active.', 'woo-kyber-payment' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</strong></p></div>';
 	}
 
 	/**
@@ -216,7 +217,7 @@ class Woo_Kyber_Payment {
 	public function kyber_cron_add_intervals( $schedules ) {
 		$schedules['custom_time'] = array(
 			'interval' => 30,
-			'display' => __( 'Every 30 seconds', 'woocommerce-kyber-gateway' )
+			'display' => __( 'Every 30 seconds', 'woo-kyber-payment' )
 		);
 		return $schedules;
 	}
@@ -299,26 +300,26 @@ class Woo_Kyber_Payment {
 			  // check if payment is valid 
 			  $valid = $receipt['paymentValid'];
 			  if ( !$valid or is_null($valid) ) {
-				  $order->update_status( 'failed',  __("Order payment failed", "woocommerce-gateway-kyber"));
+				  $order->update_status( 'failed',  __("Order payment failed", "woo-kyber-payment"));
 				  $order->update_meta_data( 'tx_status', 'failed' );
 				  $order->save();
 				  return;
 			  }
-		      $order->update_status('processing', __("Awaiting cheque payment", "woocommerce-gateway-kyber"));
+		      $order->update_status('processing', __("Awaiting cheque payment", "woo-kyber-payment"));
 			  $order->update_meta_data( 'tx_status', 'success' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'FAIL' ) {
-			  $order->update_status( 'failed', __("Order tx failed", "woocommerce-gateway-kyber" ) );
+			  $order->update_status( 'failed', __("Order tx failed", "woo-kyber-payment" ) );
 			  $order->update_meta_data( 'tx_status', 'failed' );
 			  $order->save();
 		  } else if ( $receipt['status'] == 'LOST' ) {
-			  $order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			  $order->update_status( 'failed', __("Order tx lost", "woo-kyber-payment") );
 			  $order->update_meta_data( 'tx_status', 'lost' );
 			  $order->save();
 		  }
 		  // if monitor time is more than 15 min then this tx consider lost
 		  if ( (time() - $order->get_meta( "payment_time" )) / 60 > 15 ) {
-			$order->update_status( 'failed', __("Order tx lost", "woocommerce-gateway-kyber") );
+			$order->update_status( 'failed', __("Order tx lost", "woo-kyber-payment") );
 			$order->update_meta_data( 'tx_status', 'lost' );
 			$order->save();	
 		  }

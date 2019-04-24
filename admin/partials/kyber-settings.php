@@ -42,7 +42,7 @@ return apply_filters( 'wc_kyber_settings',
         'receive_addr' => array(
             'title' => __( 'Receive Address*', 'woo-kyber-payment' ),
             'type' => 'text',
-            'description' => 'Address to receive coins, token payment',
+            'description' => __('Address to receive coins, token payment', 'woo-kyber-payment'),
         ),
         'network' => array(
             'title' => __( 'Network', 'woo-kyber-payment' ),
@@ -66,7 +66,7 @@ return apply_filters( 'wc_kyber_settings',
         'mode' => array(
             'title' => __( 'Payment mode', 'woo-kyber-payment' ),
             'type' => 'select',
-            'description' => __( 'This is mode for display Kyber widget style, tab will load Kyber widget in new tab, iframe will load Kyber widget inside order received page.' ),
+            'description' => __( 'This is mode for display Kyber widget style, tab will load Kyber widget in new tab, iframe will load Kyber widget inside order received page.', "woo-kyber-payment" ),
             'default' => 'iframe',
             'descp_ip' => false,
             'options' => array(
@@ -78,7 +78,7 @@ return apply_filters( 'wc_kyber_settings',
         'block_confirmation' => array(
             'title' => __( 'Block Confirmation', 'woo-kyber-payment' ),
             'type' => 'number',
-            'description' => __( 'Number of block confirmation for confirm tx as success' ),
+            'description' => __( 'Number of block confirmation for confirm tx as success', 'woo-kyber-payment' ),
             'default' => '7',
         ),
         'commission_id' => array(

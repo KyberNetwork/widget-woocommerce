@@ -1,0 +1,195 @@
+# Copyright (C) 2019 Kyber Network
+# This file is distributed under the same license as the WooCommerce Kyber Payment plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Kyber Payment 0.2.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/widget-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-04-24T03:31:59+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.1.0\n"
+"X-Domain: woo-kyber-payment\n"
+
+#. Plugin Name of the plugin
+msgid "WooCommerce Kyber Payment"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "github.com/KyberNetwork/widget-woocommerce"
+msgstr ""
+
+#. Description of the plugin
+msgid "Allow Woocommerce site to accept pay by token."
+msgstr ""
+
+#. Author of the plugin
+msgid "Kyber Network"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "developer.kyber.network"
+msgstr ""
+
+#: widget-woocommerce.php:70
+msgid "Settings"
+msgstr ""
+
+#. translators: warning when missing woocommerce as required plugin
+#: includes/class-woo-kyber-payment.php:188
+msgid "Kyber Payment requires %s to be installed and active."
+msgstr ""
+
+#: includes/class-woo-kyber-payment.php:220
+msgid "Every 30 seconds"
+msgstr ""
+
+#: includes/class-woo-kyber-payment.php:303
+msgid "Order payment failed"
+msgstr ""
+
+#: includes/class-woo-kyber-payment.php:308
+#: includes/class-woo-kyber-payment-gateway.php:481
+msgid "Awaiting cheque payment"
+msgstr ""
+
+#: includes/class-woo-kyber-payment.php:312
+msgid "Order tx failed"
+msgstr ""
+
+#: includes/class-woo-kyber-payment.php:316
+#: includes/class-woo-kyber-payment.php:322
+msgid "Order tx lost"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:26
+msgid "Kyber"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:27
+msgid "Kyber allow user to pay by using tokens"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:28
+msgid "Place order"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:49
+msgid " TESTMODE is enabled. The payment by this method now will not be proceed."
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:316
+msgid "Order transaction hash"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:325
+msgid "Tx Status"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:334
+#: admin/partials/kyber-settings.php:48
+msgid "Network"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:349
+msgid "Receive address is empty. You cannot use pay by token, please contact your shop about this issue"
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:355
+msgid "Receive token is not supported."
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:361
+msgid "Network is not valid."
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:367
+msgid "Widget mode is not valid."
+msgstr ""
+
+#: includes/class-woo-kyber-payment-gateway.php:564
+msgid "Pay by tokens"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:9
+msgid "Enable/Disable"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:10
+msgid "Enable Kyber"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:16
+msgid "Title"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:19
+msgid "Coins, Tokens"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:23
+msgid "Description"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:25
+msgid "This is description for kyber payment method"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:26
+msgid "Pay with your coins, tokens supported by Kyber"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:43
+msgid "Receive Address*"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:45
+msgid "Address to receive coins, token payment"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:50
+msgid "Select network which you want payment to run on, Ropsten for test and Mainnet for produdction"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:54
+msgid "Ropsten"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:55
+msgid "Mainnet"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:59
+msgid "Receive token symbol"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:61
+msgid "Token you would like to receive by payment"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:67
+msgid "Payment mode"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:69
+msgid "This is mode for display Kyber widget style, tab will load Kyber widget in new tab, iframe will load Kyber widget inside order received page."
+msgstr ""
+
+#: admin/partials/kyber-settings.php:79
+msgid "Block Confirmation"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:81
+msgid "Number of block confirmation for confirm tx as success"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:85
+msgid "Commission ID"
+msgstr ""
+
+#: admin/partials/kyber-settings.php:87
+msgid "Your Ethereum wallet to get commission of the fees for the transaction. Your wallet must be whitelisted by KyberNetwork (the permissionless registration will be available soon) in order to get the commission, otherwise it will be ignored."
+msgstr ""

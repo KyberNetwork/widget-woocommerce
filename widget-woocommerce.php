@@ -21,7 +21,7 @@
  * Author URI:        developer.kyber.network
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       woocommerce-gateway-kyber 
+ * Text Domain:       woo-kyber-payment
  * Domain Path:       /languages
  */
 
@@ -67,7 +67,7 @@ register_deactivation_hook( __FILE__, 'deactivate_woo_kyber_payment' );
  */
 function plugin_action_links( $links ) {
 	$links = array_merge( array(
-		'<a href="admin.php?page=wc-settings&tab=checkout&section=kyber">' . esc_html__( 'Settings', 'woocommerce-gateway-kyber' ) . '</a>',
+		'<a href="admin.php?page=wc-settings&tab=checkout&section=kyber">' . esc_html__( 'Settings', 'woo-kyber-payment' ) . '</a>',
 	), $links );
 	return $links;
 }
